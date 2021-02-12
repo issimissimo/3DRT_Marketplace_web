@@ -6,6 +6,9 @@ var token = "T1==cGFydG5lcl9pZD00NzA5MDI1NCZzaWc9YTc3ZmRlM2Q4Y2JkZDNmOWRlMTFiYTM
 // (optional) add server code here
 // initializeSession();
 
+
+
+
 // Handling all of our errors here by alerting them
 function handleError(error) {
     if (error) {
@@ -13,25 +16,68 @@ function handleError(error) {
     }
 }
 
-function initializeSession() {
+function initializeSession(user) {
+
+    console.log(user);
+    let publisherElementId;
+    let publisherinsertMode;
+    switch (user) {
+        case "master":
+            publisherElementId = 'video-master';
+            publisherinsertMode = 'replace';
+            break;
+        case "client":
+            publisherElementId = 'window-clients-videochat';
+            publisherinsertMode = 'append';
+            break;
+        default:
+            alert("user not defined");
+    }
+    if (!publisherElementId) return;
+
+
     var session = OT.initSession(apiKey, sessionId);
 
     // Subscribe to a newly created stream
     session.on('streamCreated', function (event) {
-        session.subscribe(event.stream, 'subscriber', {
-            insertMode: 'append',
+
+        let streamStyle = {};
+
+        var subscriberElementId;
+        var subscriberInsertMode;
+        switch (event.stream.name) {
+            case "master":
+                subscriberElementId = 'video-master';
+                subscriberInsertMode = 'replace';
+                break;
+            case "client":
+                subscriberElementId = 'window-clients-videochat';
+                subscriberInsertMode = 'append';
+                break;
+            case "monitor":
+                streamStyle.nameDisplayMode = "off";
+                streamStyle.buttonDisplayMode = "off";
+            default:
+                alert("user not defined");
+        }
+
+
+        session.subscribe(event.stream, subscriberElementId, {
+            insertMode: subscriberInsertMode,
             width: '80%',
             // height: '150px'
         }, handleError);
     });
 
+
     // Create a publisher
-    var publisher = OT.initPublisher('window-master-videochat', {
+    var publisher = OT.initPublisher(publisherElementId, {
+        name: user,
         resolution: '320x240',
         frameRate: 15,
-        // insertMode: 'append',
-        width: '100%',
-        height: '100%'
+        insertMode: publisherinsertMode,
+        width: '80%',
+        // height: '80%',
     }, handleError);
 
     // Connect to the session
@@ -46,7 +92,7 @@ function initializeSession() {
 }
 
 export default class Videochat {
-    static init(){
-        initializeSession();
+    static init(_user) {
+        initializeSession(_user);
     }
 }
