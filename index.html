@@ -1,0 +1,195 @@
+﻿<!doctype html>
+<html>
+
+<head>
+    <title>TEST</title>
+    <!-- <link href="css/app.css" rel="stylesheet" type="text/css">
+    <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
+
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+
+            /* remove scrollbar for Microsoft Edge */
+            -ms-overflow-style: none;
+            overflow: -moz-scrollbars-none;
+        }
+
+        #container {
+            position: relative;
+            width: 80%;
+            height: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* #realtime {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+} */
+
+
+
+        .videochat-container {
+            width: 20%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* .videochat-container div {
+            margin-bottom: 20px;
+        } */
+
+
+
+        .wrapper {
+            position: relative;
+            width: 100%;
+            /* <-- just a default, can be anything. */
+        }
+
+        .three-by-two.aspect-ratio {
+            padding-bottom: 66.666%
+        }
+
+        .four-by-three.aspect-ratio {
+            padding-bottom: 75%
+        }
+
+        .sixteen-by-nine.aspect-ratio {
+            padding-bottom: 56.25%
+        }
+
+        .content {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            /* padding: 0 24px; */
+            /* Optional padding for content area */
+        }
+
+
+        /*
+The classes above have all of the aspect ratio stuff we need.
+They can be reused on any element.
+Below are some element-specific styles
+*/
+
+        .half {
+            width: 85%;
+            float: right;
+            /* background: beige; */
+        }
+
+
+        /* Positioning for the main box */
+        .main-box {
+            width: 100%;
+            margin: 5% auto;
+        }
+
+        /* Styles for the content in the main box */
+        .main-box>.content {
+            background: #ffe5e5;
+        }
+    </style>
+</head>
+
+<body style="display: flex; flex-direction: column;">
+
+    <div id="topBar" style="width: 100%; height: 3em; background-color: green; display: flex;"></div>
+
+
+
+
+    <div style="width: 100%; height: 100%; background-color: red; display: flex;">
+
+
+        <div id="leftBar" style="background-color: aquamarine; width: 5%; height: 100%;"></div>
+
+
+
+        <div style="flex: 1; display: flex; flex-direction: column;">
+
+
+            <div id="window-main" style="background-color: orange; position: relative; height: 800px;">
+
+                <!-- <iframe id="realtime"
+                    src="https://portal.furioos.com/embed/214.300?whiteLabel=true&hideTitle=true&hideToolbar=true&autoRun=true"
+                    allowfullscreen="true" style="border: none; width: 100%; height: 100%;"></iframe> -->
+            </div>
+
+
+
+            <div id="bottomBar" style="width: 100%; background-color: brown; flex: 1;"></div>
+
+
+        </div>
+
+
+
+        <div id="subscriber" class="videochat-container">
+
+            <div id="window-master-videochat" style="width: 100%; height: 300px; background-color: darkblue;"></div>
+            <div id="window-clients-videochat" style="width: 100%; flex: 1; background-color: grey;"></div>
+
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+
+
+    <script type="module" src="app/index.js"></script>
+
+
+    <script>
+
+        function keepRatio(elementId, ratio) {
+            const w = $('#' + elementId).outerWidth();
+            const h = w * ratio;
+            $('#' + elementId).outerHeight(h);
+        }
+
+        $(window).resize(function () {
+            keepRatio('window-main', 0.5625); /// 16:9
+            keepRatio('window-master-videochat', 0.75); /// 4:3
+        });
+        keepRatio('window-main', 0.5625); /// 16:9
+        keepRatio('window-master-videochat', 0.75); /// 4:3
+
+
+
+
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const user = 'master';
+        // const user = urlParams.get('user');
+        console.log(user);
+
+    </script>
+
+</body>
+
+</html>
