@@ -1,6 +1,7 @@
 import Videochat from '../src/videochat.js';
 import FilesLoader from '../src/filesLoader.js';
 
+console.log("AAAAAAAAAAAAAAAA")
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
@@ -11,7 +12,7 @@ if (!userType) {
 }
 
 ///Start videochat
-Videochat.init(userType);
+// Videochat.init(userType);
 
 
 ///Load remote files
