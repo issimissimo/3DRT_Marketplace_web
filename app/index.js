@@ -20,7 +20,8 @@ SocketManager.Connect(userType);
 
 
 ///Load remote files
-FilesManager.init('http://www.issimissimo.com/playground/folderToListFiles/', userType);
+// FilesManager.init('http://www.issimissimo.com/playground/folderToListFiles/', userType);
+FilesManager.init('https://test.issimissimo.com/folderToLoadFiles/', userType);
 
 
 

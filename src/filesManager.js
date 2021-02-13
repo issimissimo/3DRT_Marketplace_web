@@ -148,6 +148,8 @@ function listFilesFromUrl(url) {
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 
+            console.log("OK....")
+
             var html = xmlhttp.responseText;
             var parser = new DOMParser();
             var htmlDoc = parser.parseFromString(html, 'text/html');
