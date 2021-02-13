@@ -1,18 +1,21 @@
 import * as videoCover from "../src/utils/videoCover.js";
 import ImageLoader from "../src/loaders/imageLoader.js";
+import * as SocketManager from '../src/socketManager.js';
+
+
+
+
 
 
 
 var imageNames = [];
 var thumbnails = [];
 var thumbnailsLoaded = 0;
+var usertype;
 
 
-function openImage(url){
-    console.log("load image to screen")
-    console.log(url)
-
-    ImageLoader.Load(url);
+function openImage(url) {
+    ImageLoader.Load(url, usertype);
 }
 
 
@@ -23,8 +26,6 @@ function loadThumbnails() {
     var i = thumbnailsLoaded;
     const url = thumbnails[i].data('data-url');
     const type = thumbnails[i].data('data-type');
-    console.log(thumbnails[i].data('data-type'));
-
 
     switch (type) {
 
@@ -33,7 +34,7 @@ function loadThumbnails() {
             var img = new Image();
             img.src = url;
             img.onload = function () {
-                thumbnails[i].click(function(){
+                thumbnails[i].click(function () {
                     openImage(url);
                 });
                 thumbnails[i].attr('src', url);
@@ -50,32 +51,32 @@ function loadThumbnails() {
 
             console.log("detected video")
 
-                thumbnails[i].fadeIn(1000);
+            thumbnails[i].fadeIn(1000);
 
-                if (i < thumbnails.length - 1) {
-                    thumbnailsLoaded++;
-                    loadThumbnails();
-                }
+            if (i < thumbnails.length - 1) {
+                thumbnailsLoaded++;
+                loadThumbnails();
+            }
 
             // fetch('http://www.issimissimo.com/playground/folderToListFiles/BigBuckBunny_test.mp4')
             //     .then(res => res.blob()) // Gets the response and returns it as a blob
             //     .then(blob => {
 
             //         console.log(blob);
-                    
-                    
-                    // Here's where you get access to the blob
-                    // And you can use it for whatever you want
-                    // Like calling ref().put(blob)
-
-                    // Here, I use it to make an image appear on the page
 
 
-                    // let objectURL = URL.createObjectURL(blob);
-                    // let myImage = new Image();
-                    // myImage.src = objectURL;
-                    // document.getElementById('myImg').appendChild(myImage)
-                // });
+            // Here's where you get access to the blob
+            // And you can use it for whatever you want
+            // Like calling ref().put(blob)
+
+            // Here, I use it to make an image appear on the page
+
+
+            // let objectURL = URL.createObjectURL(blob);
+            // let myImage = new Image();
+            // myImage.src = objectURL;
+            // document.getElementById('myImg').appendChild(myImage)
+            // });
 
 
             /// get video thumbnail image
@@ -213,7 +214,20 @@ function listFilesFromUrl(url) {
 
 
 export default class FilesManager {
-    static init(_url) {
-        listFilesFromUrl(_url);
+    static init(_url, _usertype) {
+        usertype = _usertype;
+
+        if (usertype == "master"){
+            /// load the files in the container to show them
+            listFilesFromUrl(_url);
+        }
+        
+
+        if (usertype == "client") {
+            /// register the data receiver for imageLoader
+            SocketManager.OnReceivedData.push((dataString) => {
+                ImageLoader.ReceiveData(dataString);
+            });
+        }
     }
 }
