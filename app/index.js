@@ -1,5 +1,5 @@
 import Videochat from '../src/videochat.js';
-import FilesLoader from '../src/filesLoader.js';
+import FilesManager from '../src/filesManager.js';
 
 console.log("AAAAAAAAAAAAAAAA")
 
@@ -16,7 +16,7 @@ if (!userType) {
 
 
 ///Load remote files
-FilesLoader.init('http://www.issimissimo.com/playground/folderToListFiles/');
+FilesManager.init('http://www.issimissimo.com/playground/folderToListFiles/');
 
 
 
