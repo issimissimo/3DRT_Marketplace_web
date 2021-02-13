@@ -1,7 +1,7 @@
 import * as SocketManager from '../../src/socketManager.js';
 
-const JsonObj = {
-    class: "imageLoader",
+const jsonObj = {
+    class: "ImageLoader",
 }
 
 
@@ -33,13 +33,13 @@ export default class ImageLoader {
                 // console.log("view")
             },
             moved(event) {
-                JsonObj.x = event.detail.x;
-                JsonObj.y = event.detail.y;
-                SocketManager.FMEmitStringToOthers(JSON.stringify(JsonObj));
+                jsonObj.x = event.detail.x;
+                jsonObj.y = event.detail.y;
+                SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
             },
             zoomed(event) {
-                JsonObj.ratio = event.detail.ratio;
-                SocketManager.FMEmitStringToOthers(JSON.stringify(JsonObj));
+                jsonObj.ratio = event.detail.ratio;
+                SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
             },
             url() {
                 return url;

@@ -4,7 +4,9 @@ import * as SocketManager from '../src/socketManager.js';
 
 
 
-
+const jsonObj = {
+    class: "FilesManager",
+}
 
 
 
@@ -16,6 +18,11 @@ var usertype;
 
 function openImage(url) {
     ImageLoader.Load(url, usertype);
+
+    /// send to clients
+    jsonObj.action = "LoadImage";
+    jsonObj.url = url;
+    SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
 }
 
 
@@ -212,21 +219,45 @@ function listFilesFromUrl(url) {
 
 
 
-
+///
+/// INIT
+///
 export default class FilesManager {
+
     static init(_url, _usertype) {
         usertype = _usertype;
 
-        if (usertype == "master"){
+        if (usertype == "master") {
+
             /// load the files in the container to show them
             listFilesFromUrl(_url);
         }
-        
+
 
         if (usertype == "client") {
+
             /// register the data receiver for imageLoader
+            // SocketManager.OnReceivedData.push((dataString) => {
+            //     ImageLoader.ReceiveData(dataString);
+            // });
+
             SocketManager.OnReceivedData.push((dataString) => {
-                ImageLoader.ReceiveData(dataString);
+                const jsonObj = JSON.parse(dataString);
+
+                console.log(jsonObj.class);
+
+                if (jsonObj.class == "ImageLoader") {
+
+                }
+
+                if (jsonObj.class == "FilesManager") {
+                    
+                    if (jsonObj.action == "LoadImage"){
+                        ImageLoader.Load(jsonObj.url, usertype);
+                    }
+                }
+
+
             });
         }
     }
