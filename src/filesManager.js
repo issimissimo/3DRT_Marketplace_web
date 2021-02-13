@@ -247,7 +247,7 @@ export default class FilesManager {
                 console.log(jsonObj.class);
 
                 if (jsonObj.class == "ImageLoader") {
-
+                    ImageLoader.ReceiveData(jsonObj);
                 }
 
                 if (jsonObj.class == "FilesManager") {

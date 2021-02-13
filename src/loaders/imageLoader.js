@@ -13,7 +13,7 @@ export default class ImageLoader {
 
     static Load(url, userType) {
 
-        const interactionEnabled = userType == "master" ? true : false;
+        const interactionEnabled = userType == "master" ? true : true;
 
         if (viewer) {
             viewer.destroy();
@@ -32,12 +32,14 @@ export default class ImageLoader {
             view(event) {
                 // console.log("view")
             },
-            moved(event) {
+            move(event) {
+                jsonObj.action = "move";
                 jsonObj.x = event.detail.x;
                 jsonObj.y = event.detail.y;
                 SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
             },
-            zoomed(event) {
+            zoom(event) {
+                jsonObj.action = "zoom";
                 jsonObj.ratio = event.detail.ratio;
                 SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
             },
@@ -52,22 +54,30 @@ export default class ImageLoader {
 
     };
 
-    static Zoom(ratio) {
-        if (viewer) viewer.zoom(ratio);
+    static ZoomTo(ratio) {
+        console.log(ratio)
+        if (viewer) viewer.zoomTo(ratio);
 
     };
 
-    static Move(x, y) {
-        if (viewer) viewer.move(x, y);
+    static MoveTo(x, y) {
+        if (viewer) viewer.moveTo(x, y);
     };
 
     ///
     /// receive data from socket
     ///
-    static ReceiveData(stringData) {
-        // if (viewer) {
-            const obj = JSON.parse(stringData);
-            console.log(obj)
-        // }
+    static ReceiveData(obj) {
+        if (viewer) {
+            console.log(obj.action);
+
+            if (obj.action == "move") {
+                ImageLoader.MoveTo(obj.x, obj.y);
+            }
+
+            if (obj.action == "zoom") {
+                ImageLoader.ZoomTo(obj.ratio);
+            }
+        }
     };
 }
