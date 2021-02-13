@@ -8,7 +8,7 @@ const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 let userType = urlParams.get('user');
 if (!userType) {
-    console.warn("URL user parameter not defined! We'll use 'master'");
+    console.log("URL user parameter not defined! We'll use 'master'");
     userType = 'master';
 }
 

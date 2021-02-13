@@ -17,7 +17,7 @@ var usertype;
 
 
 function openImage(url) {
-    ImageLoader.Load(url, usertype);
+    ImageLoader.Load(url);
 
     /// send to clients
     jsonObj.action = "LoadImage";
@@ -227,37 +227,39 @@ export default class FilesManager {
     static init(_url, _usertype) {
         usertype = _usertype;
 
+        ///
+        /// initializazion for "master" (server)
+        ///
         if (usertype == "master") {
+
+            /// enable interaction on the main view
+            $('#window-main').css( 'pointer-events', 'all' );
 
             /// load the files in the container to show them
             listFilesFromUrl(_url);
         }
 
-
+        ///
+        /// initializazion for "client" (client)
+        ///
         if (usertype == "client") {
 
-            /// register the data receiver for imageLoader
-            // SocketManager.OnReceivedData.push((dataString) => {
-            //     ImageLoader.ReceiveData(dataString);
-            // });
+            /// disable interaction on the main view
+            $('#window-main').css( 'pointer-events', 'none' );
 
+            /// subscribe functions for OnReceiveData
             SocketManager.OnReceivedData.push((dataString) => {
                 const jsonObj = JSON.parse(dataString);
-
-                console.log(jsonObj.class);
 
                 if (jsonObj.class == "ImageLoader") {
                     ImageLoader.ReceiveData(jsonObj);
                 }
-
                 if (jsonObj.class == "FilesManager") {
                     
                     if (jsonObj.action == "LoadImage"){
-                        ImageLoader.Load(jsonObj.url, usertype);
+                        ImageLoader.Load(jsonObj.url);
                     }
                 }
-
-
             });
         }
     }

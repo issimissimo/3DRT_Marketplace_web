@@ -11,9 +11,7 @@ const imageContainer = document.getElementById('imageContainer');
 
 export default class ImageLoader {
 
-    static Load(url, userType) {
-
-        const interactionEnabled = userType == "master" ? true : true;
+    static Load(url) {
 
         if (viewer) {
             viewer.destroy();
@@ -26,8 +24,6 @@ export default class ImageLoader {
             navbar: false,
             toolbar: false,
             title: false,
-            movable: interactionEnabled,
-            zoomable: interactionEnabled,
             zoomRatio: 0.2,
             view(event) {
                 // console.log("view")
