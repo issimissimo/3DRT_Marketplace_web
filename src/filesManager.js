@@ -21,9 +21,11 @@ function openImage(url) {
     ImageLoader.Load(url);
 
     /// send to clients
-    jsonObj.action = "LoadImage";
-    jsonObj.url = url;
-    SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+    if (usertype == "master") {
+        jsonObj.action = "LoadImage";
+        jsonObj.url = url;
+        SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+    }
 }
 
 
@@ -32,9 +34,11 @@ function openVideo(url) {
     VideoLoader.Load(url, usertype);
 
     /// send to clients
-    jsonObj.action = "LoadVideo";
-    jsonObj.url = url;
-    SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+    if (usertype == "master") {
+        jsonObj.action = "LoadVideo";
+        jsonObj.url = url;
+        SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+    }
 }
 
 
@@ -178,18 +182,38 @@ export default class FilesManager {
             /// disable interaction on the main view
             $('#window-main').css('pointer-events', 'none');
 
+
+            ////////////////////////////////////////////////
             /// subscribe functions for OnReceiveData
+            ////////////////////////////////////////////////
             SocketManager.OnReceivedData.push((dataString) => {
                 const jsonObj = JSON.parse(dataString);
 
-                if (jsonObj.class == "ImageLoader") {
-                    ImageLoader.ReceiveData(jsonObj);
-                }
-                if (jsonObj.class == "FilesManager") {
+                switch (jsonObj.class) {
 
-                    if (jsonObj.action == "LoadImage") {
-                        ImageLoader.Load(jsonObj.url);
-                    }
+                    case "FilesManager":
+
+                        switch (jsonObj.action) {
+
+                            case "LoadImage":
+                                openImage(jsonObj.url);
+                                break;
+
+                            case "LoadVideo":
+                                openVideo(jsonObj.url);
+                                break;
+                        }
+                        break;
+
+
+                    case "ImageLoader":
+                        ImageLoader.ReceiveData(jsonObj);
+                        break;
+
+
+                    case "VideoLoader":
+                        VideoLoader.ReceiveData(jsonObj);
+                        break;
                 }
             });
         }
