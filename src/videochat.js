@@ -38,6 +38,21 @@ function initializeSession(user) {
 
     var session = OT.initSession(apiKey, sessionId);
 
+    var publisher;
+
+    // Create a publisher
+    publisher = OT.initPublisher(publisherElementId, {
+        name: user,
+        resolution: '320x240',
+        frameRate: 15,
+        insertMode: publisherinsertMode,
+        width: '100%',
+        // height: '100%',
+        // fitMode: "cover",
+    }, handleError);
+
+
+
     // Subscribe to a newly created stream
     session.on('streamCreated', function (event) {
 
@@ -54,9 +69,6 @@ function initializeSession(user) {
                 subscriberElementId = 'window-clients-videochat';
                 subscriberInsertMode = 'append';
                 break;
-            case "monitor":
-                streamStyle.nameDisplayMode = "off";
-                streamStyle.buttonDisplayMode = "off";
             default:
                 alert("user not defined");
         }
@@ -64,21 +76,16 @@ function initializeSession(user) {
 
         session.subscribe(event.stream, subscriberElementId, {
             insertMode: subscriberInsertMode,
-            width: '80%',
-            // height: '150px'
+            width: '100%',
+            // height: '100%',
         }, handleError);
+
+
+
+
     });
 
 
-    // Create a publisher
-    var publisher = OT.initPublisher(publisherElementId, {
-        name: user,
-        resolution: '320x240',
-        frameRate: 15,
-        insertMode: publisherinsertMode,
-        width: '80%',
-        // height: '80%',
-    }, handleError);
 
     // Connect to the session
     session.connect(token, function (error) {

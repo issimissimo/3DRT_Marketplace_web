@@ -4,11 +4,9 @@
 <head>
     <title>TEST</title>
     <link rel="shortcut icon" href="#" />
-    <!-- <link href="css/app.css" rel="stylesheet" type="text/css">
-    <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
 
     <link href="lib/viewerjs/dist/viewer.min.css" rel="stylesheet">
@@ -29,93 +27,13 @@
             /* remove scrollbar for Microsoft Edge */
             -ms-overflow-style: none;
             overflow: -moz-scrollbars-none;
+
+            background-color:  rgb(19, 19, 19);
         }
-
-        #container {
-            position: relative;
-            width: 80%;
-            height: 80%;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* #realtime {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-} */
-
-
-
-        /* .videochat-container {
-            width: 17%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        } */
 
         #window-clients-videochat div {
             margin-bottom: 20px;
-        }
-
-
-
-        .wrapper {
-            position: relative;
-            width: 100%;
-            /* <-- just a default, can be anything. */
-        }
-
-        .three-by-two.aspect-ratio {
-            padding-bottom: 66.666%
-        }
-
-        .four-by-three.aspect-ratio {
-            padding-bottom: 75%
-        }
-
-        .sixteen-by-nine.aspect-ratio {
-            padding-bottom: 56.25%
-        }
-
-        .content {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            /* padding: 0 24px; */
-            /* Optional padding for content area */
-        }
-
-
-        /*
-The classes above have all of the aspect ratio stuff we need.
-They can be reused on any element.
-Below are some element-specific styles
-*/
-
-        .half {
-            width: 85%;
-            float: right;
-            /* background: beige; */
-        }
-
-
-        /* Positioning for the main box */
-        .main-box {
-            width: 100%;
-            margin: 5% auto;
-        }
-
-        /* Styles for the content in the main box */
-        .main-box>.content {
-            background: #ffe5e5;
+            border-radius: 8px;
         }
 
         .thumbnail {
@@ -128,6 +46,10 @@ Below are some element-specific styles
             cursor: pointer;
             display: none;
         }
+
+        #window-main div {
+            border-radius: 8px;
+        }
     </style>
 </head>
 
@@ -138,25 +60,30 @@ Below are some element-specific styles
 
 
 
-    <div style="width: 100%; height: 100%; background-color: red; display: flex;">
+    <div style="width: 100%; height: 100%; display: flex;">
 
 
-        <div id="leftBar" style="background-color: aquamarine; width: 5%; height: 100%;"></div>
+        <div id="leftBar" style="background-color: aquamarine; width: 60px; height: 100%;"></div>
 
 
 
         <div style="flex: 1; display: flex; flex-direction: column;">
 
+         
+            <div id="window-main-container" style="padding: 10px; padding-right: 0;">
 
-            <div id="window-main" style="background-color: black; position: relative; height: 800px;">
+                <div id="window-main" style="background-color: black; position: relative; height: 800px; border-radius: 8px;">
 
-                <!-- <iframe id="realtime"
-                    src="https://portal.furioos.com/embed/214.300?whiteLabel=true&hideTitle=true&hideToolbar=true&autoRun=true"
-                    allowfullscreen="true" style="border: none; width: 100%; height: 100%;"></iframe> -->
-
-                <img id="imageContainer" src="images/black.jpg">
-
+                    <!-- <iframe id="realtime"
+                        src="https://portal.furioos.com/embed/214.300?whiteLabel=true&hideTitle=true&hideToolbar=true&autoRun=true"
+                        allowfullscreen="true" style="border: none; width: 100%; height: 100%;"></iframe> -->
+    
+                    <img id="imageContainer" src="images/black.jpg">
+    
+                </div>
             </div>
+
+            
 
 
 
@@ -169,15 +96,22 @@ Below are some element-specific styles
 
 
 
-        <div id="rightBar" style="width: 17%; height: 100%; display: flex; flex-direction: column;">
+        <div id="rightBar" style="width: 17%; display: flex; flex-direction: column;">
 
-            <div id="window-master-videochat"
+            <!-- <div id="window-master-videochat"
                 style="width: 100%; height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: rgb(43, 43, 43);">
-                <div id="video-master" style="background-color: rgb(0, 0, 0); width: 80%; height: 80%;"></div>
+                <div id="video-master" style="background-color: rgb(0, 0, 0); width: 100%; height: 100%;"></div>
+            </div> -->
+
+            <div id="window-master-videochat" style="background-color: rgb(19, 19, 19); padding: 10px;">
+                <div id="video-master"
+                    style="background-color: rgb(0, 0, 0); border-radius: 8px; border-style: solid; border-width: 3px; border-color: rgb(92, 27, 27); box-sizing: border-box;"></div>
             </div>
 
+
+
             <div id="window-clients-videochat"
-                style="width: 100%; flex: 1; display: flex; flex-direction: column; align-items: center; background-color: grey;">
+                style="flex: 1; display: flex; flex-direction: column; align-items: center; background-color: rgb(19, 19, 19); padding: 10px;">
             </div>
 
         </div>
@@ -190,23 +124,19 @@ Below are some element-specific styles
 
     <script>
 
-        function keepRatio(elementId, ratio) {
+        function keepRatioId(elementId, ratio) {
             const w = $('#' + elementId).outerWidth();
             const h = w * ratio;
             $('#' + elementId).outerHeight(h);
         }
 
+        /// when the window is resized...
         $(window).resize(function () {
-            keepRatio('window-main', 0.5625); /// 16:9
-            keepRatio('window-master-videochat', 0.75); /// 4:3
+
+            /// keep ratio for main window
+            keepRatioId('window-main', 0.5625); /// 16:9
         });
-        keepRatio('window-main', 0.5625); /// 16:9
-        keepRatio('window-master-videochat', 0.75); /// 4:3
-
-
-
-
-
+        keepRatioId('window-main', 0.5625); /// 16:9
 
     </script>
 

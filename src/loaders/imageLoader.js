@@ -4,7 +4,6 @@ const jsonObj = {
     class: "ImageLoader",
 }
 
-
 var viewer;
 const imageContainer = document.getElementById('imageContainer');
 
