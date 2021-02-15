@@ -16,7 +16,7 @@ if (!userType) {
 SocketManager.Connect(userType);
 
 /// Start videochat
-Videochat.init(userType);
+// Videochat.init(userType);
 
 
 ///Load remote files

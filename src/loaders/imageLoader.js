@@ -7,16 +7,17 @@ const jsonObj = {
 var viewer;
 const imageContainer = document.getElementById('imageContainer');
 
-
 export default class ImageLoader {
 
     static Load(url) {
+
+        imageContainer.style.display = "inline";
 
         if (viewer) {
             viewer.destroy();
             viewer = null;
         }
-
+        
         viewer = new Viewer(imageContainer, {
             inline: true,
             backdrop: false,
@@ -24,6 +25,7 @@ export default class ImageLoader {
             toolbar: false,
             title: false,
             zoomRatio: 0.2,
+            transition: false,
             view(event) {
                 // console.log("view")
             },
@@ -45,8 +47,11 @@ export default class ImageLoader {
     };
 
     static Destroy() {
-        if (viewer) viewer.destroy();
-
+        if (viewer) {
+            viewer.destroy();
+            viewer = null;
+        }
+        imageContainer.style.display = "none";
     };
 
     static ZoomTo(ratio) {
