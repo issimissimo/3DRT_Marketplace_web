@@ -1,7 +1,8 @@
-import * as videoCover from "../src/utils/videoCover.js";
-import ImageLoader from "../src/loaders/imageLoader.js";
-import VideoLoader from "../src/loaders/videoLoader.js";
-import * as SocketManager from '../src/socketManager.js';
+import * as videoCover from "../utils/videoCover.js";
+import ImageLoader from "../loaders/imageLoader.js";
+import VideoLoader from "../loaders/videoLoader.js";
+import * as SocketManager from './socketManager.js';
+import { loadXml } from "../utils/xmlLoader.js";
 
 
 
@@ -9,7 +10,7 @@ const jsonObj = {
     class: "FilesManager",
 }
 
-var imageNames = [];
+// var imageNames = [];
 var thumbnails = [];
 var thumbnailsLoaded = -1;
 var usertype;
@@ -51,6 +52,7 @@ function loadThumbnails() {
     if (i >= thumbnails.length) return;
 
     const url = thumbnails[i].data('data-url');
+    const fileName = thumbnails[i].data('data-fileName');
     const type = thumbnails[i].data('data-type');
 
     switch (type) {
@@ -59,34 +61,36 @@ function loadThumbnails() {
             var img = new Image();
             img.src = url;
             img.onload = function () {
+                thumbnails[i].find('img').attr('src', url);
+                thumbnails[i].find('p').text(fileName.slice(0, -4));
+                thumbnails[i].fadeIn(1000);
                 thumbnails[i].click(function () {
                     openImage(url);
                 });
-                thumbnails[i].attr('src', url);
-                thumbnails[i].fadeIn(1000);
-
                 loadThumbnails();
-                // if (i < thumbnails.length - 1) {
-                //     thumbnailsLoaded++;
-                //     loadThumbnails();
-                // }
             };
             break;
 
 
         case "video":
             console.log("detected video")
+            thumbnails[i].find('p').text(fileName.slice(0, -4));
+            thumbnails[i].fadeIn(1000);
             thumbnails[i].click(function () {
                 openVideo(url);
             });
-
-            thumbnails[i].fadeIn(1000);
-
             loadThumbnails();
-            // if (i < thumbnails.length - 1) {
-            //     thumbnailsLoaded++;
-            //     loadThumbnails();
-            // }
+            break;
+
+
+        case "panorama":
+            console.log("detected panorama!")
+            thumbnails[i].find('p').text(fileName.slice(0, -4));
+            thumbnails[i].fadeIn(1000);
+            thumbnails[i].click(function () {
+                openVideo(url);
+            });
+            loadThumbnails();
             break;
     }
 
@@ -100,8 +104,6 @@ function listFilesFromUrl(url) {
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 
-            console.log("OK....")
-
             var html = xmlhttp.responseText;
             var parser = new DOMParser();
             var htmlDoc = parser.parseFromString(html, 'text/html');
@@ -112,13 +114,13 @@ function listFilesFromUrl(url) {
                 const name = x[i].href;
                 const extension = name.slice(-3).toLowerCase();
 
-                if (extension == "jpg" || extension == "png" || extension == "mp4") {
+                if (extension == "jpg" || extension == "png" || extension == "mp4" || extension == "xml") {
                     const e = name.split("/");
-                    const el = e[e.length - 1];
-                    imageNames.push(el);
-
+                    const fileName = e[e.length - 1];
 
                     const newThumbnail = $('#bottomBar').children().first().clone().appendTo('#bottomBar');
+                    newThumbnail.data('data-url', url + fileName);
+                    newThumbnail.data('data-fileName', fileName);
 
                     switch (extension) {
                         case "jpg":
@@ -130,19 +132,20 @@ function listFilesFromUrl(url) {
                             newThumbnail.data('data-type', "video");
                             break;
 
-                        default:
-                            console.warn("file nor recognized!");
-                    }
+                        case "xml":
+                            loadXml(url + fileName).then((xml) => {
+                                const classType = xml.getElementsByTagName("class")[0].childNodes[0].nodeValue;
+                                newThumbnail.data('data-type', classType);
+                            });
+                            break;
 
-                    newThumbnail.data('data-url', url + el);
+                    }
                     thumbnails.push(newThumbnail);
                 }
             }
 
             console.log("all file names loaded")
             loadThumbnails();
-
-            // const imageCollection = loadImages(imageNames, )
         }
     }
     xmlhttp.open("GET", url, false);

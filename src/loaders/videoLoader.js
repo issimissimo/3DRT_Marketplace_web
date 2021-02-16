@@ -1,4 +1,4 @@
-import * as SocketManager from '../../src/socketManager.js';
+import * as SocketManager from '../managers/socketManager.js';
 
 const jsonObj = {
     class: "VideoLoader",
