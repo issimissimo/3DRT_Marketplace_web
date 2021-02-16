@@ -21,10 +21,10 @@ var usertype;
 
 
 function LoadImage(url) {
-    ImageLoader.Load(url);
     VideoLoader.Destroy();
     PanoramaLoader.Destroy();
     CameraLoader.Destroy();
+    ImageLoader.Load(url);
 
     /// send to clients
     if (usertype == "master") {
@@ -37,9 +37,9 @@ function LoadImage(url) {
 
 function LoadVideo(url) {
     ImageLoader.Destroy();
-    VideoLoader.Load(url, usertype);
     PanoramaLoader.Destroy();
     CameraLoader.Destroy();
+    VideoLoader.Load(url, usertype);
 
     /// send to clients
     if (usertype == "master") {
@@ -53,8 +53,8 @@ function LoadVideo(url) {
 function LoadPanorama(xml) {
     ImageLoader.Destroy();
     VideoLoader.Destroy();
-    PanoramaLoader.Load(xml);
     CameraLoader.Destroy();
+    PanoramaLoader.Load(xml);
 
     /// send to clients
     if (usertype == "master") {
@@ -86,7 +86,10 @@ function loadThumbnails() {
 
     thumbnailsLoaded++;
     const i = thumbnailsLoaded;
-    if (i >= thumbnails.length) return;
+    if (i >= thumbnails.length) {
+        console.log("all thumbnails loaded");
+        return;
+    } 
 
     const url = thumbnails[i].data('data-url');
     const fileName = thumbnails[i].data('data-fileName');

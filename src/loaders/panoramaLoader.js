@@ -18,7 +18,7 @@ export class PanoramaLoader {
                 'zoom',
             ],
             container: container,
-            panorama: 'image.jpg',
+            panorama: 'https://test.issimissimo.com/folderToLoadFiles/image360_1.jpg',
 
             plugins: [
                 [PhotoSphereViewer.MarkersPlugin, {
@@ -27,7 +27,7 @@ export class PanoramaLoader {
                             id: 'new-marker',
                             longitude: '45deg',
                             latitude: '0deg',
-                            image: 'pin-red.png',
+                            image: 'img/pin-red.png',
                             width: 32,
                             height: 32,
                         },
@@ -43,19 +43,38 @@ export class PanoramaLoader {
 
         viewer.on('position-updated', (e, position) => {
             console.log(`new position is longitude: ${position.longitude} latitude: ${position.latitude}`);
+            jsonObj.action = "rotate";
+            jsonObj.longitude = position.longitude;
+            jsonObj.latitude = position.latitude;
+            SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
         });
 
         viewer.on('zoom-updated', (e, level) => {
             console.log(level);
+            jsonObj.action = "zoom";
+            jsonObj.level = level;
+            SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
         });
     };
 
+
+    static Rotate(longitude, latitude){
+        if (viewer) {
+            viewer.rotate({
+                x: zzzz,
+                y: zzzzz,
+            });
+        }
+    };
+
+
+
+
     static Destroy() {
         if (viewer) {
-            // viewer.destroy();
+            viewer.destroy();
             viewer = null;
         }
-        
     };
 
     // static ZoomTo(ratio) {
@@ -75,12 +94,12 @@ export class PanoramaLoader {
         if (viewer) {
             console.log(obj.action);
 
-            if (obj.action == "move") {
-                ImageLoader.MoveTo(obj.x, obj.y);
+            if (obj.action == "rotate") {
+                
             }
 
             if (obj.action == "zoom") {
-                ImageLoader.ZoomTo(obj.ratio);
+                
             }
         }
     };

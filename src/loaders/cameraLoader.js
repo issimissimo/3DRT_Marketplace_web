@@ -5,7 +5,7 @@ const container = document.getElementById('window-main');
 export class CameraLoader {
 
     static Load(xml) {
-
+        console.log(xml);
      
     };
 
