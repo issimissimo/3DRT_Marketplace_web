@@ -50,22 +50,26 @@ function LoadVideo(url) {
 }
 
 
-function LoadPanorama(xml) {
+function LoadPanorama(data) {
+
+    console.log("allora, hai cliccato su panorama")
+    
     ImageLoader.Destroy();
     VideoLoader.Destroy();
     CameraLoader.Destroy();
-    PanoramaLoader.Load(xml);
+    PanoramaLoader.Load(data);
 
     /// send to clients
     if (usertype == "master") {
         jsonObj.action = "LoadPanorama";
-        jsonObj.xml = xml;
+        jsonObj.data = data;
+        console.log("sono master, ho mandato dati")
         SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
     }
 }
 
 
-function LoadCamera(xml) {
+function LoadCamera(data) {
     ImageLoader.Destroy();
     VideoLoader.Destroy();
     PanoramaLoader.Destroy();
@@ -89,12 +93,12 @@ function loadThumbnails() {
     if (i >= thumbnails.length) {
         console.log("all thumbnails loaded");
         return;
-    } 
+    }
 
     const url = thumbnails[i].data('data-url');
     const fileName = thumbnails[i].data('data-fileName');
     const type = thumbnails[i].data('data-type');
-    var xml;
+    var data;
 
     switch (type) {
 
@@ -130,11 +134,11 @@ function loadThumbnails() {
 
         case "panorama":
             thumbnails[i].find('img').attr('src', './img/icon-panorama.png');
-            xml = thumbnails[i].data('data-xml');
+            data = thumbnails[i].data('data');
             thumbnails[i].find('p').text(fileName.slice(0, -4));
             thumbnails[i].fadeIn(1000);
             thumbnails[i].click(function () {
-                LoadPanorama(xml);
+                LoadPanorama(data);
             });
             loadThumbnails();
             break;
@@ -142,7 +146,7 @@ function loadThumbnails() {
 
         case "camera":
             thumbnails[i].find('img').attr('src', './img/icon-camera.png');
-            xml = thumbnails[i].data('data-xml');
+            data = thumbnails[i].data('data');
             thumbnails[i].find('p').text(fileName.slice(0, -4));
             thumbnails[i].fadeIn(1000);
             thumbnails[i].click(function () {
@@ -192,9 +196,11 @@ function listFilesFromUrl(url) {
 
                         case "xml":
                             loadXml(url + fileName).then((xml) => {
-                                const classType = xml.getElementsByTagName("class")[0].childNodes[0].nodeValue;
+                                const data = xmlToJson.parse(xml);
+                                const classType = data.root.class;
+                                console.log(classType);
                                 newThumbnail.data('data-type', classType);
-                                newThumbnail.data('data-xml', xml);
+                                newThumbnail.data('data', data);
                             });
                             break;
 
@@ -251,6 +257,8 @@ export default class FilesManager {
             SocketManager.OnReceivedData.push((dataString) => {
                 const jsonObj = JSON.parse(dataString);
 
+                console.log("sono client, ho rivuto dati")
+
                 switch (jsonObj.class) {
 
                     case "FilesManager":
@@ -266,11 +274,13 @@ export default class FilesManager {
                                 break;
 
                             case "LoadPanorama":
-                                LoadPanorama(jsonObj.xml);
+                                console.log("*********RECEIVED");
+                                console.log(jsonObj);
+                                LoadPanorama(jsonObj.data);
                                 break;
 
                             case "LoadCamera":
-                                LoadPanorama(jsonObj.xml);
+                                LoadCamera(jsonObj.data);
                                 break;
                         }
                         break;
@@ -283,6 +293,12 @@ export default class FilesManager {
 
                     case "VideoLoader":
                         VideoLoader.ReceiveData(jsonObj);
+                        break;
+
+
+                    case "PanoramaLoader":
+                        console.log(jsonObj)
+                        PanoramaLoader.ReceiveData(jsonObj);
                         break;
                 }
             });

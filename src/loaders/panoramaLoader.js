@@ -1,24 +1,33 @@
 import * as SocketManager from '../managers/socketManager.js';
 
 const jsonObj = {
-    class: "ImageLoader",
+    class: "PanoramaLoader",
 }
 
 var viewer;
+var images = [];
 const container = document.getElementById('window-main');
 
 export class PanoramaLoader {
 
-    static Load(xml) {
+    static Load(data) {
 
-        console.log(xml)
+        console.log(data)
+        images = data.root.image;
+
+        // const navbar = usertype == "master" ? ['zoom'] : null;
+        const navbar = ['zoom'];
+
+        // images = xml.getElementsByTagName("image");
+        const firstImage = images[0];
 
         viewer = new PhotoSphereViewer.Viewer({
-            navbar: [
-                'zoom',
-            ],
+            // navbar: [
+            //     'zoom',
+            // ],
+            navbar: navbar,
             container: container,
-            panorama: 'https://test.issimissimo.com/folderToLoadFiles/image360_1.jpg',
+            panorama: firstImage,
 
             plugins: [
                 [PhotoSphereViewer.MarkersPlugin, {
@@ -37,7 +46,6 @@ export class PanoramaLoader {
         });
 
         viewer.on('click', (e, data) => {
-            console.log("iiiiiiiiiiii")
             // console.log(`${data.rightclick ? 'right clicked' : 'clicked'} at longitude: ${data.longitude} latitude: ${data.latitude}`);
         });
 
@@ -58,11 +66,11 @@ export class PanoramaLoader {
     };
 
 
-    static Rotate(longitude, latitude){
+    static Rotate(longitude, latitude) {
         if (viewer) {
             viewer.rotate({
-                x: zzzz,
-                y: zzzzz,
+                x: longitude,
+                y: latitude,
             });
         }
     };
@@ -95,11 +103,11 @@ export class PanoramaLoader {
             console.log(obj.action);
 
             if (obj.action == "rotate") {
-                
+                PanoramaLoader.Rotate(obj.longitude, obj.latitude);
             }
 
             if (obj.action == "zoom") {
-                
+
             }
         }
     };
