@@ -43,6 +43,21 @@ function openVideo(url) {
 }
 
 
+function openPanorama(xml) {
+    console.log('open PANO!')
+    console.log(xml)
+    // ImageLoader.Destroy();
+    // VideoLoader.Load(url, usertype);
+
+    // /// send to clients
+    // if (usertype == "master") {
+    //     jsonObj.action = "LoadVideo";
+    //     jsonObj.url = url;
+    //     SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+    // }
+}
+
+
 
 
 function loadThumbnails() {
@@ -61,12 +76,16 @@ function loadThumbnails() {
             var img = new Image();
             img.src = url;
             img.onload = function () {
-                thumbnails[i].find('img').attr('src', url);
-                thumbnails[i].find('p').text(fileName.slice(0, -4));
-                thumbnails[i].fadeIn(1000);
-                thumbnails[i].click(function () {
-                    openImage(url);
-                });
+
+                /// skip images for 360
+                if (img.naturalWidth / img.naturalHeight != 2){
+                    thumbnails[i].find('img').attr('src', url);
+                    thumbnails[i].find('p').text(fileName.slice(0, -4));
+                    thumbnails[i].fadeIn(1000);
+                    thumbnails[i].click(function () {
+                        openImage(url);
+                    });
+                }
                 loadThumbnails();
             };
             break;
@@ -74,6 +93,7 @@ function loadThumbnails() {
 
         case "video":
             console.log("detected video")
+            thumbnails[i].find('img').attr('src', './img/icon-video.png');
             thumbnails[i].find('p').text(fileName.slice(0, -4));
             thumbnails[i].fadeIn(1000);
             thumbnails[i].click(function () {
@@ -85,10 +105,12 @@ function loadThumbnails() {
 
         case "panorama":
             console.log("detected panorama!")
+            thumbnails[i].find('img').attr('src', './img/icon-panorama.png');
+            const xml = thumbnails[i].data('data-xml');
             thumbnails[i].find('p').text(fileName.slice(0, -4));
             thumbnails[i].fadeIn(1000);
             thumbnails[i].click(function () {
-                openVideo(url);
+                openPanorama(xml);
             });
             loadThumbnails();
             break;
@@ -136,6 +158,7 @@ function listFilesFromUrl(url) {
                             loadXml(url + fileName).then((xml) => {
                                 const classType = xml.getElementsByTagName("class")[0].childNodes[0].nodeValue;
                                 newThumbnail.data('data-type', classType);
+                                newThumbnail.data('data-xml', xml);
                             });
                             break;
 
