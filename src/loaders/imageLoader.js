@@ -7,7 +7,7 @@ const jsonObj = {
 var viewer;
 const imageContainer = document.getElementById('imageContainer');
 
-export default class ImageLoader {
+export class ImageLoader {
 
     static Load(url) {
 

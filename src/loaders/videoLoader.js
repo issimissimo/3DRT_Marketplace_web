@@ -48,7 +48,7 @@ function createClapprPlayer(url, _userType) {
 }
 
 
-export default class VideoLoader {
+export class VideoLoader {
 
     static Load(url, userType) {
 

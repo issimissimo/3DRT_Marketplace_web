@@ -1,8 +1,10 @@
-import * as videoCover from "../utils/videoCover.js";
-import ImageLoader from "../loaders/imageLoader.js";
-import VideoLoader from "../loaders/videoLoader.js";
+import { ImageLoader } from "../loaders/imageLoader.js";
+import { VideoLoader } from "../loaders/videoLoader.js";
+import { PanoramaLoader } from "../loaders/panoramaLoader.js";
+import { CameraLoader } from "../loaders/cameraLoader.js";
 import * as SocketManager from './socketManager.js';
 import { loadXml } from "../utils/xmlLoader.js";
+
 
 
 
@@ -10,16 +12,19 @@ const jsonObj = {
     class: "FilesManager",
 }
 
-// var imageNames = [];
+
 var thumbnails = [];
 var thumbnailsLoaded = -1;
 var usertype;
 
 
 
-function openImage(url) {
-    VideoLoader.Destroy();
+
+function LoadImage(url) {
     ImageLoader.Load(url);
+    VideoLoader.Destroy();
+    PanoramaLoader.Destroy();
+    CameraLoader.Destroy();
 
     /// send to clients
     if (usertype == "master") {
@@ -30,9 +35,11 @@ function openImage(url) {
 }
 
 
-function openVideo(url) {
+function LoadVideo(url) {
     ImageLoader.Destroy();
     VideoLoader.Load(url, usertype);
+    PanoramaLoader.Destroy();
+    CameraLoader.Destroy();
 
     /// send to clients
     if (usertype == "master") {
@@ -43,18 +50,33 @@ function openVideo(url) {
 }
 
 
-function openPanorama(xml) {
-    console.log('open PANO!')
-    console.log(xml)
-    // ImageLoader.Destroy();
-    // VideoLoader.Load(url, usertype);
+function LoadPanorama(xml) {
+    ImageLoader.Destroy();
+    VideoLoader.Destroy();
+    PanoramaLoader.Load(xml);
+    CameraLoader.Destroy();
 
-    // /// send to clients
-    // if (usertype == "master") {
-    //     jsonObj.action = "LoadVideo";
-    //     jsonObj.url = url;
-    //     SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
-    // }
+    /// send to clients
+    if (usertype == "master") {
+        jsonObj.action = "LoadPanorama";
+        jsonObj.xml = xml;
+        SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+    }
+}
+
+
+function LoadCamera(xml) {
+    ImageLoader.Destroy();
+    VideoLoader.Destroy();
+    PanoramaLoader.Destroy();
+    CameraLoader.Load(xml);
+
+    /// send to clients
+    if (usertype == "master") {
+        jsonObj.action = "LoadCamera";
+        jsonObj.xml = xml;
+        SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+    }
 }
 
 
@@ -69,6 +91,7 @@ function loadThumbnails() {
     const url = thumbnails[i].data('data-url');
     const fileName = thumbnails[i].data('data-fileName');
     const type = thumbnails[i].data('data-type');
+    var xml;
 
     switch (type) {
 
@@ -78,12 +101,12 @@ function loadThumbnails() {
             img.onload = function () {
 
                 /// skip images for 360
-                if (img.naturalWidth / img.naturalHeight != 2){
+                if (img.naturalWidth / img.naturalHeight != 2) {
                     thumbnails[i].find('img').attr('src', url);
                     thumbnails[i].find('p').text(fileName.slice(0, -4));
                     thumbnails[i].fadeIn(1000);
                     thumbnails[i].click(function () {
-                        openImage(url);
+                        LoadImage(url);
                     });
                 }
                 loadThumbnails();
@@ -92,25 +115,35 @@ function loadThumbnails() {
 
 
         case "video":
-            console.log("detected video")
             thumbnails[i].find('img').attr('src', './img/icon-video.png');
             thumbnails[i].find('p').text(fileName.slice(0, -4));
             thumbnails[i].fadeIn(1000);
             thumbnails[i].click(function () {
-                openVideo(url);
+                LoadVideo(url);
             });
             loadThumbnails();
             break;
 
 
         case "panorama":
-            console.log("detected panorama!")
             thumbnails[i].find('img').attr('src', './img/icon-panorama.png');
-            const xml = thumbnails[i].data('data-xml');
+            xml = thumbnails[i].data('data-xml');
             thumbnails[i].find('p').text(fileName.slice(0, -4));
             thumbnails[i].fadeIn(1000);
             thumbnails[i].click(function () {
-                openPanorama(xml);
+                LoadPanorama(xml);
+            });
+            loadThumbnails();
+            break;
+
+
+        case "camera":
+            thumbnails[i].find('img').attr('src', './img/icon-camera.png');
+            xml = thumbnails[i].data('data-xml');
+            thumbnails[i].find('p').text(fileName.slice(0, -4));
+            thumbnails[i].fadeIn(1000);
+            thumbnails[i].click(function () {
+                LoadCamera(xml);
             });
             loadThumbnails();
             break;
@@ -222,11 +255,19 @@ export default class FilesManager {
                         switch (jsonObj.action) {
 
                             case "LoadImage":
-                                openImage(jsonObj.url);
+                                LoadImage(jsonObj.url);
                                 break;
 
                             case "LoadVideo":
-                                openVideo(jsonObj.url);
+                                LoadVideo(jsonObj.url);
+                                break;
+
+                            case "LoadPanorama":
+                                LoadPanorama(jsonObj.xml);
+                                break;
+
+                            case "LoadCamera":
+                                LoadPanorama(jsonObj.xml);
                                 break;
                         }
                         break;

@@ -1,0 +1,132 @@
+{
+  "_from": "photo-sphere-viewer",
+  "_id": "photo-sphere-viewer@4.2.0",
+  "_inBundle": false,
+  "_integrity": "sha512-uEW+YxkxJHs1PD/tWKo/G3SGPjl1YXyC1Hm4qXqjuWvo0Adj4Tav762f4a0AsCDktJxm8oANUOL1ltJOsELJjw==",
+  "_location": "/photo-sphere-viewer",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "photo-sphere-viewer",
+    "name": "photo-sphere-viewer",
+    "escapedName": "photo-sphere-viewer",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/photo-sphere-viewer/-/photo-sphere-viewer-4.2.0.tgz",
+  "_shasum": "7dc2a4c431db9c13e71b28cbfb37be30c7c87460",
+  "_spec": "photo-sphere-viewer",
+  "_where": "E:\\WORK\\Temporary Projects\\Web Projects\\PhotoSphereViewer",
+  "authors": [
+    {
+      "name": "Jérémy Heleine",
+      "email": "jeremy.heleine@gmail.com",
+      "homepage": "http://jeremyheleine.me"
+    },
+    {
+      "name": "Damien \"Mistic\" Sorel",
+      "email": "contact@git.strangeplanet.fr",
+      "homepage": "https://www.strangeplanet.fr"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/mistic100/Photo-Sphere-Viewer/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "three": "^0.125.2",
+    "uevent": "~2.0.0"
+  },
+  "deprecated": false,
+  "description": "A JavaScript library to display Photo Sphere panoramas",
+  "devDependencies": {
+    "@babel/core": "^7.7.4",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-proposal-optional-chaining": "^7.9.0",
+    "@babel/preset-env": "^7.7.4",
+    "@babel/register": "^7.7.4",
+    "@csstools/postcss-sass": "^4.0.0",
+    "@pixi/jsdoc-template": "^2.5.1",
+    "@rollup/plugin-alias": "^3.0.1",
+    "@rollup/plugin-babel": "^5.2.2",
+    "@rollup/plugin-inject": "^4.0.1",
+    "@rollup/plugin-replace": "^2.3.1",
+    "@vuepress/plugin-active-header-links": "^1.2.0",
+    "@vuepress/plugin-back-to-top": "^1.2.0",
+    "@vuepress/plugin-google-analytics": "^1.2.0",
+    "autoprefixer": "^9.7.3",
+    "axios": "^0.21.0",
+    "babel-eslint": "^10.0.3",
+    "cpx": "^1.5.0",
+    "date-fns": "^2.9.0",
+    "eslint": "^7.7.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.21.2",
+    "jsdoc": "^3.6.3",
+    "live-server": "^1.2.0",
+    "marked": "^1.0.0",
+    "mocha": "^8.0.1",
+    "ngrok": "^3.2.7",
+    "node-sass": "^4.13.0",
+    "nosleep.js": "^0.12.0",
+    "npm-run-all": "^4.1.3",
+    "postcss-banner": "^3.0.0",
+    "promise-polyfill": "^8.1.3",
+    "raw-loader": "^4.0.0",
+    "rollup": "^2.36.2",
+    "rollup-plugin-local-resolve": "^1.0.7",
+    "rollup-plugin-postcss": "^3.1.0",
+    "rollup-plugin-string": "^3.0.0",
+    "stylelint": "^13.0.0",
+    "stylelint-config-standard": "^20.0.0",
+    "stylelint-scss": "^3.13.0",
+    "vue-material": "^1.0.0-beta-11",
+    "vue-slider-component": "^3.2.11",
+    "vue-swatches": "^2.1.0",
+    "vuepress": "^1.4.0",
+    "vuepress-plugin-element-tabs": "^0.2.8"
+  },
+  "files": [
+    "src/",
+    "dist/"
+  ],
+  "homepage": "https://photo-sphere-viewer.js.org",
+  "keywords": [
+    "photosphere",
+    "panorama",
+    "threejs"
+  ],
+  "license": "MIT",
+  "main": "dist/photo-sphere-viewer.js",
+  "name": "photo-sphere-viewer",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mistic100/Photo-Sphere-Viewer.git"
+  },
+  "scripts": {
+    "compile": "npm-run-all compile:*",
+    "compile:prepare": "cpx \"node_modules/three/examples/jsm/**/*\" three-examples/",
+    "compile:rollup": "rollup --config rollup.config.js",
+    "dev:serve": "live-server --watch=dist,example --open=example",
+    "dev:watch": "npm run compile:rollup -- --watch",
+    "doc": "npm-run-all doc:*",
+    "doc:assets": "cpx \"example/assets/*\" public/assets && cpx example/sphere.jpg public/assets && cpx example/sphere_small.jpg public/assets && cpx example/sphere_cropped.jpg public/assets && cpx \"example/cubemap/*\" public/assets/cubemap",
+    "doc:clean": "rm -rf public/*",
+    "doc:jsdoc": "jsdoc --configure .jsdoc.json --destination public/api src",
+    "doc:vuepress": "vuepress build docs",
+    "start": "npm-run-all --parallel dev:**",
+    "start:doc": "vuepress dev docs",
+    "start:remote": "ngrok http 8080",
+    "test": "npm-run-all --parallel test:*",
+    "test:eslint": "eslint src --ignore-path .gitignore --ignore-pattern \"*.spec.js\"",
+    "test:mocha": "mocha --require @babel/register --recursive \"src/**/*.spec.js\"",
+    "test:sasslint": "stylelint \"src/**/*.scss\""
+  },
+  "version": "4.2.0"
+}
