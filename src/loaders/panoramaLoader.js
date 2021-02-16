@@ -10,21 +10,12 @@ const container = document.getElementById('window-main');
 
 export class PanoramaLoader {
 
-    static Load(data) {
-
-        console.log(data)
+    static Load(data, usertype) {
         images = data.root.image;
-
-        // const navbar = usertype == "master" ? ['zoom'] : null;
-        const navbar = ['zoom'];
-
-        // images = xml.getElementsByTagName("image");
         const firstImage = images[0];
+        const navbar = usertype == "master" ? ['zoom'] : null;
 
         viewer = new PhotoSphereViewer.Viewer({
-            // navbar: [
-            //     'zoom',
-            // ],
             navbar: navbar,
             container: container,
             panorama: firstImage,

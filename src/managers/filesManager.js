@@ -51,19 +51,15 @@ function LoadVideo(url) {
 
 
 function LoadPanorama(data) {
-
-    console.log("allora, hai cliccato su panorama")
-    
     ImageLoader.Destroy();
     VideoLoader.Destroy();
     CameraLoader.Destroy();
-    PanoramaLoader.Load(data);
+    PanoramaLoader.Load(data, usertype);
 
     /// send to clients
     if (usertype == "master") {
         jsonObj.action = "LoadPanorama";
         jsonObj.data = data;
-        console.log("sono master, ho mandato dati")
         SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
     }
 }
