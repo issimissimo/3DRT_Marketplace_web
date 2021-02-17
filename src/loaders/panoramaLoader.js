@@ -43,8 +43,7 @@ export class PanoramaLoader {
         viewer.on('position-updated', (e, position) => {
             console.log(`new position is longitude: ${position.longitude} latitude: ${position.latitude}`);
             jsonObj.action = "rotate";
-            jsonObj.longitude = position.longitude;
-            jsonObj.latitude = position.latitude;
+            jsonObj.position = position;
             SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
         });
 
@@ -57,12 +56,16 @@ export class PanoramaLoader {
     };
 
 
-    static Rotate(longitude, latitude) {
+    static Rotate(position) {
         if (viewer) {
-            viewer.rotate({
-                x: latitude,
-                y: longitude,
-            });
+            viewer.rotate(position);
+        }
+    };
+
+
+    static Zoom(level) {
+        if (viewer) {
+            viewer.zoom(level);
         }
     };
 
@@ -76,15 +79,7 @@ export class PanoramaLoader {
         }
     };
 
-    // static ZoomTo(ratio) {
-    //     console.log(ratio)
-    //     if (viewer) viewer.zoomTo(ratio);
-
-    // };
-
-    // static MoveTo(x, y) {
-    //     if (viewer) viewer.moveTo(x, y);
-    // };
+    
 
     ///
     /// receive data from socket
@@ -94,11 +89,11 @@ export class PanoramaLoader {
             console.log(obj.action);
 
             if (obj.action == "rotate") {
-                PanoramaLoader.Rotate(obj.longitude, obj.latitude);
+                PanoramaLoader.Rotate(obj.position);
             }
 
             if (obj.action == "zoom") {
-
+                PanoramaLoader.Zoom(obj.level);
             }
         }
     };
