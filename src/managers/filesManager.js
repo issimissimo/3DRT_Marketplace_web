@@ -2,6 +2,7 @@ import { ImageLoader } from "../loaders/imageLoader.js";
 import { VideoLoader } from "../loaders/videoLoader.js";
 import { PanoramaLoader } from "../loaders/panoramaLoader.js";
 import { CameraLoader } from "../loaders/cameraLoader.js";
+import { RealtimeLoader } from "../loaders/realtimeLoader.js";
 import * as SocketManager from './socketManager.js';
 import { loadXml } from "../utils/xmlLoader.js";
 
@@ -24,6 +25,7 @@ function LoadImage(url) {
     VideoLoader.Destroy();
     PanoramaLoader.Destroy();
     CameraLoader.Destroy();
+    RealtimeLoader.Hide();
     ImageLoader.Load(url);
 
     /// send to clients
@@ -39,6 +41,7 @@ function LoadVideo(url) {
     ImageLoader.Destroy();
     PanoramaLoader.Destroy();
     CameraLoader.Destroy();
+    RealtimeLoader.Hide();
     VideoLoader.Load(url, usertype);
 
     /// send to clients
@@ -54,6 +57,7 @@ function LoadPanorama(data) {
     ImageLoader.Destroy();
     VideoLoader.Destroy();
     CameraLoader.Destroy();
+    RealtimeLoader.Hide();
     PanoramaLoader.Load(data, usertype);
 
     /// send to clients
@@ -69,11 +73,28 @@ function LoadCamera(data) {
     ImageLoader.Destroy();
     VideoLoader.Destroy();
     PanoramaLoader.Destroy();
+    RealtimeLoader.Hide();
     CameraLoader.Load(data);
 
     /// send to clients
     if (usertype == "master") {
         jsonObj.action = "LoadCamera";
+        jsonObj.data = data;
+        SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+    }
+}
+
+
+function LoadRealtime(data) {
+    ImageLoader.Destroy();
+    VideoLoader.Destroy();
+    PanoramaLoader.Destroy();
+    CameraLoader.Destroy();
+    RealtimeLoader.Load(data);
+
+    /// send to clients
+    if (usertype == "master") {
+        jsonObj.action = "LoadRealtime";
         jsonObj.data = data;
         SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
     }
@@ -102,16 +123,12 @@ function loadThumbnails() {
             var img = new Image();
             img.src = url;
             img.onload = function () {
-
-                /// skip images for 360
-                if (img.naturalWidth / img.naturalHeight != 2) {
-                    thumbnails[i].find('img').attr('src', url);
-                    thumbnails[i].find('p').text(fileName.slice(0, -4));
-                    thumbnails[i].fadeIn(1000);
-                    thumbnails[i].click(function () {
-                        LoadImage(url);
-                    });
-                }
+                thumbnails[i].find('img').attr('src', url);
+                thumbnails[i].find('p').text(fileName.slice(0, -4));
+                thumbnails[i].fadeIn(1000);
+                thumbnails[i].click(function () {
+                    LoadImage(url);
+                });
                 loadThumbnails();
             };
             break;
@@ -152,15 +169,15 @@ function loadThumbnails() {
             break;
 
 
-        case "3D":
-            // thumbnails[i].find('img').attr('src', './img/icon-camera.png');
-            // data = thumbnails[i].data('data');
-            // thumbnails[i].find('p').text(fileName.slice(0, -4));
-            // thumbnails[i].fadeIn(1000);
-            // thumbnails[i].click(function () {
-            //     LoadCamera(xml);
-            // });
-            // loadThumbnails();
+        case "realtime":
+            thumbnails[i].find('img').attr('src', './img/icon-realtime.png');
+            data = thumbnails[i].data('data');
+            thumbnails[i].find('p').text(fileName.slice(0, -4));
+            thumbnails[i].fadeIn(1000);
+            thumbnails[i].click(function () {
+                LoadRealtime(data);
+            });
+            loadThumbnails();
             break;
     }
 
@@ -285,6 +302,10 @@ export class FilesManager {
 
                             case "LoadCamera":
                                 LoadCamera(jsonObj.data);
+                                break;
+
+                            case "LoadRealtime":
+                                LoadRealtime(jsonObj.data);
                                 break;
                         }
                         break;

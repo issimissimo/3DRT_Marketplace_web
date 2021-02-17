@@ -41,14 +41,14 @@ export class PanoramaLoader {
         });
 
         viewer.on('position-updated', (e, position) => {
-            console.log(`new position is longitude: ${position.longitude} latitude: ${position.latitude}`);
+            // console.log(`new position is longitude: ${position.longitude} latitude: ${position.latitude}`);
             jsonObj.action = "rotate";
             jsonObj.position = position;
             SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
         });
 
         viewer.on('zoom-updated', (e, level) => {
-            console.log(level);
+            // console.log(level);
             jsonObj.action = "zoom";
             jsonObj.level = level;
             SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));

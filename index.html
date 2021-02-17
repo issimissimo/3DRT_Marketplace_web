@@ -7,17 +7,17 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    
+
     <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
 
-    
+
     <link href="lib/viewerjs/dist/viewer.min.css" rel="stylesheet">
     <script src="lib/viewerjs/dist/viewer.min.js"></script>
 
-    
+
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
 
-    
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photo-sphere-viewer@4/dist/photo-sphere-viewer.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/three/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/uevent@2/browser.min.js"></script>
@@ -31,7 +31,7 @@
 
 
     <!-- https://www.cssscript.com/convert-xml-json/ -->
-    <script src="lib/xmlToJson/xmlToJson.min.js"></script> 
+    <script src="lib/xmlToJson/xmlToJson.min.js"></script>
 
 
 
@@ -97,16 +97,16 @@
         <div style="flex: 1; display: flex; flex-direction: column;">
 
 
-            <div id="window-main-container" style="padding: 10px; padding-right: 0;">
+            <div id="window-main-container" style="position: relative; padding: 10px; padding-right: 0;">
 
+                
                 <div id="window-main" style="position: relative; border-radius: 8px;">
-
-                    <!-- <iframe id="realtime"
-                        src="https://portal.furioos.com/embed/214.300?whiteLabel=true&hideTitle=true&hideToolbar=true&autoRun=true"
-                        allowfullscreen="true" style="border: none; width: 100%; height: 100%;"></iframe> -->
 
                     <img id="imageContainer" src="img/trasparent.png">
 
+                </div>
+
+                <div id="window-realtime" style="position: absolute; top: 10px; left: 10px; right: 0px; bottom: 10px; border-radius: 8px; z-index: -1; background-color: black;">
                 </div>
             </div>
 
@@ -144,7 +144,7 @@
 
         </div>
 
-        
+
     </div>
 
 
