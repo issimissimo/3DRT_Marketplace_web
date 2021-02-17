@@ -98,7 +98,7 @@ function initializeSession(user) {
     });
 }
 
-export default class Videochat {
+export class VideochatManager {
     static init(_user) {
         initializeSession(_user);
     }

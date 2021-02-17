@@ -60,8 +60,8 @@ export class PanoramaLoader {
     static Rotate(longitude, latitude) {
         if (viewer) {
             viewer.rotate({
-                x: longitude,
-                y: latitude,
+                x: latitude,
+                y: longitude,
             });
         }
     };

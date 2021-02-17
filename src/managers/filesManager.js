@@ -69,12 +69,12 @@ function LoadCamera(data) {
     ImageLoader.Destroy();
     VideoLoader.Destroy();
     PanoramaLoader.Destroy();
-    CameraLoader.Load(xml);
+    CameraLoader.Load(data);
 
     /// send to clients
     if (usertype == "master") {
         jsonObj.action = "LoadCamera";
-        jsonObj.xml = xml;
+        jsonObj.data = data;
         SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
     }
 }
@@ -93,10 +93,10 @@ function loadThumbnails() {
 
     const url = thumbnails[i].data('data-url');
     const fileName = thumbnails[i].data('data-fileName');
-    const type = thumbnails[i].data('data-type');
+    const classType = thumbnails[i].data('data-type');
     var data;
 
-    switch (type) {
+    switch (classType) {
 
         case "image":
             var img = new Image();
@@ -146,9 +146,21 @@ function loadThumbnails() {
             thumbnails[i].find('p').text(fileName.slice(0, -4));
             thumbnails[i].fadeIn(1000);
             thumbnails[i].click(function () {
-                LoadCamera(xml);
+                LoadCamera(data);
             });
             loadThumbnails();
+            break;
+
+
+        case "3D":
+            // thumbnails[i].find('img').attr('src', './img/icon-camera.png');
+            // data = thumbnails[i].data('data');
+            // thumbnails[i].find('p').text(fileName.slice(0, -4));
+            // thumbnails[i].fadeIn(1000);
+            // thumbnails[i].click(function () {
+            //     LoadCamera(xml);
+            // });
+            // loadThumbnails();
             break;
     }
 
@@ -221,7 +233,7 @@ function listFilesFromUrl(url) {
 ///
 /// INIT
 ///
-export default class FilesManager {
+export class FilesManager {
 
     static init(_url, _usertype) {
         usertype = _usertype;
@@ -253,8 +265,6 @@ export default class FilesManager {
             SocketManager.OnReceivedData.push((dataString) => {
                 const jsonObj = JSON.parse(dataString);
 
-                console.log("sono client, ho rivuto dati")
-
                 switch (jsonObj.class) {
 
                     case "FilesManager":
@@ -270,8 +280,6 @@ export default class FilesManager {
                                 break;
 
                             case "LoadPanorama":
-                                console.log("*********RECEIVED");
-                                console.log(jsonObj);
                                 LoadPanorama(jsonObj.data);
                                 break;
 

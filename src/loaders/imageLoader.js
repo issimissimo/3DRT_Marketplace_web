@@ -26,6 +26,7 @@ export class ImageLoader {
             title: false,
             zoomRatio: 0.2,
             transition: false,
+            button: false,
             view(event) {
                 // console.log("view")
             },
