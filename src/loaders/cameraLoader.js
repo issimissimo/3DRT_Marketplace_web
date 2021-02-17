@@ -4,8 +4,10 @@ var viewer;
 export class CameraLoader {
 
     static Load(data) {
-        const src = data.root.src;
+        var src = data.root.src;
         console.log(src);
+
+        src += "&autoplay=1&disablefullscreen=1&disablevideofit=1";
 
         viewer = $('<iframe>')                      
             .attr('src', src)
