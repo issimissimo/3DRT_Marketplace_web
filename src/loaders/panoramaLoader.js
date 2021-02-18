@@ -15,8 +15,6 @@ export class PanoramaLoader {
 
     static Load(data, usertype) {
         images = data.root.image;
-        // console.log(images)
-
 
         const firstImage = images[0].url;
 
@@ -36,7 +34,6 @@ export class PanoramaLoader {
             /// create markers for 1st image
             ///
             const markers = images[0].marker;
-            console.log(markers)
             PanoramaLoader.AddMarkers(markers);
 
             ///
@@ -111,7 +108,6 @@ export class PanoramaLoader {
 
 
     static AddMarkers(markers) {
-        // markersPlugin.clearMarkers();
 
         if (Array.isArray(markers)) {
             for (let i = 0; i < markers.length; i++) {
@@ -152,6 +148,11 @@ export class PanoramaLoader {
         }
 
         /// or open scheda
+
+
+        jsonObj.action = "markerClicked";
+        jsonObj.marker = marker;
+        SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
     }
 
 
@@ -168,6 +169,10 @@ export class PanoramaLoader {
 
             if (obj.action == "zoom") {
                 PanoramaLoader.Zoom(obj.level);
+            }
+
+            if (obj.action == "markerClicked") {
+                PanoramaLoader.OnMarkerClicked(obj.marker);
             }
         }
     };
