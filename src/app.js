@@ -14,33 +14,20 @@ if (!userType) {
 }
 
 
-////////////////////////////////////
-// UserManager.userType = userType;
+///
+/// start
+///
 UserManager.SetUserType(userType, () => {
 
     /// Connect to socket
     SocketManager.Connect();
 
     /// Start videochat
-    // VideochatManager.init(userType);
+    VideochatManager.init(userType);
 
     ///Load remote files
     FilesManager.init('https://test.issimissimo.com/folderToLoadFiles/');
 })
-
-////////////////////////////////////
-
-
-// /// Connect to socket
-// SocketManager.Connect();
-
-// /// Start videochat
-// // VideochatManager.init(userType);
-
-
-// ///Load remote files
-// // FilesManager.init('http://www.issimissimo.com/playground/folderToListFiles/', userType);
-// FilesManager.init('https://test.issimissimo.com/folderToLoadFiles/', userType);
 
 
 

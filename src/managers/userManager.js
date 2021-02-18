@@ -13,7 +13,6 @@ var _interactionType;
 $('#leaveInteraction').click(function(){
     UserManager.leaveInteraction();
 })
-
 $('#getInteraction').click(function(){
     UserManager.getInteraction();
 })
@@ -23,24 +22,44 @@ export class UserManager {
 
     static OnInteractionTypeChanged = [];
 
+
+
     static SetUserType(value, callback) {
         console.log("set userType: " + value);
         _userType = value;
+
+        /// set the UI
+        const debugButtonsVisible = _userType == "master" ? "initial" : "none";
+        $('#leaveInteraction').css('display', debugButtonsVisible);
+        $('#getInteraction').css('display', debugButtonsVisible);
+
 
         const inter = _userType == "master" ? "sender" : "receiver";
         UserManager.SetInteractionType(inter, callback);
     }
 
+
+
+
     static get userType() {
         return _userType;
     }
+
+
+
 
     static SetInteractionType(value, callback) {
         console.log("set interactionType: " + value);
         _interactionType = value;
 
+        
+        
+        /// set the UI
         const pointerEvent = _interactionType == "sender" ? "all" : "none";
         $('#window-main').css('pointer-events', pointerEvent);
+
+
+
 
         /// call all the subscribed functions
         /// on interactionType changed
@@ -51,9 +70,13 @@ export class UserManager {
         if (callback) callback();
     }
 
+
+
     static get interactionType() {
         return _interactionType;
     }
+
+
 
 
     static leaveInteraction() {

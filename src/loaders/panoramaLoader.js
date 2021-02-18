@@ -31,23 +31,32 @@ export class PanoramaLoader {
 
         viewer.once('ready', () => {
 
-            if (UserManager.interactionType == "receiver") PanoramaLoader.HideUI();
+            if (UserManager.interactionType == "receiver") {
+                PanoramaLoader.HideUI();
+            }
 
-            markersPlugin = viewer.getPlugin(PhotoSphereViewer.MarkersPlugin);
-
-            ///
             /// create markers for 1st image
-            ///
+            markersPlugin = viewer.getPlugin(PhotoSphereViewer.MarkersPlugin);
             const markers = images[0].marker;
             PanoramaLoader.AddMarkers(markers);
 
-            ///
-            /// on clicked marker
-            ///
+
+            /// register on clicked marker
             markersPlugin.on('select-marker', (e, marker, data) => {
                 PanoramaLoader.OnMarkerClicked(marker);
             });
 
+
+            /// register on interactionType changed
+            /// to show-hide the UI
+            UserManager.OnInteractionTypeChanged.push(() => {
+                console.log("change UI")
+                if (UserManager.interactionType == "receiver")
+                    PanoramaLoader.HideUI();
+
+                if (UserManager.interactionType == "sender")
+                    PanoramaLoader.ShowUI();
+            })
         });
 
         viewer.on('click', (e, data) => {
@@ -117,32 +126,35 @@ export class PanoramaLoader {
 
 
     static AddMarkers(markers) {
-
-        if (Array.isArray(markers)) {
-            for (let i = 0; i < markers.length; i++) {
-                const marker = markers[i];
-                PanoramaLoader.AddMarker(i.toString(), marker.tooltip, marker.longitude, marker.latitude, "img/pin-red.png", 32, marker.data);
+        if (viewer) {
+            if (Array.isArray(markers)) {
+                for (let i = 0; i < markers.length; i++) {
+                    const marker = markers[i];
+                    PanoramaLoader.AddMarker(i.toString(), marker.tooltip, marker.longitude, marker.latitude, "img/pin-red.png", 32, marker.data);
+                }
             }
-        }
-        else {
-            PanoramaLoader.AddMarker("0", markers.tooltip, markers.longitude, markers.latitude, "img/pin-red.png", 32, markers.data);
+            else {
+                PanoramaLoader.AddMarker("0", markers.tooltip, markers.longitude, markers.latitude, "img/pin-red.png", 32, markers.data);
+            }
         }
     };
 
 
     static AddMarker(id, tooltip, longitude, latitude, image, size, data) {
-        console.log(tooltip)
-        markersPlugin.addMarker({
-            id: id,
-            tooltip: { content: tooltip },
-            longitude: longitude,
-            latitude: latitude,
-            image: image,
-            width: size,
-            height: size,
-            data: data,
-            style: { cursor: 'pointer', }
-        });
+        if (viewer) {
+            console.log(tooltip)
+            markersPlugin.addMarker({
+                id: id,
+                tooltip: { content: tooltip },
+                longitude: longitude,
+                latitude: latitude,
+                image: image,
+                width: size,
+                height: size,
+                data: data,
+                style: { cursor: 'pointer', }
+            });
+        }
     };
 
 
