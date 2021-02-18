@@ -1,4 +1,5 @@
 import * as SocketManager from '../managers/socketManager.js';
+import { UserManager } from '../managers/userManager.js';
 
 const jsonObj = {
     class: "ImageLoader",
@@ -17,7 +18,7 @@ export class ImageLoader {
             viewer.destroy();
             viewer = null;
         }
-        
+
         viewer = new Viewer(imageContainer, {
             inline: true,
             backdrop: false,
@@ -31,15 +32,20 @@ export class ImageLoader {
                 // console.log("view")
             },
             move(event) {
-                jsonObj.action = "move";
-                jsonObj.x = event.detail.x;
-                jsonObj.y = event.detail.y;
-                SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+                if (UserManager.interactionType == "sender") {
+                    jsonObj.action = "move";
+                    jsonObj.x = event.detail.x;
+                    jsonObj.y = event.detail.y;
+                    SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+                }
+
             },
             zoom(event) {
-                jsonObj.action = "zoom";
-                jsonObj.ratio = event.detail.ratio;
-                SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+                if (UserManager.interactionType == "sender") {
+                    jsonObj.action = "zoom";
+                    jsonObj.ratio = event.detail.ratio;
+                    SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+                }
             },
             url() {
                 return url;

@@ -1,3 +1,5 @@
+import { UserManager } from './userManager.js';
+
 var label_img = 1001;
 var dataID_img = 0;
 var dataLength_img = 0;
@@ -40,7 +42,7 @@ function ConnectSocketIO(_regServer = false) {
     socket.on('OnReceiveData', function (data) {
         // document.getElementById("StatusTextConnection").innerHTML = "Status" + (isServer ? "(server)" : "(client)") + ": " + new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds();
 
-        
+
         /// call all the subscribed functions
         /// to receive data
         for (let i = 0; i < OnReceivedData.length; i++) {
@@ -250,11 +252,18 @@ function ConnectAsClient() {
 }
 
 
-export function Connect(userType) {
-    if (userType == "master") ConnectAsServer();
-    else if (userType == "client") ConnectAsClient();
+export function Connect() {
+    if (UserManager.userType == "master") ConnectAsServer();
+    else if (UserManager.userType == "client") ConnectAsClient();
 }
 
+export function FMEmitString(_string) {
+    if (UserManager.userType == "master" && UserManager.interactionType == "sender")
+        FMEmitStringToOthers(_string);
+
+    else if (UserManager.userType == "client" && UserManager.interactionType == "sender")
+        FMEmitStringToServer(_string)
+}
 
 export function FMEmitStringToAll(_string) {
     var _DataString = _string;

@@ -4,6 +4,7 @@ import { PanoramaLoader } from "../loaders/panoramaLoader.js";
 import { CameraLoader } from "../loaders/cameraLoader.js";
 import { RealtimeLoader } from "../loaders/realtimeLoader.js";
 import * as SocketManager from './socketManager.js';
+import { UserManager } from './userManager.js';
 import { loadXml } from "../utils/xmlLoader.js";
 
 
@@ -16,7 +17,6 @@ const jsonObj = {
 
 var thumbnails = [];
 var thumbnailsLoaded = -1;
-var usertype;
 
 
 
@@ -29,7 +29,7 @@ function LoadImage(url) {
     ImageLoader.Load(url);
 
     /// send to clients
-    if (usertype == "master") {
+    if (UserManager.interactionType == "sender") {
         jsonObj.action = "LoadImage";
         jsonObj.url = url;
         SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
@@ -42,10 +42,10 @@ function LoadVideo(url) {
     PanoramaLoader.Destroy();
     CameraLoader.Destroy();
     RealtimeLoader.Hide();
-    VideoLoader.Load(url, usertype);
+    VideoLoader.Load(url, UserManager.userType);
 
     /// send to clients
-    if (usertype == "master") {
+    if (UserManager.interactionType == "sender") {
         jsonObj.action = "LoadVideo";
         jsonObj.url = url;
         SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
@@ -58,10 +58,10 @@ function LoadPanorama(data) {
     VideoLoader.Destroy();
     CameraLoader.Destroy();
     RealtimeLoader.Hide();
-    PanoramaLoader.Load(data, usertype);
+    PanoramaLoader.Load(data, UserManager.userType);
 
     /// send to clients
-    if (usertype == "master") {
+    if (UserManager.interactionType == "sender") {
         jsonObj.action = "LoadPanorama";
         jsonObj.data = data;
         SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
@@ -77,7 +77,7 @@ function LoadCamera(data) {
     CameraLoader.Load(data);
 
     /// send to clients
-    if (usertype == "master") {
+    if (UserManager.interactionType == "sender") {
         jsonObj.action = "LoadCamera";
         jsonObj.data = data;
         SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
@@ -93,7 +93,7 @@ function LoadRealtime(data) {
     RealtimeLoader.Load(data);
 
     /// send to clients
-    if (usertype == "master") {
+    if (UserManager.interactionType == "sender") {
         jsonObj.action = "LoadRealtime";
         jsonObj.data = data;
         SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
@@ -251,36 +251,27 @@ function listFilesFromUrl(url) {
 ///
 export class FilesManager {
 
-    static init(_url, _usertype) {
-        usertype = _usertype;
+    static init(_url) {
 
         ///
         /// initializazion for "master" (server)
         ///
-        if (usertype == "master") {
-
-            /// enable interaction on the main view
-            $('#window-main').css('pointer-events', 'all');
+        if (UserManager.userType == "master") {
 
             /// load the files in the container to show them
             listFilesFromUrl(_url);
         }
 
-        ///
-        /// initializazion for "client" (client)
-        ///
-        if (usertype == "client") {
 
-            /// disable interaction on the main view
-            $('#window-main').css('pointer-events', 'none');
+        ////////////////////////////////////////////////
+        /// subscribe functions for OnReceiveData
+        ////////////////////////////////////////////////
+        SocketManager.OnReceivedData.push((dataString) => {
 
+            if (UserManager.interactionType == "receiver") {
 
-            ////////////////////////////////////////////////
-            /// subscribe functions for OnReceiveData
-            ////////////////////////////////////////////////
-            SocketManager.OnReceivedData.push((dataString) => {
                 const jsonObj = JSON.parse(dataString);
-
+                console.log("receiving data....")
                 switch (jsonObj.class) {
 
                     case "FilesManager":
@@ -321,11 +312,10 @@ export class FilesManager {
 
 
                     case "PanoramaLoader":
-                        console.log(jsonObj)
                         PanoramaLoader.ReceiveData(jsonObj);
                         break;
                 }
-            });
-        }
+            }
+        });
     }
 }

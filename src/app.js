@@ -1,5 +1,6 @@
 import { VideochatManager } from './managers/videochatManager.js';
 import { FilesManager } from './managers/filesManager.js';
+import { UserManager } from './managers/userManager.js';
 import * as SocketManager from './managers/socketManager.js';
 
 
@@ -12,16 +13,34 @@ if (!userType) {
     userType = 'master';
 }
 
-/// Connect to socket
-SocketManager.Connect(userType);
 
-/// Start videochat
-// VideochatManager.init(userType);
+////////////////////////////////////
+// UserManager.userType = userType;
+UserManager.SetUserType(userType, () => {
+
+    /// Connect to socket
+    SocketManager.Connect();
+
+    /// Start videochat
+    // VideochatManager.init(userType);
+
+    ///Load remote files
+    FilesManager.init('https://test.issimissimo.com/folderToLoadFiles/');
+})
+
+////////////////////////////////////
 
 
-///Load remote files
-// FilesManager.init('http://www.issimissimo.com/playground/folderToListFiles/', userType);
-FilesManager.init('https://test.issimissimo.com/folderToLoadFiles/', userType);
+// /// Connect to socket
+// SocketManager.Connect();
+
+// /// Start videochat
+// // VideochatManager.init(userType);
+
+
+// ///Load remote files
+// // FilesManager.init('http://www.issimissimo.com/playground/folderToListFiles/', userType);
+// FilesManager.init('https://test.issimissimo.com/folderToLoadFiles/', userType);
 
 
 

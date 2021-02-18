@@ -1,14 +1,13 @@
 import * as SocketManager from '../managers/socketManager.js';
+import { UserManager } from '../managers/userManager.js';
 
 const jsonObj = {
     class: "VideoLoader",
 }
 
 var player;
-var userType;
 
-function createClapprPlayer(url, _userType) {
-    userType = _userType;
+function createClapprPlayer(url) {
     const videoContainer = document.getElementById('window-main');
     player = new Clappr.Player({
         source: url,
@@ -26,37 +25,42 @@ function createClapprPlayer(url, _userType) {
 
 
     player.listenTo(player, Clappr.Events.PLAYER_PLAY, () => {
-        jsonObj.action = "play";
-        SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
-
+        if (UserManager.interactionType == "sender") {
+            jsonObj.action = "play";
+            SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+        }
         /// hide UI for clients
-        if (userType == "client") player.core.mediaControl.disable();
+        if (UserManager.userType == "client") player.core.mediaControl.disable();
     });
 
 
     player.listenTo(player, Clappr.Events.PLAYER_PAUSE, () => {
-        jsonObj.action = "pause";
-        SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+        if (UserManager.interactionType == "sender") {
+            jsonObj.action = "pause";
+            SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+        }
     });
 
 
     player.listenTo(player, Clappr.Events.PLAYER_SEEK, (time) => {
-        jsonObj.action = "seek";
-        jsonObj.time = time;
-        SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+        if (UserManager.interactionType == "sender") {
+            jsonObj.action = "seek";
+            jsonObj.time = time;
+            SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+        }
     });
 }
 
 
 export class VideoLoader {
 
-    static Load(url, userType) {
+    static Load(url) {
 
         if (player) {
             player.destroy();
             player = null;
         }
-        createClapprPlayer(url, userType);
+        createClapprPlayer(url);
     };
 
 

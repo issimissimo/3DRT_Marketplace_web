@@ -1,4 +1,6 @@
 import * as SocketManager from '../managers/socketManager.js';
+import { UserManager } from '../managers/userManager.js';
+
 
 const jsonObj = {
     class: "PanoramaLoader",
@@ -28,6 +30,9 @@ export class PanoramaLoader {
         });
 
         viewer.once('ready', () => {
+
+            if (UserManager.interactionType == "receiver") PanoramaLoader.HideUI();
+
             markersPlugin = viewer.getPlugin(PhotoSphereViewer.MarkersPlugin);
 
             ///
@@ -50,15 +55,19 @@ export class PanoramaLoader {
         });
 
         viewer.on('position-updated', (e, position) => {
-            jsonObj.action = "rotate";
-            jsonObj.position = position;
-            SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+            if (UserManager.interactionType == "sender") {
+                jsonObj.action = "rotate";
+                jsonObj.position = position;
+                SocketManager.FMEmitString(JSON.stringify(jsonObj));
+            }
         });
 
         viewer.on('zoom-updated', (e, level) => {
-            jsonObj.action = "zoom";
-            jsonObj.level = level;
-            SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+            if (UserManager.interactionType == "sender") {
+                jsonObj.action = "zoom";
+                jsonObj.level = level;
+                SocketManager.FMEmitString(JSON.stringify(jsonObj));
+            }
         });
 
 
@@ -116,7 +125,6 @@ export class PanoramaLoader {
             }
         }
         else {
-            console.log("non è array")
             console.log(markers)
             PanoramaLoader.AddMarker("1", markers.tooltip, markers.longitude, markers.latitude, "img/pin-red.png", 32, markers.data);
         }
@@ -150,9 +158,11 @@ export class PanoramaLoader {
         /// or open scheda
 
 
-        jsonObj.action = "markerClicked";
-        jsonObj.marker = marker;
-        SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+        if (UserManager.interactionType == "sender") {
+            jsonObj.action = "markerClicked";
+            jsonObj.marker = marker;
+            SocketManager.FMEmitString(JSON.stringify(jsonObj));
+        }
     }
 
 
