@@ -268,7 +268,33 @@ export class FilesManager {
         ////////////////////////////////////////////////
         SocketManager.OnReceivedData.push((dataString) => {
 
-            if (UserManager.interactionType == "receiver") {
+            
+            /// this is just when the client has the control...
+            ///////////////////////////////////////////////////////////////
+            if (UserManager.interactionType == "sender" && UserManager.userType == "client") {
+
+                const jsonObj = JSON.parse(dataString);
+                console.log("receiving data....")
+
+                switch (jsonObj.class) {
+
+                    //////////
+                    /// non so nice put it here...
+                    /////////
+                    case "UserManager":
+                        UserManager.ReceiveData(jsonObj);
+                        break;
+
+
+                    default:
+                        console.error("you should not come here!");
+                        break;
+                }
+            }
+
+            /// this is the default
+            ////////////////////////////////////////////////////////////
+            else if (UserManager.interactionType == "receiver") {
 
                 const jsonObj = JSON.parse(dataString);
                 console.log("receiving data....")
@@ -313,6 +339,19 @@ export class FilesManager {
 
                     case "PanoramaLoader":
                         PanoramaLoader.ReceiveData(jsonObj);
+                        break;
+
+
+                    //////////
+                    /// non so nice put it here...
+                    /////////
+                    case "UserManager":
+                        UserManager.ReceiveData(jsonObj);
+                        break;
+
+
+                    default:
+                        console.error("you should not come here!");
                         break;
                 }
             }

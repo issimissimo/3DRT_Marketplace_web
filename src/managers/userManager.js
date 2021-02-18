@@ -1,10 +1,29 @@
+import * as SocketManager from './socketManager.js';
+
+
+const jsonObj = {
+    class: "UserManager",
+}
+
+
 var _userType;
 var _interactionType;
 
 
+$('#leaveInteraction').click(function(){
+    UserManager.leaveInteraction();
+})
+
+$('#getInteraction').click(function(){
+    UserManager.getInteraction();
+})
+
+
 export class UserManager {
-    
-    static SetUserType(value, callback){
+
+    static OnInteractionTypeChanged = [];
+
+    static SetUserType(value, callback) {
         console.log("set userType: " + value);
         _userType = value;
 
@@ -12,78 +31,73 @@ export class UserManager {
         UserManager.SetInteractionType(inter, callback);
     }
 
-    static get userType(){
+    static get userType() {
         return _userType;
     }
 
-    static SetInteractionType (value, callback){
+    static SetInteractionType(value, callback) {
         console.log("set interactionType: " + value);
         _interactionType = value;
 
         const pointerEvent = _interactionType == "sender" ? "all" : "none";
         $('#window-main').css('pointer-events', pointerEvent);
 
+        /// call all the subscribed functions
+        /// on interactionType changed
+        for (let i = 0; i < UserManager.OnInteractionTypeChanged.length; i++) {
+            UserManager.OnInteractionTypeChanged[i]();
+        }
+
         if (callback) callback();
     }
 
-    static get interactionType(){
+    static get interactionType() {
         return _interactionType;
     }
 
-    // static set userType (value){
-    //     console.log("set userType = " + value);
-    //     _userType = value;
 
-    //     const inter = _userType == "master" ? "sender" : "receiver";
-    //     UserManager.interactionType = inter;
-    // };
+    static leaveInteraction() {
+        if (UserManager.interactionType == "sender") {
+            UserManager.SetInteractionType("receiver");
 
-    // static set interactionType (value) {
-    //     console.log("set interactionType = " + value);
-    //     _interactionType = value;
+            if (UserManager.userType == "master") {
+                jsonObj.action = "getControl";
+                SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+            }
+        }
+    }
 
-    //     const pointerEvent = _interactionType == "sender" ? "all" : "none";
-    //     $('#window-main').css('pointer-events', pointerEvent);
-    // };
 
-    
-    // static INTERACTION = {
-    //     SENDER: "sender",
-    //     RECEIVER: "receiver"
-    // }
+    static getInteraction() {
+        if (UserManager.interactionType == "receiver") {
+            UserManager.SetInteractionType("sender");
 
-    // static USER = {
-    //     MASTER: "master",
-    //     CLIENT: "client"
-    // }
+            if (UserManager.userType == "master") {
+                jsonObj.action = "leaveControl";
+                SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+            }
+        }
+    }
 
-    // set userType(value){
-    //     console.log("SEEEEEEEEEETTTTTTTTTT")
-    //     if (value == UserManager.USER.MASTER){
-    //         _userType = value;
-    //         _interactionType = UserManager.INTERACTION.SENDER;
-    //     };
-    //     if (value == UserManager.USER.CLIENT){
-    //         _userType = value;
-    //         _interactionType = UserManager.INTERACTION.RECEIVER;
-    //     }
-    // }
 
-    // get userType(){
-    //     console.log("GGGGGGEEEEEEEETTTTTTT")
-    //     return _userType;
-    // }
+    ///
+    /// receive data from socket
+    ///
+    static ReceiveData(obj) {
+        if (_userType) {
 
-    // set interactionType(value){
-    //     if (value == UserManager.INTERACTION.SENDER || value == UserManager.INTERACTION.RECEIVER){
-    //         _interactionType = value;
-    //     };
-    // }
+            if (obj.action == "getControl") {
+                UserManager.getInteraction();
+            }
 
-    // get interactionType(){
-    //     return _interactionType;
-    // }
+            if (obj.action == "leaveControl") {
+                UserManager.leaveInteraction();
+            }
+        }
+    };
 };
+
+
 
 
 

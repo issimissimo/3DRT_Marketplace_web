@@ -58,7 +58,7 @@ export class PanoramaLoader {
             if (UserManager.interactionType == "sender") {
                 jsonObj.action = "rotate";
                 jsonObj.position = position;
-                SocketManager.FMEmitString(JSON.stringify(jsonObj));
+                SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
             }
         });
 
@@ -66,7 +66,7 @@ export class PanoramaLoader {
             if (UserManager.interactionType == "sender") {
                 jsonObj.action = "zoom";
                 jsonObj.level = level;
-                SocketManager.FMEmitString(JSON.stringify(jsonObj));
+                SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
             }
         });
 
@@ -125,8 +125,7 @@ export class PanoramaLoader {
             }
         }
         else {
-            console.log(markers)
-            PanoramaLoader.AddMarker("1", markers.tooltip, markers.longitude, markers.latitude, "img/pin-red.png", 32, markers.data);
+            PanoramaLoader.AddMarker("0", markers.tooltip, markers.longitude, markers.latitude, "img/pin-red.png", 32, markers.data);
         }
     };
 
@@ -150,19 +149,21 @@ export class PanoramaLoader {
     static OnMarkerClicked(marker) {
 
         /// Load new image
-        if (!isNaN(marker.data.imageToLoad)) {
+        if (!isNaN(marker.data)) {
             console.log("carico altra img")
-            PanoramaLoader.LoadNewImage(images[marker.data.imageToLoad]);
+            PanoramaLoader.LoadNewImage(images[marker.data]);
+
+            if (UserManager.interactionType == "sender") {
+                jsonObj.action = "markerClicked";
+                jsonObj.marker = marker;
+                SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+            }
         }
 
         /// or open scheda
 
 
-        if (UserManager.interactionType == "sender") {
-            jsonObj.action = "markerClicked";
-            jsonObj.marker = marker;
-            SocketManager.FMEmitString(JSON.stringify(jsonObj));
-        }
+
     }
 
 

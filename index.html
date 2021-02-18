@@ -61,8 +61,8 @@
 
         .thumbnail img {
             box-sizing: border-box;
-            width: 150px;
-            height: 100px;
+            width: 100px;
+            height: 70px;
             /* background-color: black; */
             object-fit: contain;
             margin-right: 10px;
@@ -81,7 +81,10 @@
 
 <body style="display: flex; flex-direction: column;">
 
-    <div id="topBar" style="width: 100%; height: 3em; background-color: rgb(19, 19, 19); display: flex;"></div>
+    <div id="topBar" style="width: 100%; height: 60px; background-color: rgb(19, 19, 19); display: flex;">
+        <button id="leaveInteraction">leave Interaction</button>
+        <button id="getInteraction">get Interaction</button>
+    </div>
 
 
 
@@ -98,14 +101,15 @@
 
             <div id="window-main-container" style="position: relative; padding: 10px; padding-right: 0;">
 
-                
+
                 <div id="window-main" style="position: relative; border-radius: 8px;">
 
                     <img id="imageContainer" src="img/trasparent.png">
 
                 </div>
 
-                <div id="window-realtime" style="position: absolute; top: 10px; left: 10px; right: 0px; bottom: 10px; border-radius: 8px; z-index: -1; background-color: black;">
+                <div id="window-realtime"
+                    style="position: absolute; top: 10px; left: 10px; right: 0px; bottom: 10px; border-radius: 8px; z-index: -1; background-color: black;">
                 </div>
             </div>
 
@@ -114,7 +118,7 @@
 
 
             <div id="bottomBar"
-                style="width: 100%; display: flex; flex-wrap: wrap; background-color: rgb(44, 43, 43); flex: 1;">
+                style="width: 100%; display: flex; flex-wrap: wrap; background-color: rgb(44, 43, 43); flex: 1; overflow: scroll; overflow-x: hidden;">
 
                 <div class="thumbnail" style="display: none;">
                     <img src="" data-type="" data-fileName="" data-url="">

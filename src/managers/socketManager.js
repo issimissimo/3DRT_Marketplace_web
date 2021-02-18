@@ -257,14 +257,6 @@ export function Connect() {
     else if (UserManager.userType == "client") ConnectAsClient();
 }
 
-export function FMEmitString(_string) {
-    if (UserManager.userType == "master" && UserManager.interactionType == "sender")
-        FMEmitStringToOthers(_string);
-
-    else if (UserManager.userType == "client" && UserManager.interactionType == "sender")
-        FMEmitStringToServer(_string)
-}
-
 export function FMEmitStringToAll(_string) {
     var _DataString = _string;
     var _DataByteArray = new Array(1);
