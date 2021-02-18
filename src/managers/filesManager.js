@@ -223,7 +223,6 @@ function listFilesFromUrl(url) {
                             loadXml(url + fileName).then((xml) => {
                                 const data = xmlToJson.parse(xml);
                                 const classType = data.root.class;
-                                console.log(classType);
                                 newThumbnail.data('data-type', classType);
                                 newThumbnail.data('data', data);
                             });
