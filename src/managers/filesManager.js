@@ -86,19 +86,37 @@ function LoadCamera(data) {
 
 
 function LoadRealtime(data) {
+    // ImageLoader.Destroy();
+    // VideoLoader.Destroy();
+    // PanoramaLoader.Destroy();
+    // CameraLoader.Destroy();
+    RealtimeLoader.Load(data);
+
+    // /// send to clients
+    // if (UserManager.interactionType == "sender") {
+    //     jsonObj.action = "LoadRealtime";
+    //     jsonObj.data = data;
+    //     SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+    // }
+}
+
+
+function ShowRealtime() {
     ImageLoader.Destroy();
     VideoLoader.Destroy();
     PanoramaLoader.Destroy();
     CameraLoader.Destroy();
-    RealtimeLoader.Load(data);
+    RealtimeLoader.Show();
 
     /// send to clients
     if (UserManager.interactionType == "sender") {
-        jsonObj.action = "LoadRealtime";
-        jsonObj.data = data;
+        jsonObj.action = "ShowRealtime";
         SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
     }
 }
+
+
+
 
 
 
@@ -175,9 +193,12 @@ function loadThumbnails() {
             thumbnails[i].find('p').text(fileName.slice(0, -4));
             thumbnails[i].fadeIn(1000);
             thumbnails[i].click(function () {
-                LoadRealtime(data);
+                ShowRealtime();
             });
             loadThumbnails();
+
+            /// load immediately at start!
+            LoadRealtime(data);
             break;
     }
 
@@ -320,8 +341,8 @@ export class FilesManager {
                                 LoadCamera(jsonObj.data);
                                 break;
 
-                            case "LoadRealtime":
-                                LoadRealtime(jsonObj.data);
+                            case "ShowRealtime":
+                                ShowRealtime();
                                 break;
                         }
                         break;

@@ -1,4 +1,5 @@
 import * as SocketManager from './socketManager.js';
+import { UIManager } from './UIManager.js';
 
 
 const jsonObj = {
@@ -66,6 +67,8 @@ export class UserManager {
         for (let i = 0; i < UserManager.OnInteractionTypeChanged.length; i++) {
             UserManager.OnInteractionTypeChanged[i]();
         }
+
+        UIManager.OnInteractionType(_interactionType);
 
         if (callback) callback();
     }
