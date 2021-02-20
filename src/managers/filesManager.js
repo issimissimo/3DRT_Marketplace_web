@@ -85,20 +85,20 @@ function LoadCamera(data) {
 }
 
 
-function LoadRealtime(data) {
-    // ImageLoader.Destroy();
-    // VideoLoader.Destroy();
-    // PanoramaLoader.Destroy();
-    // CameraLoader.Destroy();
-    RealtimeLoader.Load(data);
+// function LoadRealtime(data) {
+//     // ImageLoader.Destroy();
+//     // VideoLoader.Destroy();
+//     // PanoramaLoader.Destroy();
+//     // CameraLoader.Destroy();
+//     RealtimeLoader.Load(data);
 
-    // /// send to clients
-    // if (UserManager.interactionType == "sender") {
-    //     jsonObj.action = "LoadRealtime";
-    //     jsonObj.data = data;
-    //     SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
-    // }
-}
+//     // /// send to clients
+//     // if (UserManager.interactionType == "sender") {
+//     //     jsonObj.action = "LoadRealtime";
+//     //     jsonObj.data = data;
+//     //     SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+//     // }
+// }
 
 
 function ShowRealtime() {
@@ -121,86 +121,302 @@ function ShowRealtime() {
 
 
 
-function loadThumbnails() {
+// function loadThumbnails() {
 
-    thumbnailsLoaded++;
-    const i = thumbnailsLoaded;
-    if (i >= thumbnails.length) {
-        console.log("all thumbnails loaded");
+//     thumbnailsLoaded++;
+//     const i = thumbnailsLoaded;
+//     if (i >= thumbnails.length) {
+//         console.log("all thumbnails loaded");
+//         return;
+//     }
+
+//     const url = thumbnails[i].data('data-url');
+//     const fileName = thumbnails[i].data('data-fileName');
+//     const classType = thumbnails[i].data('data-type');
+//     var data;
+
+//     console.log("class: " + classType)
+
+//     switch (classType) {
+
+//         case "image":
+//             console.log("image")
+//             // if (UserManager.userType == "master") {
+//             //     var img = new Image();
+//             //     img.src = url;
+//             //     img.onload = function () {
+//             //         thumbnails[i].find('img').attr('src', url);
+//             //         thumbnails[i].find('p').text(fileName.slice(0, -4));
+//             //         thumbnails[i].fadeIn(1000);
+//             //         thumbnails[i].click(function () {
+//             //             LoadImage(url);
+//             //         });
+//             //     };
+//             // }
+//             loadThumbnails();
+//             break;
+
+
+//         case "video":
+//             console.log("video")
+//             // if (UserManager.userType == "master") {
+//             //     thumbnails[i].find('img').attr('src', './img/icon-video.png');
+//             //     thumbnails[i].find('p').text(fileName.slice(0, -4));
+//             //     thumbnails[i].fadeIn(1000);
+//             //     thumbnails[i].click(function () {
+//             //         LoadVideo(url);
+//             //     });
+//             // }
+//             loadThumbnails();
+//             break;
+
+
+//         case "xml":
+//             console.log("xml")
+//             console.log("URL: " + url)
+//             loadThumbnails();
+//             break;
+
+
+//         case "panorama":
+//             console.log("panorama")
+//             // if (UserManager.userType == "master") {
+//             //     thumbnails[i].find('img').attr('src', './img/icon-panorama.png');
+//             //     data = thumbnails[i].data('data');
+//             //     thumbnails[i].find('p').text(fileName.slice(0, -4));
+//             //     thumbnails[i].fadeIn(1000);
+//             //     thumbnails[i].click(function () {
+//             //         LoadPanorama(data);
+//             //     });
+//             // }
+//             loadThumbnails();
+//             break;
+
+
+//         case "camera":
+//             console.log("camera")
+//             // if (UserManager.userType == "master") {
+//             //     thumbnails[i].find('img').attr('src', './img/icon-camera.png');
+//             //     data = thumbnails[i].data('data');
+//             //     thumbnails[i].find('p').text(fileName.slice(0, -4));
+//             //     thumbnails[i].fadeIn(1000);
+//             //     thumbnails[i].click(function () {
+//             //         LoadCamera(data);
+//             //     });
+//             // }
+//             loadThumbnails();
+//             break;
+
+
+//         case "realtime":
+//             console.log("realtime")
+//             // if (UserManager.userType == "master") {
+//             //     thumbnails[i].find('img').attr('src', './img/icon-realtime.png');
+//             //     data = thumbnails[i].data('data');
+//             //     thumbnails[i].find('p').text(fileName.slice(0, -4));
+//             //     thumbnails[i].fadeIn(1000);
+//             //     thumbnails[i].click(function () {
+//             //         ShowRealtime();
+//             //     });
+//             // }
+//             // console.log("eeee")
+//             loadThumbnails();
+//             // console.log("fffff")
+//             // /// load immediately at start!
+//             // LoadRealtime(data);
+//             break;
+//     }
+
+
+// }
+
+
+
+
+
+
+
+var fileLoading = -1;
+function getFileFromHtmlTag(baseUrl, htmlElements) {
+
+    fileLoading++;
+
+    if (fileLoading >= htmlElements.length) {
+        console.log("-- All files are retrived -- ")
         return;
     }
 
-    const url = thumbnails[i].data('data-url');
-    const fileName = thumbnails[i].data('data-fileName');
-    const classType = thumbnails[i].data('data-type');
-    var data;
 
-    switch (classType) {
 
-        case "image":
-            var img = new Image();
-            img.src = url;
-            img.onload = function () {
-                thumbnails[i].find('img').attr('src', url);
-                thumbnails[i].find('p').text(fileName.slice(0, -4));
-                thumbnails[i].fadeIn(1000);
-                thumbnails[i].click(function () {
-                    LoadImage(url);
+    /// get name and path
+    var fullname = htmlElements[fileLoading].href;
+    fullname = fullname.split("/");
+    fullname = fullname[fullname.length - 1];
+
+    const name = fullname.slice(0, -4);
+    const extension = fullname.slice(-3).toLowerCase();
+    const url = baseUrl + fullname;
+
+    // console.log("------------------------------")
+    // console.log("name: " + name)
+    // console.log("extension: " + extension)
+    // console.log("fullName: " + fullname)
+    // console.log("url: " + url)
+
+
+    switch (extension) {
+
+        /////////////////////
+        /// switch for IMAGE
+        /////////////////////
+        case "jpg":
+        case "png":
+
+            if (UserManager.userType == "master") {
+
+                /// Create the thumbnail
+                var img = new Image();
+                img.src = url;
+                img.onload = function () {
+
+                    const newThumbnail = $('#bottomBar').children().first().clone().appendTo('#bottomBar');
+                    newThumbnail.find('img').attr('src', url);
+                    newThumbnail.find('p').text(name);
+                    newThumbnail.fadeIn(500);
+                    newThumbnail.click(function () {
+                        LoadImage(url);
+                    });
+
+                    /// go for next
+                    getFileFromHtmlTag(baseUrl, htmlElements);
+                };
+            }
+            else {
+                /// go for next
+                getFileFromHtmlTag(baseUrl, htmlElements);
+            }
+            break;
+
+
+
+        /////////////////////
+        /// switch for VIDEO
+        /////////////////////
+        case "mp4":
+
+            if (UserManager.userType == "master") {
+
+                /// Create the thumbnail
+                const newThumbnail = $('#bottomBar').children().first().clone().appendTo('#bottomBar');
+                newThumbnail.find('img').attr('src', './img/icon-video.png');
+                newThumbnail.find('p').text(name);
+                newThumbnail.fadeIn(500);
+                newThumbnail.click(function () {
+                    LoadVideo(url);
                 });
-                loadThumbnails();
-            };
+
+                /// go for next
+                getFileFromHtmlTag(baseUrl, htmlElements);
+            }
+            else {
+                /// go for next
+                getFileFromHtmlTag(baseUrl, htmlElements);
+            }
             break;
 
 
-        case "video":
-            thumbnails[i].find('img').attr('src', './img/icon-video.png');
-            thumbnails[i].find('p').text(fileName.slice(0, -4));
-            thumbnails[i].fadeIn(1000);
-            thumbnails[i].click(function () {
-                LoadVideo(url);
+        /////////////////////
+        /// switch for XML
+        /////////////////////
+        case "xml":
+
+            loadXml(url).then((xml) => {
+                const data = xmlToJson.parse(xml);
+                const classType = data.root.class;
+
+                switch (classType) {
+
+                    /////////////////////
+                    /// switch for Realtime
+                    /////////////////////
+                    case "realtime":
+
+                        /// HERE WE LOAD THE REALTIME ON START !!!!
+                        console.log("** Loading Unity App... **")
+                        
+                        RealtimeLoader.Load(data);
+
+
+                        if (UserManager.userType == "master") {
+
+                            /// Create the thumbnail
+                            const newThumbnail = $('#bottomBar').children().first().clone().appendTo('#bottomBar');
+                            newThumbnail.find('img').attr('src', './img/icon-realtime.png');
+                            newThumbnail.find('p').text(name);
+                            newThumbnail.fadeIn(500);
+                            newThumbnail.click(function () {
+                                ShowRealtime();
+                            });
+                        }
+                        /// go for next
+                        getFileFromHtmlTag(baseUrl, htmlElements);
+                        break;
+
+
+
+
+                    /////////////////////
+                    /// switch for Panorama
+                    /////////////////////
+                    case "panorama":
+                        if (UserManager.userType == "master") {
+
+                            /// Create the thumbnail
+                            const newThumbnail = $('#bottomBar').children().first().clone().appendTo('#bottomBar');
+                            newThumbnail.find('img').attr('src', './img/icon-panorama.png');
+                            newThumbnail.find('p').text(name);
+                            newThumbnail.fadeIn(500);
+                            newThumbnail.click(function () {
+                                LoadPanorama(data);
+                            });
+                        }
+                        /// go for next
+                        getFileFromHtmlTag(baseUrl, htmlElements);
+                        break;
+
+
+
+                    /////////////////////
+                    /// switch for RealtimeIP Camera
+                    /////////////////////
+                    case "camera":
+
+                        if (UserManager.userType == "master") {
+
+                            /// Create the thumbnail
+                            const newThumbnail = $('#bottomBar').children().first().clone().appendTo('#bottomBar');
+                            newThumbnail.find('img').attr('src', './img/icon-camera.png');
+                            newThumbnail.find('p').text(name);
+                            newThumbnail.fadeIn(500);
+                            newThumbnail.click(function () {
+                                LoadCamera(data);
+                            });
+                        }
+                        /// go for next
+                        getFileFromHtmlTag(baseUrl, htmlElements);
+                        break;
+                }
             });
-            loadThumbnails();
             break;
 
 
-        case "panorama":
-            thumbnails[i].find('img').attr('src', './img/icon-panorama.png');
-            data = thumbnails[i].data('data');
-            thumbnails[i].find('p').text(fileName.slice(0, -4));
-            thumbnails[i].fadeIn(1000);
-            thumbnails[i].click(function () {
-                LoadPanorama(data);
-            });
-            loadThumbnails();
-            break;
+        /// if extension is not recognized
+        default:
+            getFileFromHtmlTag(baseUrl, htmlElements);
 
 
-        case "camera":
-            thumbnails[i].find('img').attr('src', './img/icon-camera.png');
-            data = thumbnails[i].data('data');
-            thumbnails[i].find('p').text(fileName.slice(0, -4));
-            thumbnails[i].fadeIn(1000);
-            thumbnails[i].click(function () {
-                LoadCamera(data);
-            });
-            loadThumbnails();
-            break;
-
-
-        case "realtime":
-            thumbnails[i].find('img').attr('src', './img/icon-realtime.png');
-            data = thumbnails[i].data('data');
-            thumbnails[i].find('p').text(fileName.slice(0, -4));
-            thumbnails[i].fadeIn(1000);
-            thumbnails[i].click(function () {
-                ShowRealtime();
-            });
-            loadThumbnails();
-
-            /// load immediately at start!
-            LoadRealtime(data);
-            break;
     }
+
 
 
 }
@@ -215,47 +431,10 @@ function listFilesFromUrl(url) {
             var html = xmlhttp.responseText;
             var parser = new DOMParser();
             var htmlDoc = parser.parseFromString(html, 'text/html');
-            var x = htmlDoc.getElementsByTagName('a');
+            var htmlElements = htmlDoc.getElementsByTagName('a');
 
-            for (var i = 0; i < x.length; i++) {
-
-                const name = x[i].href;
-                const extension = name.slice(-3).toLowerCase();
-
-                if (extension == "jpg" || extension == "png" || extension == "mp4" || extension == "xml") {
-                    const e = name.split("/");
-                    const fileName = e[e.length - 1];
-
-                    const newThumbnail = $('#bottomBar').children().first().clone().appendTo('#bottomBar');
-                    newThumbnail.data('data-url', url + fileName);
-                    newThumbnail.data('data-fileName', fileName);
-
-                    switch (extension) {
-                        case "jpg":
-                        case "png":
-                            newThumbnail.data('data-type', "image");
-                            break;
-
-                        case "mp4":
-                            newThumbnail.data('data-type', "video");
-                            break;
-
-                        case "xml":
-                            loadXml(url + fileName).then((xml) => {
-                                const data = xmlToJson.parse(xml);
-                                const classType = data.root.class;
-                                newThumbnail.data('data-type', classType);
-                                newThumbnail.data('data', data);
-                            });
-                            break;
-
-                    }
-                    thumbnails.push(newThumbnail);
-                }
-            }
-
-            console.log("all file names loaded")
-            loadThumbnails();
+            /// effectively load the files
+            getFileFromHtmlTag(url, htmlElements);
         }
     }
     xmlhttp.open("GET", url, false);
@@ -274,14 +453,15 @@ export class FilesManager {
 
     static init(_url) {
 
-        ///
-        /// initializazion for "master" (server)
-        ///
-        if (UserManager.userType == "master") {
+        console.log("********* init")
+        listFilesFromUrl(_url);
+        
 
-            /// load the files in the container to show them
-            listFilesFromUrl(_url);
-        }
+        // if (UserManager.userType == "master") {
+
+        //     /// load the files in the container to show them
+        //     listFilesFromUrl(_url);
+        // }
 
 
         ////////////////////////////////////////////////
@@ -289,7 +469,7 @@ export class FilesManager {
         ////////////////////////////////////////////////
         SocketManager.OnReceivedData.push((dataString) => {
 
-            
+
             /// this is just when the client has the control...
             ///////////////////////////////////////////////////////////////
             if (UserManager.interactionType == "sender" && UserManager.userType == "client") {
