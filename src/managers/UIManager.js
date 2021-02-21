@@ -29,10 +29,11 @@ export class UIManager {
 
 
     static OnUserType(userType) {
-        const debugButtonsVisible = userType == "master" ? "initial" : "none";
-        $('#leaveInteraction').css('display', debugButtonsVisible);
-        $('#getInteraction').css('display', debugButtonsVisible);
-        $('.filters').css('display', debugButtonsVisible);
+        if (userType == 'client') {
+            $('#leaveInteraction').css('display', 'none');
+            $('#getInteraction').css('display', 'none');
+            $('.filters').css('display', 'none');
+        }
     }
 
 

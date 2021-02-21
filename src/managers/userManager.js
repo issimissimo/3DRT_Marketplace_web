@@ -12,12 +12,12 @@ var _interactionType;
 
 
 
-$('#leaveInteraction').click(function () {
-    UserManager.leaveInteraction();
-})
-$('#getInteraction').click(function () {
-    UserManager.getInteraction();
-})
+// $('#leaveInteraction').click(function () {
+//     UserManager.leaveInteraction();
+// })
+// $('#getInteraction').click(function () {
+//     UserManager.getInteraction();
+// })
 
 
 export class UserManager {

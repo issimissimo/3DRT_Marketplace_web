@@ -24,8 +24,8 @@ UserManager.SetUserType(userType, () => {
     /// Connect to socket
     SocketManager.Connect();
 
-    /// Start videochat
-    // VideochatManager.init(userType);
+    // /// Start videochat
+    // // VideochatManager.init(userType);
 
 
     ///Load remote files
