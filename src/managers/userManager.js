@@ -36,6 +36,7 @@ export class UserManager {
         const debugButtonsVisible = _userType == "master" ? "initial" : "none";
         $('#leaveInteraction').css('display', debugButtonsVisible);
         $('#getInteraction').css('display', debugButtonsVisible);
+        $('.filters').css('display', debugButtonsVisible);
 
 
         const inter = _userType == "master" ? "sender" : "receiver";

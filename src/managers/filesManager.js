@@ -280,10 +280,12 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                 img.src = url;
                 img.onload = function () {
 
-                    const newThumbnail = $('#bottomBar').children().first().clone().appendTo('#bottomBar');
+                    // const newThumbnail = $('#bottomBar').children().first().clone().appendTo('#bottomBar');
+                    const newThumbnail = $('#bottomBar').children().first().clone();
                     newThumbnail.find('img').attr('src', url);
                     newThumbnail.find('p').text(name);
-                    newThumbnail.fadeIn(500);
+                    newThumbnail.attr("data-class", 'image');
+                    // newThumbnail.fadeIn(500);
                     // newThumbnail.click(function () {
                     //     LoadImage(url);
                     // });
@@ -315,7 +317,8 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                 const newThumbnail = $('#bottomBar').children().first().clone().appendTo('#bottomBar');
                 newThumbnail.find('img').attr('src', './img/icon-video.png');
                 newThumbnail.find('p').text(name);
-                newThumbnail.fadeIn(500);
+                newThumbnail.attr("data-class", 'video');
+                // newThumbnail.fadeIn(500);
                 // newThumbnail.click(function () {
                 //     LoadVideo(url);
                 // });
@@ -360,7 +363,8 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                             const newThumbnail = $('#bottomBar').children().first().clone().appendTo('#bottomBar');
                             newThumbnail.find('img').attr('src', './img/icon-realtime.png');
                             newThumbnail.find('p').text(name);
-                            newThumbnail.fadeIn(500);
+                            newThumbnail.attr("data-class", classType);
+                            // newThumbnail.fadeIn(500);
                             // newThumbnail.click(function () {
                             //     ShowRealtime();
                             // });
@@ -385,7 +389,8 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                             const newThumbnail = $('#bottomBar').children().first().clone().appendTo('#bottomBar');
                             newThumbnail.find('img').attr('src', './img/icon-panorama.png');
                             newThumbnail.find('p').text(name);
-                            newThumbnail.fadeIn(500);
+                            newThumbnail.attr("data-class", classType);
+                            // newThumbnail.fadeIn(500);
                             // newThumbnail.click(function () {
                             //     LoadPanorama(data);
                             // });
@@ -410,7 +415,8 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                             const newThumbnail = $('#bottomBar').children().first().clone().appendTo('#bottomBar');
                             newThumbnail.find('img').attr('src', './img/icon-camera.png');
                             newThumbnail.find('p').text(name);
-                            newThumbnail.fadeIn(500);
+                            newThumbnail.attr("data-class", classType);
+                            // newThumbnail.fadeIn(500);
                             // newThumbnail.click(function () {
                             //     LoadCamera(data);
                             // });
@@ -469,16 +475,7 @@ export class FilesManager {
 
     static init(_url) {
 
-        console.log("********* init")
         listFilesFromUrl(_url);
-
-
-        // if (UserManager.userType == "master") {
-
-        //     /// load the files in the container to show them
-        //     listFilesFromUrl(_url);
-        // }
-
 
         ////////////////////////////////////////////////
         /// subscribe functions for OnReceiveData
