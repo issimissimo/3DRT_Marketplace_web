@@ -67,11 +67,22 @@ export class UIManager {
 
         if (UserManager.userType == "master") {
 
+
+            /// if is not passed the icon url (from a image class)
+            /// get it from the default icons
+            var _icon;
+            if (!icon) {
+                _icon = UIManager.getThumbnailIconFromClass(classType);
+            }
+            else {
+                _icon = icon;
+            }
+
             const id = thumbnails.length;
             const el = $('#bottomBar').children().first().clone();
             el.attr('data-class', classType);
             el.find('p').text(name);
-            el.find('img').attr('src', icon);
+            el.find('img').attr('src', _icon);
             el.click(function () {
 
                 if (selectedThumbnailId != id) {

@@ -105,6 +105,9 @@ function ShowRealtime() {
 
 
 
+
+
+
 var fileLoading = -1;
 function getFileFromHtmlTag(baseUrl, htmlElements) {
 
@@ -127,14 +130,10 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
     const url = baseUrl + fullname;
 
 
-
+    /// variables to create the thumbnail
+    var classType;
     var onClickFunc;
     const callbackFunc = getFileFromHtmlTag(baseUrl, htmlElements);
-
-    var classType;
-
-    var icon;
-
 
 
     switch (extension) {
@@ -145,39 +144,12 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
         case "jpg":
         case "png":
 
-            if (UserManager.userType == "master") {
+            classType = "image";
 
-
-                /// Create the thumbnail
-                classType = "image";
-
-
-                onClickFunc = function () {
-                    LoadImage(url);
-                }
-
-                var img = new Image();
-                img.src = url;
-                img.onload = function () {
-
-
-
-
-
-                    UIManager.createThumbnailFromAsset(
-                        classType,
-                        name,
-                        url,
-                        onClickFunc,
-                        callbackFunc
-                    );
-
-                };
-            }
-            else {
-                /// go for next
-                getFileFromHtmlTag(baseUrl, htmlElements);
-            }
+            onClickFunc = function () {
+                LoadImage(url);
+            };
+            UIManager.createThumbnailFromAsset(classType, name, url, onClickFunc, callbackFunc);
             break;
 
 
@@ -192,16 +164,7 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
             onClickFunc = function () {
                 LoadVideo(url);
             }
-
-
-            UIManager.createThumbnailFromAsset(
-                classType,
-                name,
-                UIManager.getThumbnailIconFromClass(classType),
-                onClickFunc,
-                callbackFunc
-            );
-
+            UIManager.createThumbnailFromAsset(classType, name, null, onClickFunc, callbackFunc);
             break;
 
 
@@ -212,6 +175,8 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
 
             loadXml(url).then((xml) => {
                 const data = xmlToJson.parse(xml);
+
+
                 classType = data.root.class;
 
                 switch (classType) {
@@ -222,35 +187,17 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                     case "realtime":
 
 
-
-
-
-
-                        onClickFunc = function () {
-                            ShowRealtime();
-                        }
-
-
-
-
-
-
                         /// HERE WE LOAD THE REALTIME ON START !!!!
                         // console.log("** Loading Unity App... **")
                         // RealtimeLoader.Load(data);
 
 
 
-                        UIManager.createThumbnailFromAsset(
-                            classType,
-                            name,
-                            UIManager.getThumbnailIconFromClass(classType),
-                            onClickFunc,
-                            callbackFunc
-                        );
-
+                        onClickFunc = function () {
+                            ShowRealtime();
+                        }
+                        UIManager.createThumbnailFromAsset(classType, name, null, onClickFunc, callbackFunc);
                         break;
-
 
 
 
@@ -259,19 +206,10 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                     /////////////////////
                     case "panorama":
 
-
                         onClickFunc = function () {
                             LoadPanorama(data);
                         }
-
-
-                        UIManager.createThumbnailFromAsset(
-                            classType,
-                            name,
-                            UIManager.getThumbnailIconFromClass(classType),
-                            onClickFunc,
-                            callbackFunc
-                        );
+                        UIManager.createThumbnailFromAsset(classType, name, null, onClickFunc, callbackFunc);
                         break;
 
 
@@ -281,18 +219,10 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                     /////////////////////
                     case "camera":
 
-
                         onClickFunc = function () {
                             LoadCamera(data);
                         }
-
-                        UIManager.createThumbnailFromAsset(
-                            classType,
-                            name,
-                            UIManager.getThumbnailIconFromClass(classType),
-                            onClickFunc,
-                            callbackFunc
-                        );
+                        UIManager.createThumbnailFromAsset(classType, name, null, onClickFunc, callbackFunc);
                         break;
                 }
             });
@@ -302,21 +232,7 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
         /// if extension is not recognized
         default:
             getFileFromHtmlTag(baseUrl, htmlElements);
-
-
     }
-
-
-    // UIManager.createThumbnailFromAsset(
-    //     classType,
-    //     name,
-    //     UIManager.getThumbnailIconFromClass(classType),
-    //     onClickFunc,
-    //     callbackFunc
-    // );
-
-
-
 }
 
 
