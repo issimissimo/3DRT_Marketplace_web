@@ -23,6 +23,7 @@ $('#getInteraction').click(function () {
 export class UserManager {
 
     static OnInteractionTypeChanged = [];
+    
 
   
     /// set user type

@@ -5,6 +5,7 @@ import { CameraLoader } from "../loaders/cameraLoader.js";
 import { RealtimeLoader } from "../loaders/realtimeLoader.js";
 import * as SocketManager from './socketManager.js';
 import { UserManager } from './userManager.js';
+import { UIManager } from './UIManager.js';
 import { loadXml } from "../utils/xmlLoader.js";
 
 
@@ -283,7 +284,11 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                     newThumbnail.find('img').attr('src', url);
                     newThumbnail.find('p').text(name);
                     newThumbnail.fadeIn(500);
-                    newThumbnail.click(function () {
+                    // newThumbnail.click(function () {
+                    //     LoadImage(url);
+                    // });
+
+                    UIManager.addThumbnail(newThumbnail, function(){
                         LoadImage(url);
                     });
 
@@ -311,7 +316,10 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                 newThumbnail.find('img').attr('src', './img/icon-video.png');
                 newThumbnail.find('p').text(name);
                 newThumbnail.fadeIn(500);
-                newThumbnail.click(function () {
+                // newThumbnail.click(function () {
+                //     LoadVideo(url);
+                // });
+                UIManager.addThumbnail(newThumbnail, function(){
                     LoadVideo(url);
                 });
 
@@ -343,7 +351,6 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
 
                         /// HERE WE LOAD THE REALTIME ON START !!!!
                         console.log("** Loading Unity App... **")
-                        
                         RealtimeLoader.Load(data);
 
 
@@ -354,7 +361,10 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                             newThumbnail.find('img').attr('src', './img/icon-realtime.png');
                             newThumbnail.find('p').text(name);
                             newThumbnail.fadeIn(500);
-                            newThumbnail.click(function () {
+                            // newThumbnail.click(function () {
+                            //     ShowRealtime();
+                            // });
+                            UIManager.addThumbnail(newThumbnail, function(){
                                 ShowRealtime();
                             });
                         }
@@ -376,7 +386,10 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                             newThumbnail.find('img').attr('src', './img/icon-panorama.png');
                             newThumbnail.find('p').text(name);
                             newThumbnail.fadeIn(500);
-                            newThumbnail.click(function () {
+                            // newThumbnail.click(function () {
+                            //     LoadPanorama(data);
+                            // });
+                            UIManager.addThumbnail(newThumbnail, function(){
                                 LoadPanorama(data);
                             });
                         }
@@ -398,7 +411,10 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                             newThumbnail.find('img').attr('src', './img/icon-camera.png');
                             newThumbnail.find('p').text(name);
                             newThumbnail.fadeIn(500);
-                            newThumbnail.click(function () {
+                            // newThumbnail.click(function () {
+                            //     LoadCamera(data);
+                            // });
+                            UIManager.addThumbnail(newThumbnail, function(){
                                 LoadCamera(data);
                             });
                         }
@@ -455,7 +471,7 @@ export class FilesManager {
 
         console.log("********* init")
         listFilesFromUrl(_url);
-        
+
 
         // if (UserManager.userType == "master") {
 
