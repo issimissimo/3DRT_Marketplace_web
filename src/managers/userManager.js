@@ -32,11 +32,13 @@ export class UserManager {
         _userType = value;
 
 
-        /// set the UI
-        const debugButtonsVisible = _userType == "master" ? "initial" : "none";
-        $('#leaveInteraction').css('display', debugButtonsVisible);
-        $('#getInteraction').css('display', debugButtonsVisible);
-        $('.filters').css('display', debugButtonsVisible);
+        // /// set the UI
+        // const debugButtonsVisible = _userType == "master" ? "initial" : "none";
+        // $('#leaveInteraction').css('display', debugButtonsVisible);
+        // $('#getInteraction').css('display', debugButtonsVisible);
+        // $('.filters').css('display', debugButtonsVisible);
+
+        UIManager.OnUserType(_userType);
 
 
         const inter = _userType == "master" ? "sender" : "receiver";
@@ -58,8 +60,8 @@ export class UserManager {
         _interactionType = value;
 
         /// set the UI
-        const pointerEvent = _interactionType == "sender" ? "all" : "none";
-        $('#window-main').css('pointer-events', pointerEvent);
+        // const pointerEvent = _interactionType == "sender" ? "all" : "none";
+        // $('#window-main').css('pointer-events', pointerEvent);
 
         /// call all the subscribed functions
         /// on interactionType changed

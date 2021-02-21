@@ -86,21 +86,6 @@ function LoadCamera(data) {
 }
 
 
-// function LoadRealtime(data) {
-//     // ImageLoader.Destroy();
-//     // VideoLoader.Destroy();
-//     // PanoramaLoader.Destroy();
-//     // CameraLoader.Destroy();
-//     RealtimeLoader.Load(data);
-
-//     // /// send to clients
-//     // if (UserManager.interactionType == "sender") {
-//     //     jsonObj.action = "LoadRealtime";
-//     //     jsonObj.data = data;
-//     //     SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
-//     // }
-// }
-
 
 function ShowRealtime() {
     ImageLoader.Destroy();
@@ -115,123 +100,6 @@ function ShowRealtime() {
         SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
     }
 }
-
-
-
-
-
-
-
-// function loadThumbnails() {
-
-//     thumbnailsLoaded++;
-//     const i = thumbnailsLoaded;
-//     if (i >= thumbnails.length) {
-//         console.log("all thumbnails loaded");
-//         return;
-//     }
-
-//     const url = thumbnails[i].data('data-url');
-//     const fileName = thumbnails[i].data('data-fileName');
-//     const classType = thumbnails[i].data('data-type');
-//     var data;
-
-//     console.log("class: " + classType)
-
-//     switch (classType) {
-
-//         case "image":
-//             console.log("image")
-//             // if (UserManager.userType == "master") {
-//             //     var img = new Image();
-//             //     img.src = url;
-//             //     img.onload = function () {
-//             //         thumbnails[i].find('img').attr('src', url);
-//             //         thumbnails[i].find('p').text(fileName.slice(0, -4));
-//             //         thumbnails[i].fadeIn(1000);
-//             //         thumbnails[i].click(function () {
-//             //             LoadImage(url);
-//             //         });
-//             //     };
-//             // }
-//             loadThumbnails();
-//             break;
-
-
-//         case "video":
-//             console.log("video")
-//             // if (UserManager.userType == "master") {
-//             //     thumbnails[i].find('img').attr('src', './img/icon-video.png');
-//             //     thumbnails[i].find('p').text(fileName.slice(0, -4));
-//             //     thumbnails[i].fadeIn(1000);
-//             //     thumbnails[i].click(function () {
-//             //         LoadVideo(url);
-//             //     });
-//             // }
-//             loadThumbnails();
-//             break;
-
-
-//         case "xml":
-//             console.log("xml")
-//             console.log("URL: " + url)
-//             loadThumbnails();
-//             break;
-
-
-//         case "panorama":
-//             console.log("panorama")
-//             // if (UserManager.userType == "master") {
-//             //     thumbnails[i].find('img').attr('src', './img/icon-panorama.png');
-//             //     data = thumbnails[i].data('data');
-//             //     thumbnails[i].find('p').text(fileName.slice(0, -4));
-//             //     thumbnails[i].fadeIn(1000);
-//             //     thumbnails[i].click(function () {
-//             //         LoadPanorama(data);
-//             //     });
-//             // }
-//             loadThumbnails();
-//             break;
-
-
-//         case "camera":
-//             console.log("camera")
-//             // if (UserManager.userType == "master") {
-//             //     thumbnails[i].find('img').attr('src', './img/icon-camera.png');
-//             //     data = thumbnails[i].data('data');
-//             //     thumbnails[i].find('p').text(fileName.slice(0, -4));
-//             //     thumbnails[i].fadeIn(1000);
-//             //     thumbnails[i].click(function () {
-//             //         LoadCamera(data);
-//             //     });
-//             // }
-//             loadThumbnails();
-//             break;
-
-
-//         case "realtime":
-//             console.log("realtime")
-//             // if (UserManager.userType == "master") {
-//             //     thumbnails[i].find('img').attr('src', './img/icon-realtime.png');
-//             //     data = thumbnails[i].data('data');
-//             //     thumbnails[i].find('p').text(fileName.slice(0, -4));
-//             //     thumbnails[i].fadeIn(1000);
-//             //     thumbnails[i].click(function () {
-//             //         ShowRealtime();
-//             //     });
-//             // }
-//             // console.log("eeee")
-//             loadThumbnails();
-//             // console.log("fffff")
-//             // /// load immediately at start!
-//             // LoadRealtime(data);
-//             break;
-//     }
-
-
-// }
-
-
 
 
 
@@ -258,11 +126,15 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
     const extension = fullname.slice(-3).toLowerCase();
     const url = baseUrl + fullname;
 
-    // console.log("------------------------------")
-    // console.log("name: " + name)
-    // console.log("extension: " + extension)
-    // console.log("fullName: " + fullname)
-    // console.log("url: " + url)
+
+
+    var onClickFunc;
+    const callbackFunc = getFileFromHtmlTag(baseUrl, htmlElements);
+
+    var classType;
+
+    var icon;
+
 
 
     switch (extension) {
@@ -275,27 +147,31 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
 
             if (UserManager.userType == "master") {
 
+
                 /// Create the thumbnail
+                classType = "image";
+
+
+                onClickFunc = function () {
+                    LoadImage(url);
+                }
+
                 var img = new Image();
                 img.src = url;
                 img.onload = function () {
 
-                    // const newThumbnail = $('#bottomBar').children().first().clone().appendTo('#bottomBar');
-                    const newThumbnail = $('#bottomBar').children().first().clone();
-                    newThumbnail.find('img').attr('src', url);
-                    newThumbnail.find('p').text(name);
-                    newThumbnail.attr("data-class", 'image');
-                    // newThumbnail.fadeIn(500);
-                    // newThumbnail.click(function () {
-                    //     LoadImage(url);
-                    // });
 
-                    UIManager.addThumbnail(newThumbnail, function(){
-                        LoadImage(url);
-                    });
 
-                    /// go for next
-                    getFileFromHtmlTag(baseUrl, htmlElements);
+
+
+                    UIManager.createThumbnailFromAsset(
+                        classType,
+                        name,
+                        url,
+                        onClickFunc,
+                        callbackFunc
+                    );
+
                 };
             }
             else {
@@ -311,28 +187,21 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
         /////////////////////
         case "mp4":
 
-            if (UserManager.userType == "master") {
+            classType = "video";
 
-                /// Create the thumbnail
-                const newThumbnail = $('#bottomBar').children().first().clone().appendTo('#bottomBar');
-                newThumbnail.find('img').attr('src', './img/icon-video.png');
-                newThumbnail.find('p').text(name);
-                newThumbnail.attr("data-class", 'video');
-                // newThumbnail.fadeIn(500);
-                // newThumbnail.click(function () {
-                //     LoadVideo(url);
-                // });
-                UIManager.addThumbnail(newThumbnail, function(){
-                    LoadVideo(url);
-                });
+            onClickFunc = function () {
+                LoadVideo(url);
+            }
 
-                /// go for next
-                getFileFromHtmlTag(baseUrl, htmlElements);
-            }
-            else {
-                /// go for next
-                getFileFromHtmlTag(baseUrl, htmlElements);
-            }
+
+            UIManager.createThumbnailFromAsset(
+                classType,
+                name,
+                UIManager.getThumbnailIconFromClass(classType),
+                onClickFunc,
+                callbackFunc
+            );
+
             break;
 
 
@@ -343,7 +212,7 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
 
             loadXml(url).then((xml) => {
                 const data = xmlToJson.parse(xml);
-                const classType = data.root.class;
+                classType = data.root.class;
 
                 switch (classType) {
 
@@ -352,28 +221,34 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                     /////////////////////
                     case "realtime":
 
-                        /// HERE WE LOAD THE REALTIME ON START !!!!
-                        console.log("** Loading Unity App... **")
-                        RealtimeLoader.Load(data);
 
 
-                        if (UserManager.userType == "master") {
 
-                            /// Create the thumbnail
-                            const newThumbnail = $('#bottomBar').children().first().clone().appendTo('#bottomBar');
-                            newThumbnail.find('img').attr('src', './img/icon-realtime.png');
-                            newThumbnail.find('p').text(name);
-                            newThumbnail.attr("data-class", classType);
-                            // newThumbnail.fadeIn(500);
-                            // newThumbnail.click(function () {
-                            //     ShowRealtime();
-                            // });
-                            UIManager.addThumbnail(newThumbnail, function(){
-                                ShowRealtime();
-                            });
+
+
+                        onClickFunc = function () {
+                            ShowRealtime();
                         }
-                        /// go for next
-                        getFileFromHtmlTag(baseUrl, htmlElements);
+
+
+
+
+
+
+                        /// HERE WE LOAD THE REALTIME ON START !!!!
+                        // console.log("** Loading Unity App... **")
+                        // RealtimeLoader.Load(data);
+
+
+
+                        UIManager.createThumbnailFromAsset(
+                            classType,
+                            name,
+                            UIManager.getThumbnailIconFromClass(classType),
+                            onClickFunc,
+                            callbackFunc
+                        );
+
                         break;
 
 
@@ -383,23 +258,20 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                     /// switch for Panorama
                     /////////////////////
                     case "panorama":
-                        if (UserManager.userType == "master") {
 
-                            /// Create the thumbnail
-                            const newThumbnail = $('#bottomBar').children().first().clone().appendTo('#bottomBar');
-                            newThumbnail.find('img').attr('src', './img/icon-panorama.png');
-                            newThumbnail.find('p').text(name);
-                            newThumbnail.attr("data-class", classType);
-                            // newThumbnail.fadeIn(500);
-                            // newThumbnail.click(function () {
-                            //     LoadPanorama(data);
-                            // });
-                            UIManager.addThumbnail(newThumbnail, function(){
-                                LoadPanorama(data);
-                            });
+
+                        onClickFunc = function () {
+                            LoadPanorama(data);
                         }
-                        /// go for next
-                        getFileFromHtmlTag(baseUrl, htmlElements);
+
+
+                        UIManager.createThumbnailFromAsset(
+                            classType,
+                            name,
+                            UIManager.getThumbnailIconFromClass(classType),
+                            onClickFunc,
+                            callbackFunc
+                        );
                         break;
 
 
@@ -409,23 +281,18 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                     /////////////////////
                     case "camera":
 
-                        if (UserManager.userType == "master") {
 
-                            /// Create the thumbnail
-                            const newThumbnail = $('#bottomBar').children().first().clone().appendTo('#bottomBar');
-                            newThumbnail.find('img').attr('src', './img/icon-camera.png');
-                            newThumbnail.find('p').text(name);
-                            newThumbnail.attr("data-class", classType);
-                            // newThumbnail.fadeIn(500);
-                            // newThumbnail.click(function () {
-                            //     LoadCamera(data);
-                            // });
-                            UIManager.addThumbnail(newThumbnail, function(){
-                                LoadCamera(data);
-                            });
+                        onClickFunc = function () {
+                            LoadCamera(data);
                         }
-                        /// go for next
-                        getFileFromHtmlTag(baseUrl, htmlElements);
+
+                        UIManager.createThumbnailFromAsset(
+                            classType,
+                            name,
+                            UIManager.getThumbnailIconFromClass(classType),
+                            onClickFunc,
+                            callbackFunc
+                        );
                         break;
                 }
             });
@@ -438,6 +305,15 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
 
 
     }
+
+
+    // UIManager.createThumbnailFromAsset(
+    //     classType,
+    //     name,
+    //     UIManager.getThumbnailIconFromClass(classType),
+    //     onClickFunc,
+    //     callbackFunc
+    // );
 
 
 

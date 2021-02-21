@@ -20,7 +20,7 @@ function handleError(error) {
 
 function initializeSession(user) {
 
-    console.log(user);
+    // console.log(user);
     let publisherElementId;
     let publisherinsertMode;
     switch (user) {
