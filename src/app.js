@@ -1,6 +1,7 @@
 import { VideochatManager } from './managers/videochatManager.js';
 import { FilesManager } from './managers/filesManager.js';
 import { UserManager } from './managers/userManager.js';
+import { DebugManager } from './managers/debugManager.js';
 import * as SocketManager from './managers/socketManager.js';
 
 
@@ -24,8 +25,9 @@ UserManager.SetUserType(userType, () => {
     /// Connect to socket
     SocketManager.Connect();
 
-    // /// Start videochat
-    // // VideochatManager.init(userType);
+    /// Start videochat
+    if (DebugManager.startVideochat)
+        VideochatManager.init(userType);
 
 
     ///Load remote files

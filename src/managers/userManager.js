@@ -31,18 +31,15 @@ export class UserManager {
         console.log("set userType: " + value);
         _userType = value;
 
-
-        // /// set the UI
-        // const debugButtonsVisible = _userType == "master" ? "initial" : "none";
-        // $('#leaveInteraction').css('display', debugButtonsVisible);
-        // $('#getInteraction').css('display', debugButtonsVisible);
-        // $('.filters').css('display', debugButtonsVisible);
-
-        UIManager.OnUserType(_userType);
+        UIManager.SetUI(_userType, function(){
+            
+            const inter = _userType == "master" ? "sender" : "receiver";
+            UserManager.SetInteractionType(inter, callback);
+        });
 
 
-        const inter = _userType == "master" ? "sender" : "receiver";
-        UserManager.SetInteractionType(inter, callback);
+        // const inter = _userType == "master" ? "sender" : "receiver";
+        // UserManager.SetInteractionType(inter, callback);
     }
 
 

@@ -6,6 +6,7 @@ import { RealtimeLoader } from "../loaders/realtimeLoader.js";
 import * as SocketManager from './socketManager.js';
 import { UserManager } from './userManager.js';
 import { UIManager } from './UIManager.js';
+import { DebugManager } from './debugManager.js';
 import { loadXml } from "../utils/xmlLoader.js";
 
 
@@ -115,6 +116,8 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
 
     if (fileLoading >= htmlElements.length) {
         console.log("-- All files are retrived -- ")
+
+        UIManager.OnAssetLoaded();
         return;
     }
 
@@ -188,9 +191,10 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
 
 
                         /// HERE WE LOAD THE REALTIME ON START !!!!
-                        // console.log("** Loading Unity App... **")
-                        // RealtimeLoader.Load(data);
-
+                        if (DebugManager.loadRealtime) {
+                            console.log("** Loading Unity App... **")
+                            RealtimeLoader.Load(data);
+                        }
 
 
                         onClickFunc = function () {

@@ -27,12 +27,32 @@ for (let i = 0; i < filterButtons.length; i++) {
 export class UIManager {
 
 
+    static OnAssetLoaded() {
+        $("#preloader").fadeOut();
+    }
 
-    static OnUserType(userType) {
+
+    static SetUI(userType, callback) {
+
+
+
+        const text = userType.toUpperCase();
+        $('#preloader').append('Welcome ' + text);
+        const enterButton = $('<button/>',
+            {
+                text: 'ENTER',
+                click: function () { callback(); }
+            });
+        $("#preloader").append(enterButton);
+
+
+
+
         if (userType == 'client') {
             $('#leaveInteraction').css('display', 'none');
             $('#getInteraction').css('display', 'none');
             $('.filters').css('display', 'none');
+
         }
     }
 
@@ -110,27 +130,27 @@ export class UIManager {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    static addThumbnail(el, onClickCallback) {
-        const id = thumbnails.length;
+    // static addThumbnail(el, onClickCallback) {
+    //     const id = thumbnails.length;
 
-        el.click(function () {
+    //     el.click(function () {
 
-            if (selectedThumbnailId != id) {
+    //         if (selectedThumbnailId != id) {
 
-                if (selectedThumbnailId != null) {
-                    thumbnails[selectedThumbnailId].find('img').removeClass('active-user');
-                }
+    //             if (selectedThumbnailId != null) {
+    //                 thumbnails[selectedThumbnailId].find('img').removeClass('active-user');
+    //             }
 
-                thumbnails[id].find('img').addClass('active-user');
-                selectedThumbnailId = id;
-                onClickCallback();
-            }
-        });
+    //             thumbnails[id].find('img').addClass('active-user');
+    //             selectedThumbnailId = id;
+    //             onClickCallback();
+    //         }
+    //     });
 
-        el.appendTo('#bottomBar');
-        el.show();
-        thumbnails.push(el);
-    }
+    //     el.appendTo('#bottomBar');
+    //     el.show();
+    //     thumbnails.push(el);
+    // }
 
 
 
