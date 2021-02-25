@@ -35,6 +35,7 @@
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="css/scrollbar.css" />
 
@@ -55,7 +56,7 @@
 
             font-family: 'Roboto', sans-serif;
             color: rgb(204, 204, 204);
-            
+
         }
 
         #window-clients-videochat div {
@@ -100,6 +101,7 @@
 
         #preloader {
             font-size: 30px;
+            font-family: 'Open Sans', sans-serif;
         }
 
         #preloader button {
@@ -135,6 +137,19 @@
             background-color: rgb(55, 118, 236);
         }
 
+        .absolute-centered {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 99;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
     </style>
 </head>
 
@@ -143,14 +158,13 @@
 <body style="position: relative;">
 
     <div id="preloader"
-        style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; background-color: rgb(26, 29, 33); z-index: 999; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; background-color: rgb(26, 29, 33); z-index: 999; display: flex; flex-direction: column; justify-content: center; align-items: center;
+        ">
     </div>
 
 
 
-    <div id="topBar"
-        style="width: 100%; height: 50px; display: flex; align-items: center; justify-content: space-between;
-        ">
+    <div id="topBar" style="width: 100%; height: 50px; display: flex; align-items: center; justify-content: space-between;">
         <!-- <button id="leaveInteraction" style="height: 60%;">leave Interaction</button>
         <button id="getInteraction" style="height: 60%;">get Interaction</button> -->
     </div>
@@ -185,6 +199,11 @@
 
 
                 <div id="window-main-container" style="position: relative; padding-right: 0; width: 100%;">
+
+
+                    <div id="no-selection-message" class="absolute-centered" style="font-family: 'Open Sans', sans-serif;">
+                        <p>Your sharing space is empty</p>
+                    </div>
 
 
                     <div id="window-main" style="position: relative;">
@@ -228,12 +247,11 @@
 
 
 
-            <div class="filters"
-                style="width: 100%; height: 40px; background-color: rgb(31, 34, 39); display: flex; align-items: flex-end; margin-top: 30px;
+            <div class="filters" style="width: 100%; height: 40px; background-color: rgb(31, 34, 39); display: flex; align-items: flex-end; margin-top: 30px;
                 border-bottom: 1px solid rgb(44, 47, 52);">
 
 
-                
+
                 <div class="button-selected" data-class="all" style="display: flex; align-items: center; height: 100%; font-size: 13px; font-weight: 500; box-sizing: border-box;
                 padding: 10px; cursor: pointer; margin-right: 15px;">
                     <img src="img/icon-all.svg" style="height: 100%; padding-right: 5px;">Show all
@@ -313,8 +331,7 @@
 
                 </div>
 
-                <div id="video-master"
-                    style="box-sizing: border-box; width: 320px; background-color: red;">
+                <div id="video-master" style="box-sizing: border-box; width: 320px; background-color: red;">
                 </div>
             </div>
 

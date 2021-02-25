@@ -16,13 +16,13 @@ const thumbnailIcon = {
 
 /// listener for filter buttons
 function onFilterButtonClicked(el) {
-    if (el != selectedFilterButton){
+    if (el != selectedFilterButton) {
         selectedFilterButton.removeClass('button-selected');
         UIManager.changeTab(el.data('class'));
         el.addClass('button-selected');
         selectedFilterButton = el;
     }
-    
+
 }
 
 
@@ -62,7 +62,7 @@ export class UIManager {
 
         /// show welcome page
         if (DebugManager.showWelcome) {
-            const text = userType.toUpperCase();
+            const text = UserManager.userType.toUpperCase();
             $('#preloader').append('Welcome ' + text);
             const enterButton = $('<button/>',
                 {
@@ -183,6 +183,14 @@ export class UIManager {
     // }
 
 
+
+
+    ///
+    /// called when an asset is clicked in the asset window
+    ///
+    static OnAssetClicked() {
+        $("#no-selection-message").hide();
+    }
 
 
 

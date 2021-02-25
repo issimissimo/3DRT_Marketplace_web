@@ -150,6 +150,7 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
             classType = "image";
 
             onClickFunc = function () {
+                UIManager.OnAssetClicked();
                 LoadImage(url);
             };
             UIManager.createThumbnailFromAsset(classType, name, url, onClickFunc, callbackFunc);
@@ -165,6 +166,7 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
             classType = "video";
 
             onClickFunc = function () {
+                UIManager.OnAssetClicked();
                 LoadVideo(url);
             }
             UIManager.createThumbnailFromAsset(classType, name, null, onClickFunc, callbackFunc);
@@ -204,6 +206,7 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
 
 
                         onClickFunc = function () {
+                            UIManager.OnAssetClicked();
                             ShowRealtime();
                         }
                         UIManager.createThumbnailFromAsset(classType, name, poster, onClickFunc, callbackFunc);
@@ -217,6 +220,7 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                     case "panorama":
 
                         onClickFunc = function () {
+                            UIManager.OnAssetClicked();
                             LoadPanorama(data);
                         }
                         UIManager.createThumbnailFromAsset(classType, name, poster, onClickFunc, callbackFunc);
@@ -230,6 +234,7 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                     case "camera":
 
                         onClickFunc = function () {
+                            UIManager.OnAssetClicked();
                             LoadCamera(data);
                         }
                         UIManager.createThumbnailFromAsset(classType, name, poster, onClickFunc, callbackFunc);
