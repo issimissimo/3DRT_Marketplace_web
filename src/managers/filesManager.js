@@ -179,8 +179,14 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
             loadXml(url).then((xml) => {
                 const data = xmlToJson.parse(xml);
 
-
+                /// get classtype
                 classType = data.root.class;
+
+                /// get poster
+                var poster = null;
+                if (data.root.poster != undefined && typeof data.root.poster === 'string'){
+                    poster = data.root.poster;
+                } 
 
                 switch (classType) {
 
@@ -200,7 +206,7 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                         onClickFunc = function () {
                             ShowRealtime();
                         }
-                        UIManager.createThumbnailFromAsset(classType, name, null, onClickFunc, callbackFunc);
+                        UIManager.createThumbnailFromAsset(classType, name, poster, onClickFunc, callbackFunc);
                         break;
 
 
@@ -213,7 +219,7 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                         onClickFunc = function () {
                             LoadPanorama(data);
                         }
-                        UIManager.createThumbnailFromAsset(classType, name, null, onClickFunc, callbackFunc);
+                        UIManager.createThumbnailFromAsset(classType, name, poster, onClickFunc, callbackFunc);
                         break;
 
 
@@ -226,7 +232,7 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                         onClickFunc = function () {
                             LoadCamera(data);
                         }
-                        UIManager.createThumbnailFromAsset(classType, name, null, onClickFunc, callbackFunc);
+                        UIManager.createThumbnailFromAsset(classType, name, poster, onClickFunc, callbackFunc);
                         break;
                 }
             });

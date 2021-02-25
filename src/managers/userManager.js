@@ -12,34 +12,30 @@ var _interactionType;
 
 
 
-// $('#leaveInteraction').click(function () {
-//     UserManager.leaveInteraction();
-// })
-// $('#getInteraction').click(function () {
-//     UserManager.getInteraction();
-// })
+$('#leaveInteraction').click(function () {
+    UserManager.leaveInteraction();
+})
+$('#getInteraction').click(function () {
+    UserManager.getInteraction();
+})
 
 
 export class UserManager {
 
     static OnInteractionTypeChanged = [];
-    
 
-  
+
+
     /// set user type
     static SetUserType(value, callback) {
         console.log("set userType: " + value);
         _userType = value;
 
-        UIManager.SetUI(_userType, function(){
-            
+        UIManager.SetUI(function () {
+
             const inter = _userType == "master" ? "sender" : "receiver";
             UserManager.SetInteractionType(inter, callback);
         });
-
-
-        // const inter = _userType == "master" ? "sender" : "receiver";
-        // UserManager.SetInteractionType(inter, callback);
     }
 
 
@@ -72,14 +68,14 @@ export class UserManager {
     }
 
 
-    
+
     /// get user interaction type
     static get interactionType() {
         return _interactionType;
     }
 
 
-   
+
 
 
 

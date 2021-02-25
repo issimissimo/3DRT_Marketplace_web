@@ -9,7 +9,9 @@ const jsonObj = {
 var viewer;
 var markersPlugin;
 var images;
+var panel;
 const container = document.getElementById('window-main');
+const panelContainer = $("#panorama-panel");
 
 
 
@@ -43,7 +45,7 @@ export class PanoramaLoader {
 
             /// register on clicked marker
             markersPlugin.on('select-marker', (e, marker, data) => {
-                PanoramaLoader.OnMarkerClicked(marker);
+                PanoramaLoader.OnMarkerClicked(marker.data);
             });
 
 
@@ -117,6 +119,21 @@ export class PanoramaLoader {
         }
     };
 
+
+    static ShowPanel(text) {
+        panelContainer.show();
+
+        panelContainer.append(text);
+    };
+
+
+    static HidePanel() {
+        panelContainer.hide();
+
+
+    };
+
+
     static Destroy() {
         if (viewer) {
             viewer.destroy();
@@ -130,17 +147,17 @@ export class PanoramaLoader {
             if (Array.isArray(markers)) {
                 for (let i = 0; i < markers.length; i++) {
                     const marker = markers[i];
-                    PanoramaLoader.AddMarker(i.toString(), marker.tooltip, marker.longitude, marker.latitude, "img/pin-red.png", 32, marker.data);
+                    PanoramaLoader.AddMarker(i.toString(), marker.tooltip, marker.longitude, marker.latitude, marker.data);
                 }
             }
             else {
-                PanoramaLoader.AddMarker("0", markers.tooltip, markers.longitude, markers.latitude, "img/pin-red.png", 32, markers.data);
+                PanoramaLoader.AddMarker("0", markers.tooltip, markers.longitude, markers.latitude, markers.data);
             }
         }
     };
 
 
-    static AddMarker(id, tooltip, longitude, latitude, image, size, data) {
+    static AddMarker(id, tooltip, longitude, latitude, data) {
         if (viewer) {
             console.log(tooltip)
             markersPlugin.addMarker({
@@ -148,9 +165,9 @@ export class PanoramaLoader {
                 tooltip: { content: tooltip },
                 longitude: longitude,
                 latitude: latitude,
-                image: image,
-                width: size,
-                height: size,
+                image: isNaN(data) ? "img/icon-info.svg" : "img/icon-go.svg",
+                width: 32,
+                height: 32,
                 data: data,
                 style: { cursor: 'pointer', }
             });
@@ -158,24 +175,24 @@ export class PanoramaLoader {
     };
 
 
-    static OnMarkerClicked(marker) {
+    static OnMarkerClicked(data) {
 
         /// Load new image
-        if (!isNaN(marker.data)) {
-            console.log("carico altra img")
-            PanoramaLoader.LoadNewImage(images[marker.data]);
-
-            if (UserManager.interactionType == "sender") {
-                jsonObj.action = "markerClicked";
-                jsonObj.marker = marker;
-                SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
-            }
+        if (!isNaN(data)) {
+            PanoramaLoader.HidePanel();
+            PanoramaLoader.LoadNewImage(images[data]);
+        }
+        else{
+            PanoramaLoader.ShowPanel(data);
         }
 
-        /// or open scheda
 
-
-
+        if (UserManager.interactionType == "sender") {
+            jsonObj.action = "markerClicked";
+            jsonObj.data = data;
+            console.log(jsonObj)
+            SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+        }
     }
 
 
@@ -195,7 +212,7 @@ export class PanoramaLoader {
             }
 
             if (obj.action == "markerClicked") {
-                PanoramaLoader.OnMarkerClicked(obj.marker);
+                PanoramaLoader.OnMarkerClicked(obj.data);
             }
         }
     };
