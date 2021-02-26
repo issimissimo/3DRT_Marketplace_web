@@ -138,13 +138,15 @@
             background-color: rgb(55, 118, 236);
         }
 
-        .absolute-centered {
+        .absolute{
             position: absolute;
             left: 0;
             right: 0;
             top: 0;
             bottom: 0;
-            z-index: 99;
+        }
+
+        .centered {
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -154,6 +156,8 @@
         #others-videochat-container div{
             margin-bottom: 20px;
         }
+
+        
     </style>
 </head>
 
@@ -208,8 +212,8 @@
                 <div id="window-main-container" style="position: relative; padding-right: 0; width: 100%;">
 
 
-                    <div id="no-selection-message" class="absolute-centered"
-                        style="font-family: 'Open Sans', sans-serif;">
+                    <div id="no-selection-message" class="absolute centered"
+                        style="font-family: 'Open Sans', sans-serif; z-index: 99;">
                         <p>Your sharing space is empty</p>
                     </div>
 
@@ -231,7 +235,7 @@
                     </div>
 
                     <div id="window-realtime"
-                        style="position: absolute; top: 10px; left: 10px; right: 0px; bottom: 10px; border-radius: 8px; z-index: -1; background-color: black;">
+                        style="position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; z-index: -1;">
                     </div>
 
 
