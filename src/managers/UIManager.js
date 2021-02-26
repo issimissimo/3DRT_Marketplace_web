@@ -52,7 +52,7 @@ export class UIManager {
     ///
     static SetUI(callback) {
 
-        /// hide UI elements for client
+        /// Set UI elements for client
         if (UserManager.userType == 'client') {
             $('#leaveInteraction').css('display', 'none');
             $('#getInteraction').css('display', 'none');
@@ -67,7 +67,18 @@ export class UIManager {
         }
         else if (UserManager.userType == 'master'){
             $('#window-client-videochat').css('display', 'none');
+
+            /// set toggle-interaction
+            $('.toggle-interaction').css('cursor', 'pointer');
+            $('.toggle-interaction').click(function(){
+                UserManager.toggleInteraction();
+            })
         }
+
+
+        
+
+
 
         /// show welcome page
         if (DebugManager.showWelcome) {
@@ -92,11 +103,13 @@ export class UIManager {
     static OnInteractionType(interactionType) {
         if (interactionType == 'sender') {
             $('#window-main').css('pointer-events', 'all');
-            // $('#window-main').addClass('active-user');
+            $('.toggle-interaction').css('filter', 'grayscale(0)');
+            
         }
         else if (interactionType == 'receiver') {
             $('#window-main').css('pointer-events', 'none');
-            // $('#window-main').removeClass('active-user');
+            $('.toggle-interaction').css('filter', 'grayscale(100)');
+            
         }
     }
 

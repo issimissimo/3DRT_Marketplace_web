@@ -52,9 +52,6 @@ export class UserManager {
         console.log("set interactionType: " + value);
         _interactionType = value;
 
-        /// set the UI
-        // const pointerEvent = _interactionType == "sender" ? "all" : "none";
-        // $('#window-main').css('pointer-events', pointerEvent);
 
         /// call all the subscribed functions
         /// on interactionType changed
@@ -62,6 +59,7 @@ export class UserManager {
             UserManager.OnInteractionTypeChanged[i]();
         }
 
+        /// set the UI
         UIManager.OnInteractionType(_interactionType);
 
         if (callback) callback();
@@ -76,31 +74,46 @@ export class UserManager {
 
 
 
-
-
-
-    static leaveInteraction() {
+    static toggleInteraction() {
         if (UserManager.interactionType == "sender") {
             UserManager.SetInteractionType("receiver");
-
-            if (UserManager.userType == "master") {
-                jsonObj.action = "getControl";
-                SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
-            }
         }
-    }
-
-
-    static getInteraction() {
-        if (UserManager.interactionType == "receiver") {
+        else if (UserManager.interactionType == "receiver") {
             UserManager.SetInteractionType("sender");
+        }
 
-            if (UserManager.userType == "master") {
-                jsonObj.action = "leaveControl";
-                SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
-            }
+        /// send message if you are master
+        if (UserManager.userType == "master") {
+            jsonObj.action = "toggleInteraction";
+            SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
         }
     }
+
+
+
+
+    // static leaveInteraction() {
+    //     if (UserManager.interactionType == "sender") {
+    //         UserManager.SetInteractionType("receiver");
+
+    //         if (UserManager.userType == "master") {
+    //             jsonObj.action = "getControl";
+    //             SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+    //         }
+    //     }
+    // }
+
+
+    // static getInteraction() {
+    //     if (UserManager.interactionType == "receiver") {
+    //         UserManager.SetInteractionType("sender");
+
+    //         if (UserManager.userType == "master") {
+    //             jsonObj.action = "leaveControl";
+    //             SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+    //         }
+    //     }
+    // }
 
 
     ///
@@ -109,13 +122,18 @@ export class UserManager {
     static ReceiveData(obj) {
         if (_userType) {
 
-            if (obj.action == "getControl") {
-                UserManager.getInteraction();
+            // if (obj.action == "getControl") {
+            //     UserManager.getInteraction();
+            // }
+
+            // if (obj.action == "leaveControl") {
+            //     UserManager.leaveInteraction();
+            // }
+
+            if (obj.action == "toggleInteraction") {
+                UserManager.toggleInteraction();
             }
 
-            if (obj.action == "leaveControl") {
-                UserManager.leaveInteraction();
-            }
         }
     };
 };

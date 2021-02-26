@@ -134,11 +134,33 @@
             }
         }
 
+
+        /* FILTER */
+        .button-filter {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            font-size: 13px;
+            font-weight: 500;
+            box-sizing: border-box;
+            padding: 10px;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        .button-filter>img {
+            height: 100%;
+            padding-right: 5px;
+        }
+
+        /* END FILTER */
+
+
         .button-selected {
             background-color: rgb(55, 118, 236);
         }
 
-        .absolute{
+        .absolute {
             position: absolute;
             left: 0;
             right: 0;
@@ -153,11 +175,9 @@
             align-items: center;
         }
 
-        #others-videochat-container div{
+        #others-videochat-container div {
             margin-bottom: 20px;
         }
-
-        
     </style>
 </head>
 
@@ -180,15 +200,15 @@
     </div>
 
 
-    <!-- <div id="divisor" style="width: 100%; height: 1px; background-color: rgb(5, 5, 5); margin-bottom: 20px;"></div> -->
+  
 
 
 
 
-    <div style="width: 100%; height: 100%; display: flex;">
+    <div id="container-app" style="width: 100%; height: 100%; display: flex;">
 
 
-        <!-- <div id="leftBar" style="background-color: rgb(88, 88, 88); width: 60px; height: 100%;"></div> -->
+        
 
 
 
@@ -201,10 +221,12 @@
 
                 <div id="toolbar"
                     style="width: 60px; height: 100%; border-right: 1px solid rgb(44, 47, 52); background-color: rgb(26, 29, 33);">
-                    <input id="toolbar-button-upload" type="image" src="img/icon-upload.svg" style="width: 100%; filter: brightness(0.7);" />
+                    <input id="toolbar-button-upload" type="image" src="img/icon-upload.svg"
+                        style="width: 100%; filter: brightness(0.7);" />
                     <input id="toolbar-button-presentation" type="image" src="img/icon-presentation.svg"
                         style="width: 100%; background-color: rgb(55, 118, 236); filter: brightness(0.9);" />
-                    <input id="toolbar-button-shop" type="image" src="img/icon-shop.svg" style="width: 100%; filter: brightness(0.7);" />
+                    <input id="toolbar-button-shop" type="image" src="img/icon-shop.svg"
+                        style="width: 100%; filter: brightness(0.7);" />
 
                 </div>
 
@@ -239,18 +261,6 @@
                     </div>
 
 
-                    <!-- <div class="filters" style="width: 100%; height: 60px; display: flex;">
-
-                        <input type="image" src="img/icon-all.svg"
-                            style="height: 100%; background-color: rgb(55, 118, 236);" />
-
-                        <input type="image" src="img/icon-image.svg" style="filter: brightness(0.5);" />
-
-                        <input type="image" src="img/icon-video.svg" style="filter: brightness(0.5);" />
-
-                        <input type="image" src="img/icon-panorama.svg" style="filter: brightness(0.5);" />
-
-                    </div> -->
                 </div>
 
 
@@ -262,51 +272,25 @@
             <div class="filters" style="width: 100%; height: 40px; background-color: rgb(26, 29, 33); display: flex; align-items: flex-end; margin-top: 30px;
                 border-bottom: 1px solid rgb(44, 47, 52);">
 
-
-
-                <div class="button-selected" data-class="all" style="display: flex; align-items: center; height: 100%; font-size: 13px; font-weight: 500; box-sizing: border-box;
-                padding: 10px; cursor: pointer; margin-right: 15px;">
-                    <img src="img/icon-all.svg" style="height: 100%; padding-right: 5px;">Show all
+                <div class="button-filter button-selected" data-class="all">
+                    <img src="img/icon-all.svg">Show all
+                </div>
+                <div class="button-filter" data-class="image">
+                    <img src="img/icon-image.svg">Images
+                </div>
+                <div class="button-filter" data-class="video">
+                    <img src="img/icon-video.svg">Video
+                </div>
+                <div class="button-filter" data-class="panorama">
+                    <img src="img/icon-panorama.svg">Virtual tour
+                </div>
+                <div class="button-filter" data-class="realtime">
+                    <img src="img/icon-3d.svg">3D Realtime
+                </div>
+                <div class="button-filter" data-class="camera">
+                    <img src="img/icon-camera.svg">IP Cameras
                 </div>
 
-
-                <div data-class="image" style="display: flex; align-items: center; height: 100%; font-size: 13px; font-weight: 500; box-sizing: border-box;
-                padding: 10px; cursor: pointer; margin-right: 15px;">
-                    <img src="img/icon-image.svg" style="height: 100%; padding-right: 5px;">Images
-                </div>
-
-
-                <div data-class="video" style="display: flex; align-items: center; height: 100%; font-size: 13px; font-weight: 500; box-sizing: border-box;
-                padding: 10px; cursor: pointer; margin-right: 15px;">
-                    <img src="img/icon-video.svg" style="height: 100%; padding-right: 5px;">Video
-                </div>
-
-
-                <div data-class="panorama" style="display: flex; align-items: center; height: 100%; font-size: 13px; font-weight: 500; box-sizing: border-box;
-                padding: 10px; cursor: pointer; margin-right: 15px;">
-                    <img src="img/icon-panorama.svg" style="height: 100%; padding-right: 5px;">Virtual tour
-                </div>
-
-
-                <div data-class="realtime" style="display: flex; align-items: center; height: 100%; font-size: 13px; font-weight: 500; box-sizing: border-box;
-                padding: 10px; cursor: pointer; margin-right: 15px;">
-                    <img src="img/icon-3d.svg" style="height: 100%; padding-right: 5px;">3D Realtime
-                </div>
-
-                <div data-class="camera" style="display: flex; align-items: center; height: 100%; font-size: 13px; font-weight: 500; box-sizing: border-box;
-                padding: 10px; cursor: pointer; margin-right: 15px;">
-                    <img src="img/icon-camera.svg" style="height: 100%; padding-right: 5px;">IP Cameras
-                </div>
-
-
-
-
-                <!-- <button data-class="all" style="height: 60%;">ALL</button>
-                <button data-class="image" style="height: 60%;">IMAGES</button>
-                <button data-class="video" style="height: 60%;">VIDEO</button>
-                <button data-class="camera" style="height: 60%;">IP CAMERA</button>
-                <button data-class="panorama" style="height: 60%;">VIRTUAL TOUR</button>
-                <button data-class="realtime" style="height: 60%;">3D REALTIME</button> -->
             </div>
 
 
@@ -337,12 +321,13 @@
 
         <div id="rightbar" style="width: 400px; display: flex; flex-direction: column; margin-right: 30px;">
 
-            <div id="window-master-videochat" style="height: 240px; display: flex; justify-content: flex-end; margin-bottom: 20px;">
+            <div id="window-master-videochat"
+                style="height: 240px; display: flex; justify-content: flex-end; margin-bottom: 20px;">
 
                 <div id="master-videochat-toolbar" style="width: 40px; height: 100%; border-right: 1px solid rgb(44, 47, 52);
                     background-color: rgb(26, 29, 33); display: flex; flex-direction: column; align-items: center;">
 
-                    <img src="img/icon-control.svg" style="height: 40px; ">
+                    <img class="toggle-interaction" src="img/icon-control.svg" style="height: 40px; ">
                     <img src="img/icon-videoCamera.svg" style="height: 40px;">
                     <img src="img/icon-microphone.svg" style="height: 40px">
 
@@ -352,14 +337,15 @@
                 </div>
             </div>
 
-            
 
-            <div id="window-client-videochat" style="height: 240px; display: flex; justify-content: flex-end; margin-bottom: 20px">
-                
+
+            <div id="window-client-videochat"
+                style="height: 240px; display: flex; justify-content: flex-end; margin-bottom: 20px">
+
                 <div id="client-videochat-toolbar" style="width: 40px; height: 100%; border-right: 1px solid rgb(44, 47, 52);
                     background-color: rgb(26, 29, 33); display: flex; flex-direction: column; align-items: center;">
 
-                    <img src="img/icon-control.svg" style="height: 40px; filter: grayscale(100);">
+                    <img class="toggle-interaction" src="img/icon-control.svg" style="height: 40px;">
                     <img src="img/icon-videoCamera.svg" style="height: 40px;">
                     <img src="img/icon-microphone.svg" style="height: 40px">
 
