@@ -47,13 +47,52 @@ selectedFilterButton = $(filterButtons[0]);
 
 export class UIManager {
 
+
+    ///
+    /// the welcome window
+    ///
+    static ShowWelcome(callback) {
+        if (DebugManager.showWelcome) {
+
+            /// button for password submit
+            $('#welcome-button-submit').click(function () {
+                const passw = $('#password').val();
+                if (passw == UserManager.masterPassw) {
+                    console.log("**** access as master!");
+                    UserManager.SetUserType("master", callback);
+                }
+                else {
+                    console.log("ERROR: access as master is denied because wrong password");
+                }
+            });
+
+            /// button for client
+            $('#welcome-button-isClient').click(function(){
+                console.log("**** access as client!");
+                UserManager.SetUserType("client", callback);
+            })
+
+        }
+        /// for debug, if we don't want to use the welcome
+        /// so, just set the user as "master"
+        else {
+            UserManager.SetUserType("master", callback);
+        }
+    }
+
+
+
+
     ///
     /// called at start from UserManager
     ///
     static SetUI(callback) {
 
+        console.log("Set UI...")
+
         /// Set UI elements for client
         if (UserManager.userType == 'client') {
+            console.log("set UI for client")
             $('#leaveInteraction').css('display', 'none');
             $('#getInteraction').css('display', 'none');
             $('.filters').css('display', 'none');
@@ -65,35 +104,20 @@ export class UIManager {
 
             $('#master-videochat-toolbar').css('display', 'none');
         }
-        else if (UserManager.userType == 'master'){
+        else if (UserManager.userType == 'master') {
+            console.log("set UI for master")
             $('#window-client-videochat').css('display', 'none');
 
             /// set toggle-interaction
             $('.toggle-interaction').css('cursor', 'pointer');
-            $('.toggle-interaction').click(function(){
+            $('.toggle-interaction').click(function () {
                 UserManager.toggleInteraction();
             })
         }
 
 
-        
-
-
-
-        /// show welcome page
-        if (DebugManager.showWelcome) {
-            const text = UserManager.userType.toUpperCase();
-            $('#preloader').append('Welcome ' + text);
-            const enterButton = $('<button/>',
-                {
-                    text: 'ENTER',
-                    click: function () { callback(); }
-                });
-            $("#preloader").append(enterButton);
-        }
-        else {
-            callback();
-        }
+        /// callback
+        callback();
     }
 
 
@@ -104,12 +128,12 @@ export class UIManager {
         if (interactionType == 'sender') {
             $('#window-main').css('pointer-events', 'all');
             $('.toggle-interaction').css('filter', 'grayscale(0)');
-            
+
         }
         else if (interactionType == 'receiver') {
             $('#window-main').css('pointer-events', 'none');
             $('.toggle-interaction').css('filter', 'grayscale(100)');
-            
+
         }
     }
 
@@ -179,30 +203,6 @@ export class UIManager {
 
         if (callback) callback();
     }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // static addThumbnail(el, onClickCallback) {
-    //     const id = thumbnails.length;
-
-    //     el.click(function () {
-
-    //         if (selectedThumbnailId != id) {
-
-    //             if (selectedThumbnailId != null) {
-    //                 thumbnails[selectedThumbnailId].find('img').removeClass('active-user');
-    //             }
-
-    //             thumbnails[id].find('img').addClass('active-user');
-    //             selectedThumbnailId = id;
-    //             onClickCallback();
-    //         }
-    //     });
-
-    //     el.appendTo('#bottomBar');
-    //     el.show();
-    //     thumbnails.push(el);
-    // }
 
 
 

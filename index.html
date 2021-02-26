@@ -108,18 +108,20 @@
         #preloader button {
             display: inline-block;
             padding: 0.8em 1.5em;
-            border: 0.1em solid #979797;
+            border: 1px solid #979797;
             margin: 0 0.3em 0.3em 0;
-            border-radius: 0.12em;
+            border-radius: 0;
             box-sizing: border-box;
             text-decoration: none;
             font-family: 'Roboto', sans-serif;
-            font-weight: 300;
+            font-weight: 500;
             color: #b9b9b9;
             text-align: center;
             transition: all 0.2s;
             background-color: transparent;
             margin-top: 2em;
+            outline:none;
+            cursor: pointer;
         }
 
         #preloader button:hover {
@@ -185,8 +187,20 @@
 
 <body style="position: relative;">
 
-    <div id="preloader" style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; background-color: rgb(26, 29, 33); z-index: 999; display: flex; flex-direction: column; justify-content: center; align-items: center;
-        ">
+    <div id="preloader" style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; background-color: rgb(26, 29, 33); 
+    z-index: 999; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+
+        <p>Welcome to VI.CO</p>
+
+        <p style="font-size: 15px; font-family: Roboto; font-weight: 300; font-size: 11px;">PASSWORD</p>
+
+        
+
+        <input id="password" type="text" id="myText" value="" style="">
+        <button id="welcome-button-submit" style="border: none">SUBMIT</button>
+
+
+        <button id="welcome-button-isClient" style="margin-top: 80px;">I don't need a password, I'm a CLIENT</button>
     </div>
 
 
@@ -200,7 +214,7 @@
     </div>
 
 
-  
+
 
 
 
@@ -208,7 +222,7 @@
     <div id="container-app" style="width: 100%; height: 100%; display: flex;">
 
 
-        
+
 
 
 

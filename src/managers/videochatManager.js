@@ -1,3 +1,7 @@
+import { UserManager } from './userManager.js';
+import { DebugManager } from './debugManager.js';
+
+
 // replace these values with those generated in your TokBox Account
 var apiKey = "47090254";
 // var sessionId = "1_MX40NzA5MDI1NH5-MTYxMTE4NDI0ODA1MX5USTNSa0p2L1lRWitNczNMeFM3blBiUEl-fg";
@@ -40,7 +44,7 @@ function initializeSession(user) {
 
     var session = OT.initSession(apiKey, sessionId);
 
-    
+
 
     // Create a publisher
     // publisher = OT.initPublisher(publisherElementId, {
@@ -118,10 +122,26 @@ function initializeSession(user) {
             session.publish(publisher, handleError);
         }
     });
-}
+};
+
+
 
 export class VideochatManager {
-    static init(_user) {
-        initializeSession(_user);
-    }
-}
+    static init() {
+        if (DebugManager.startVideochat){
+            initializeSession(UserManager.userType);
+        }
+    };
+
+    static toggleVideo() {
+        if (publisher) {
+            publisher.publishVideo(value);
+        }
+    };
+
+    static toggleAudio() {
+        if (publisher) {
+            publisher.publishAudio(value);
+        }
+    };
+};

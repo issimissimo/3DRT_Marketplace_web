@@ -17,11 +17,6 @@ const jsonObj = {
 }
 
 
-var thumbnails = [];
-var thumbnailsLoaded = -1;
-
-
-
 
 function LoadImage(url) {
     UIManager.OnAssetClicked();
