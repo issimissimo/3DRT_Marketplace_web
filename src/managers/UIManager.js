@@ -58,6 +58,15 @@ export class UIManager {
             $('#getInteraction').css('display', 'none');
             $('.filters').css('display', 'none');
 
+
+            $('#toolbar-button-upload').css('display', 'none');
+            $('#toolbar-button-shop').css('display', 'none');
+            $('#bottomBar').css('visibility', 'hidden');
+
+            $('#master-videochat-toolbar').css('display', 'none');
+        }
+        else if (UserManager.userType == 'master'){
+            $('#window-client-videochat').css('display', 'none');
         }
 
         /// show welcome page

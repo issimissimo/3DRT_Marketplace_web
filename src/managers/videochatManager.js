@@ -8,8 +8,8 @@ var token = "T1==cGFydG5lcl9pZD00NzA5MDI1NCZzaWc9YWI5YzBhNmI0NzZmMWZkNWM3MjQzMjh
 // (optional) add server code here
 // initializeSession();
 
-
-
+var publisher;
+var subscriber;
 
 // Handling all of our errors here by alerting them
 function handleError(error) {
@@ -26,11 +26,11 @@ function initializeSession(user) {
     switch (user) {
         case "master":
             publisherElementId = 'video-master';
-            publisherinsertMode = 'replace';
+            // publisherinsertMode = 'replace';
             break;
         case "client":
-            publisherElementId = 'window-clients-videochat';
-            publisherinsertMode = 'append';
+            publisherElementId = 'video-client';
+            // publisherinsertMode = 'append';
             break;
         default:
             alert("user not defined");
@@ -40,18 +40,30 @@ function initializeSession(user) {
 
     var session = OT.initSession(apiKey, sessionId);
 
-    var publisher;
+    
 
     // Create a publisher
-    publisher = OT.initPublisher(publisherElementId, {
+    // publisher = OT.initPublisher(publisherElementId, {
+    //     name: user,
+    //     resolution: '320x240',
+    //     frameRate: 15,
+    //     insertMode: publisherinsertMode,
+    //     width: '100%',
+    //     // height: '100%',
+    //     // fitMode: "cover",
+    // }, handleError);
+
+    publisher = OT.initPublisher({
+        insertDefaultUI: false,
         name: user,
         resolution: '320x240',
         frameRate: 15,
-        insertMode: publisherinsertMode,
-        width: '100%',
-        // height: '100%',
-        // fitMode: "cover",
     }, handleError);
+
+    publisher.on('videoElementCreated', function (event) {
+        document.getElementById(publisherElementId).appendChild(event.element);
+    });
+
 
 
 
@@ -65,23 +77,31 @@ function initializeSession(user) {
         switch (event.stream.name) {
             case "master":
                 subscriberElementId = 'video-master';
-                subscriberInsertMode = 'replace';
+                // subscriberInsertMode = 'replace';
                 break;
             case "client":
-                subscriberElementId = 'window-clients-videochat';
-                subscriberInsertMode = 'append';
+                subscriberElementId = 'others-videochat-container';
+                // subscriberInsertMode = 'append';
                 break;
             default:
                 alert("user not defined");
         }
 
 
-        session.subscribe(event.stream, subscriberElementId, {
-            insertMode: subscriberInsertMode,
-            width: '100%',
-            // height: '100%',
+        // session.subscribe(event.stream, subscriberElementId, {
+        //     insertMode: subscriberInsertMode,
+        //     width: '100%',
+        //     // height: '100%',
+        // }, handleError);
+
+        subscriber = session.subscribe(event.stream, {
+            insertDefaultUI: false,
         }, handleError);
 
+
+        subscriber.on('videoElementCreated', function (event) {
+            document.getElementById(subscriberElementId).appendChild(event.element);
+        });
 
 
 

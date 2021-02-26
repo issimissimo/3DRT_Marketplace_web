@@ -1,5 +1,5 @@
 export class DebugManager {
-    static startVideochat = false;
-    static loadRealtime = false;
-    static showWelcome = true;
+    static startVideochat = true;
+    static loadRealtime = true;
+    static showWelcome = true
 }

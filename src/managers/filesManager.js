@@ -24,6 +24,7 @@ var thumbnailsLoaded = -1;
 
 
 function LoadImage(url) {
+    UIManager.OnAssetClicked();
     VideoLoader.Destroy();
     PanoramaLoader.Destroy();
     CameraLoader.Destroy();
@@ -40,6 +41,7 @@ function LoadImage(url) {
 
 
 function LoadVideo(url) {
+    UIManager.OnAssetClicked();
     ImageLoader.Destroy();
     PanoramaLoader.Destroy();
     CameraLoader.Destroy();
@@ -56,6 +58,7 @@ function LoadVideo(url) {
 
 
 function LoadPanorama(data) {
+    UIManager.OnAssetClicked();
     ImageLoader.Destroy();
     VideoLoader.Destroy();
     CameraLoader.Destroy();
@@ -72,6 +75,7 @@ function LoadPanorama(data) {
 
 
 function LoadCamera(data) {
+    UIManager.OnAssetClicked();
     ImageLoader.Destroy();
     VideoLoader.Destroy();
     PanoramaLoader.Destroy();
@@ -89,6 +93,7 @@ function LoadCamera(data) {
 
 
 function ShowRealtime() {
+    UIManager.OnAssetClicked();
     ImageLoader.Destroy();
     VideoLoader.Destroy();
     PanoramaLoader.Destroy();
@@ -150,7 +155,6 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
             classType = "image";
 
             onClickFunc = function () {
-                UIManager.OnAssetClicked();
                 LoadImage(url);
             };
             UIManager.createThumbnailFromAsset(classType, name, url, onClickFunc, callbackFunc);
@@ -166,7 +170,6 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
             classType = "video";
 
             onClickFunc = function () {
-                UIManager.OnAssetClicked();
                 LoadVideo(url);
             }
             UIManager.createThumbnailFromAsset(classType, name, null, onClickFunc, callbackFunc);
@@ -186,9 +189,9 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
 
                 /// get poster
                 var poster = null;
-                if (data.root.poster != undefined && typeof data.root.poster === 'string'){
+                if (data.root.poster != undefined && typeof data.root.poster === 'string') {
                     poster = data.root.poster;
-                } 
+                }
 
                 switch (classType) {
 
@@ -206,7 +209,6 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
 
 
                         onClickFunc = function () {
-                            UIManager.OnAssetClicked();
                             ShowRealtime();
                         }
                         UIManager.createThumbnailFromAsset(classType, name, poster, onClickFunc, callbackFunc);
@@ -220,7 +222,6 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                     case "panorama":
 
                         onClickFunc = function () {
-                            UIManager.OnAssetClicked();
                             LoadPanorama(data);
                         }
                         UIManager.createThumbnailFromAsset(classType, name, poster, onClickFunc, callbackFunc);
@@ -234,7 +235,6 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                     case "camera":
 
                         onClickFunc = function () {
-                            UIManager.OnAssetClicked();
                             LoadCamera(data);
                         }
                         UIManager.createThumbnailFromAsset(classType, name, poster, onClickFunc, callbackFunc);
