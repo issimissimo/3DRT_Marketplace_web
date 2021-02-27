@@ -66,6 +66,9 @@ function initializeSession(user) {
 
     publisher.on('videoElementCreated', function (event) {
         document.getElementById(publisherElementId).appendChild(event.element);
+        
+        /// force the size
+        event.element.style.width = "320px";
     });
 
 
@@ -105,6 +108,9 @@ function initializeSession(user) {
 
         subscriber.on('videoElementCreated', function (event) {
             document.getElementById(subscriberElementId).appendChild(event.element);
+
+            /// force the size
+            event.element.style.width = "320px";
         });
 
 

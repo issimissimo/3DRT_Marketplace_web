@@ -5,5 +5,5 @@ export class DebugManager {
 }
 
 DebugManager.startVideochat = true;
-DebugManager.loadRealtime = false;
+DebugManager.loadRealtime = true;
 DebugManager.showWelcome = true;
