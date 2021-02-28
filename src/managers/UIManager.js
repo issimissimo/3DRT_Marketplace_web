@@ -127,12 +127,13 @@ export class UIManager {
         if (interactionType == 'sender') {
             $('#window-main').css('pointer-events', 'all');
             $('.toggle-interaction').css('filter', 'grayscale(0)');
+            $('#bottomBar-cover').fadeOut();
 
         }
         else if (interactionType == 'receiver') {
             $('#window-main').css('pointer-events', 'none');
             $('.toggle-interaction').css('filter', 'grayscale(100)');
-
+            $('#bottomBar-cover').fadeIn();
         }
     }
 
