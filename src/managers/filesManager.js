@@ -16,6 +16,16 @@ const jsonObj = {
     class: "FilesManager",
 }
 
+function sendMessageToCreateAsset(url){
+    /// send to clients
+    if (UserManager.interactionType == "sender") {
+        jsonObj.action = "CreateAsset";
+        jsonObj.url = url;
+        SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+    }
+}
+
+
 
 
 function LoadImage(url) {
@@ -103,42 +113,40 @@ function ShowRealtime() {
 }
 
 
+///////////////////////////////////////////////////////////////////////
+
+
+// function TestForLoadAssetFromClientSide(url) {
+//     if (UserManager.userType == "client") {
+//         createNewAsset(url, null);
+//     }
+// }
+
+var allAssetRetrieved = false;
 
 
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+/// create the asset
+///////////////////////////////////////////////////////////////////////////////////////////////////
+function createNewAsset(url, onAssetCreated) {
 
+    /// get extension
+    const extension = url.slice(-3).toLowerCase();
 
-var fileLoading = -1;
-function getFileFromHtmlTag(baseUrl, htmlElements) {
+    /// get name
+    var name = url.split("/");
+    name = name[name.length - 1];
+    name = name.slice(0, -4);
 
-    fileLoading++;
-
-    if (fileLoading >= htmlElements.length) {
-        console.log("-- All files are retrived -- ")
-
-        UIManager.OnAssetLoaded();
-        return;
-    }
-
-
-
-    /// get name and path
-    var fullname = htmlElements[fileLoading].href;
-    fullname = fullname.split("/");
-    fullname = fullname[fullname.length - 1];
-
-    const name = fullname.slice(0, -4);
-    const extension = fullname.slice(-3).toLowerCase();
-    const url = baseUrl + fullname;
-
-
-    /// variables to create the thumbnail
+    /// declare variables
     var classType;
+    var poster;
     var onClickFunc;
-    const callbackFunc = getFileFromHtmlTag(baseUrl, htmlElements);
 
 
+    /// create asset...
     switch (extension) {
 
         /////////////////////
@@ -148,11 +156,19 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
         case "png":
 
             classType = "image";
-
+            poster = url;
             onClickFunc = function () {
                 LoadImage(url);
+
+                // sendMessageToCreateAsset(url);
+
             };
-            UIManager.createThumbnailFromAsset(classType, name, url, onClickFunc, callbackFunc);
+            if ((UserManager.userType == "master" && !allAssetRetrieved) || (UserManager.userType == "client" && allAssetRetrieved)) {
+                UIManager.createThumbnailFromAsset(url, classType, name, poster, onClickFunc, onAssetCreated);
+            }
+            else {
+                if (onAssetCreated) onAssetCreated();
+            }
             break;
 
 
@@ -163,11 +179,15 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
         case "mp4":
 
             classType = "video";
-
             onClickFunc = function () {
                 LoadVideo(url);
             }
-            UIManager.createThumbnailFromAsset(classType, name, null, onClickFunc, callbackFunc);
+            if ((UserManager.userType == "master" && !allAssetRetrieved) || (UserManager.userType == "client" && allAssetRetrieved)) {
+                UIManager.createThumbnailFromAsset(url, classType, name, poster, onClickFunc, onAssetCreated);
+            }
+            else {
+                if (onAssetCreated) onAssetCreated();
+            }
             break;
 
 
@@ -183,7 +203,7 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                 classType = data.root.class;
 
                 /// get poster
-                var poster = null;
+                // var poster = null;
                 if (data.root.poster != undefined && typeof data.root.poster === 'string') {
                     poster = data.root.poster;
                 }
@@ -206,7 +226,12 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                         onClickFunc = function () {
                             ShowRealtime();
                         }
-                        UIManager.createThumbnailFromAsset(classType, name, poster, onClickFunc, callbackFunc);
+                        if ((UserManager.userType == "master" && !allAssetRetrieved) || (UserManager.userType == "client" && allAssetRetrieved)) {
+                            UIManager.createThumbnailFromAsset(url, classType, name, poster, onClickFunc, onAssetCreated);
+                        }
+                        else {
+                            if (onAssetCreated) onAssetCreated();
+                        }
                         break;
 
 
@@ -219,7 +244,12 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                         onClickFunc = function () {
                             LoadPanorama(data);
                         }
-                        UIManager.createThumbnailFromAsset(classType, name, poster, onClickFunc, callbackFunc);
+                        if ((UserManager.userType == "master" && !allAssetRetrieved) || (UserManager.userType == "client" && allAssetRetrieved)) {
+                            UIManager.createThumbnailFromAsset(url, classType, name, poster, onClickFunc, onAssetCreated);
+                        }
+                        else {
+                            if (onAssetCreated) onAssetCreated();
+                        }
                         break;
 
 
@@ -232,21 +262,88 @@ function getFileFromHtmlTag(baseUrl, htmlElements) {
                         onClickFunc = function () {
                             LoadCamera(data);
                         }
-                        UIManager.createThumbnailFromAsset(classType, name, poster, onClickFunc, callbackFunc);
+                        if ((UserManager.userType == "master" && !allAssetRetrieved) || (UserManager.userType == "client" && allAssetRetrieved)) {
+                            UIManager.createThumbnailFromAsset(url, classType, name, poster, onClickFunc, onAssetCreated);
+                        }
+                        else {
+                            if (onAssetCreated) onAssetCreated();
+                        }
                         break;
                 }
+
+                // console.log(">>>>>>>>>>>> " + classType)
+
+
             });
             break;
 
 
         /// if extension is not recognized
         default:
-            getFileFromHtmlTag(baseUrl, htmlElements);
+            console.log("file not recognized during loading: " + extension);
+            onAssetCreated();
     }
+
+    // if (classType){
+    //     console.log("****************** " + classType)
+    //     UIManager.createThumbnailFromAsset(url, classType, name, poster, onClickFunc, onAssetCreated);
+    // }
+    // else{
+    //     onAssetCreated();
+    // }
+
+
+
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+///
+/// iterate for every file in the html
+/// and create a new asset from it
+///
+var fileLoading = -1;
+function getFileFromHtmlTag(baseUrl, htmlElements) {
+
+    fileLoading++;
+
+    if (fileLoading >= htmlElements.length) {
+        console.log("-- All files are retrived -- ")
+
+        /// now, allow clients to load asset in their working space
+        allAssetRetrieved = true;
+
+        /// call UI
+        UIManager.OnAssetLoaded();
+
+    }
+
+    else {
+        /// get name and path
+        var fullname = htmlElements[fileLoading].href;
+        fullname = fullname.split("/");
+        fullname = fullname[fullname.length - 1];
+        const url = baseUrl + fullname;
+
+
+        /// callback to continue for next
+        const callbackFunc = () => {
+            getFileFromHtmlTag(baseUrl, htmlElements);
+        }
+
+        /// create the asset
+        createNewAsset(url, callbackFunc);
+    }
+};
+
+
+
+
+
+///
+/// List files form URl (not so nice, it's a fake to use a real DB...)
+///
 function listFilesFromUrl(url) {
     const xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
@@ -320,6 +417,10 @@ export class FilesManager {
 
                         switch (jsonObj.action) {
 
+                            case "CreateAsset":
+                                createNewAsset(jsonObj.url, null);
+                                break;
+
                             case "LoadImage":
                                 LoadImage(jsonObj.url);
                                 break;
@@ -373,4 +474,16 @@ export class FilesManager {
             }
         });
     }
+
+    /// send a message to the clients
+    /// to create a new asset in theyr working space
+    /// from the provided url
+    static sendMessageToCreateAsset(url){
+        if (UserManager.interactionType == "sender") {
+            jsonObj.action = "CreateAsset";
+            jsonObj.url = url;
+            SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+        }
+    }
+    
 }

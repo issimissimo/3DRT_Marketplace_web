@@ -1,5 +1,6 @@
 import { UserManager } from './userManager.js';
 import { DebugManager } from './debugManager.js';
+import { FilesManager } from './filesManager.js';
 
 var selectedThumbnailId;
 var thumbnails = [];
@@ -67,7 +68,7 @@ export class UIManager {
             });
 
             /// button for client
-            $('#welcome-button-isClient').click(function(){
+            $('#welcome-button-isClient').click(function () {
                 console.log("**** access as client!");
                 UserManager.SetUserType("client", callback);
             })
@@ -93,14 +94,12 @@ export class UIManager {
         /// Set UI elements for client
         if (UserManager.userType == 'client') {
             console.log("set UI for client")
-            $('#leaveInteraction').css('display', 'none');
-            $('#getInteraction').css('display', 'none');
-            $('.filters').css('display', 'none');
-
 
             $('#toolbar-button-upload').css('display', 'none');
             $('#toolbar-button-shop').css('display', 'none');
-            $('#bottomBar').css('visibility', 'hidden');
+
+            // $('.filters').css('display', 'none');
+            // $('#bottomBar').css('visibility', 'hidden');
 
             $('#master-videochat-toolbar').css('display', 'none');
         }
@@ -158,48 +157,57 @@ export class UIManager {
     ///
     /// create the thumbnail from loaded asset
     ///
-    static createThumbnailFromAsset(classType, name, icon, onClick, callback) {
+    static createThumbnailFromAsset(url, classType, name, icon, onClick, callback) {
 
-        console.log(classType)
+        console.log("creo thumbail")
+        /// if is not passed the icon url (from a image class)
+        /// get it from the default icons
+        var _icon;
+        if (!icon) {
+            _icon = UIManager.getThumbnailIconFromClass(classType);
+        }
+        else {
+            _icon = icon;
+        }
 
-        if (UserManager.userType == "master") {
+        const id = thumbnails.length;
+        const el = $('#bottomBar').children().first().clone();
 
+        /// share button
+        if (UserManager.userType == "client"){
+            el.find('.thumbnail-button-share').css('display', 'none');
+        }
+        else{
+            el.find('.thumbnail-button-share').click(function(){
+                el.find('.thumbnail-icon-share').css('filter', 'grayscale(0)');
+                console.log("send message to clients to create a new asset from url")
+                FilesManager.sendMessageToCreateAsset(url);
+            })
+        }
 
-            /// if is not passed the icon url (from a image class)
-            /// get it from the default icons
-            var _icon;
-            if (!icon) {
-                _icon = UIManager.getThumbnailIconFromClass(classType);
-            }
-            else {
-                _icon = icon;
-            }
+        el.attr('data-URL', url);
+        el.attr('data-class', classType);
+        el.find('.thumbnail-image').attr('src', _icon);
+        el.find('p').text(decodeURI(name));
+        el.find('.thumbnail-image').click(function () {
 
-            const id = thumbnails.length;
-            const el = $('#bottomBar').children().first().clone();
-            el.attr('data-class', classType);
-            el.find('p').text(decodeURI(name));
-            el.find('img').attr('src', _icon);
-            el.click(function () {
+            if (selectedThumbnailId != id) {
 
-                if (selectedThumbnailId != id) {
-
-                    if (selectedThumbnailId != null) {
-                        thumbnails[selectedThumbnailId].find('img').removeClass('active-user');
-                    }
-
-                    thumbnails[id].find('img').addClass('active-user');
-                    selectedThumbnailId = id;
-                    onClick();
+                if (selectedThumbnailId != null) {
+                    thumbnails[selectedThumbnailId].find('.thumbnail-image').removeClass('active-user');
                 }
 
-            })
+                thumbnails[id].find('.thumbnail-image').addClass('active-user');
+                selectedThumbnailId = id;
+                onClick();
+            }
 
-            el.appendTo('#bottomBar');
-            el.show();
-            thumbnails.push(el);
+        })
 
-        }
+        el.appendTo('#bottomBar');
+        el.fadeIn();
+        thumbnails.push(el);
+
 
         if (callback) callback();
     }
