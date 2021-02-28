@@ -160,7 +160,6 @@ export class UIManager {
     ///
     static createThumbnailFromAsset(url, classType, name, icon, onClick, callback) {
 
-        console.log("creo thumbail")
         /// if is not passed the icon url (from a image class)
         /// get it from the default icons
         var _icon;
@@ -196,9 +195,11 @@ export class UIManager {
 
                 if (selectedThumbnailId != null) {
                     thumbnails[selectedThumbnailId].find('.thumbnail-image').removeClass('active-user');
+                    thumbnails[selectedThumbnailId].find('p').removeClass('active-user-text');
                 }
 
                 thumbnails[id].find('.thumbnail-image').addClass('active-user');
+                thumbnails[id].find('p').addClass('active-user-text');
                 selectedThumbnailId = id;
                 onClick();
             }
