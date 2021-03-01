@@ -185,6 +185,9 @@ export class UIManager {
             })
         }
 
+        /// class icon
+        el.find('.thumbnail-icon-class').attr('src', UIManager.getThumbnailIconFromClass(classType));
+
         el.attr('data-URL', url);
         el.attr('data-class', classType);
         el.find('.thumbnail-image').attr('src', _icon);
@@ -196,10 +199,12 @@ export class UIManager {
                 if (selectedThumbnailId != null) {
                     thumbnails[selectedThumbnailId].find('.thumbnail-image').removeClass('active-user');
                     thumbnails[selectedThumbnailId].find('p').removeClass('active-user-text');
+                    thumbnails[selectedThumbnailId].find('.thumbnail-icon-class').removeClass('active-user-icon');
                 }
 
                 thumbnails[id].find('.thumbnail-image').addClass('active-user');
                 thumbnails[id].find('p').addClass('active-user-text');
+                thumbnails[id].find('.thumbnail-icon-class').addClass('active-user-icon');
                 selectedThumbnailId = id;
                 onClick();
             }

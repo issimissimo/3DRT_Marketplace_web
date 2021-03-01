@@ -7,15 +7,15 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: lightgray
+    background: rgb(31, 34, 39);
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #888;
+    background: rgb(65, 71, 82);
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: #4e4e4e;
+    background: #9c9c9c;
 }
