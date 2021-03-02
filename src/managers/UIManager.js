@@ -251,7 +251,7 @@ export class UIManager {
                 }
             }
             if (oldSelectedThumbnail){
-                console.log("spengo quella prima...")
+                // console.log("spengo quella prima...")
                 oldSelectedThumbnail.attr('data-selected', 'false');
                 oldSelectedThumbnail.find('.thumbnail-image').removeClass('active-user');
                 oldSelectedThumbnail.find('p').removeClass('active-user-text');
@@ -262,7 +262,7 @@ export class UIManager {
 
 
         /// enable clicked thumbnail
-        console.log("provo ad accendere questa!")
+        // console.log("provo ad accendere questa!")
         /// get the selected thumbnail
         var selectedThumbnail;
         for (let i = 0; i < thumbnails.length; i++) {
@@ -272,18 +272,18 @@ export class UIManager {
             }
         }
         if (selectedThumbnail){
-            console.log("...accendo questa selezionata")
+            // console.log("...accendo questa selezionata")
             selectedThumbnail.attr('data-selected', 'true');
             selectedThumbnail.find('.thumbnail-image').addClass('active-user');
             selectedThumbnail.find('p').addClass('active-user-text');
             selectedThumbnail.find('.thumbnail-icon-class').addClass('active-user-icon');
         }
-        else{
-            console.log("NESSUNA TROVATA")
-        }
+        // else{
+        //     console.log("NESSUNA TROVATA")
+        // }
 
         selectedThumbnailId = id;
-        console.log("settato ID: " + selectedThumbnailId);
+        // console.log("settato ID: " + selectedThumbnailId);
     }
 
 

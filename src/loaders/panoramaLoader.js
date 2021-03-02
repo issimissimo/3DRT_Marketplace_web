@@ -14,14 +14,18 @@ const container = document.getElementById('window-main');
 const panelContainer = $("#panorama-panel");
 panelContainer.find('#panorama-panel-button-close').click(function () {
     PanoramaLoader.HidePanel();
+
+    /// send message
+    jsonObj.action = "closePanel";
+    SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
 })
 
 
 
 export class PanoramaLoader {
 
-    static Load(data, usertype) {
-        
+    static Load(data) {
+
         if (viewer) return;
 
         images = data.root.image;
@@ -191,7 +195,7 @@ export class PanoramaLoader {
             PanoramaLoader.HidePanel();
             PanoramaLoader.LoadNewImage(images[data]);
         }
-        else{
+        else {
             PanoramaLoader.ShowPanel(data);
         }
 
@@ -222,6 +226,10 @@ export class PanoramaLoader {
 
             if (obj.action == "markerClicked") {
                 PanoramaLoader.OnMarkerClicked(obj.data);
+            }
+
+            if (obj.action == "closePanel") {
+                PanoramaLoader.HidePanel();
             }
         }
     };
