@@ -1,8 +1,11 @@
 import { UserManager } from './userManager.js';
 import { DebugManager } from './debugManager.js';
 import { FilesManager } from './filesManager.js';
+import * as SocketManager from './socketManager.js';
+
 
 var selectedThumbnailId;
+// var selectedThumbnail;
 var thumbnails = [];
 
 const thumbnailIcon = {
@@ -11,6 +14,11 @@ const thumbnailIcon = {
     'panorama': './img/icon-panorama.svg',
     'camera': './img/icon-camera.svg',
     'realtime': './img/icon-3d.svg',
+}
+
+
+const jsonObj = {
+    class: "UIManager",
 }
 
 
@@ -38,6 +46,12 @@ for (let i = 0; i < filterButtons.length; i++) {
 }
 
 selectedFilterButton = $(filterButtons[0]);
+
+
+
+
+
+
 
 
 
@@ -155,69 +169,243 @@ export class UIManager {
 
 
 
+    // ///
+    // /// create the thumbnail from loaded asset
+    // ///
+    // static createThumbnailFromAsset(url, classType, name, icon, onClick, callback) {
+
+    //     /// if is not passed the icon url (from a image class)
+    //     /// get it from the default icons
+    //     var _icon;
+    //     if (!icon) {
+    //         _icon = UIManager.getThumbnailIconFromClass(classType);
+    //     }
+    //     else {
+    //         _icon = icon;
+    //     }
+
+    //     const id = thumbnails.length;
+    //     const el = $('#bottomBar').children().first().clone();
+
+    //     /// share button
+    //     if (UserManager.userType == "client"){
+    //         el.find('.thumbnail-button-share').css('display', 'none');
+    //     }
+    //     else{
+    //         el.find('.thumbnail-button-share').click(function(){
+    //             el.find('.thumbnail-icon-share').css('filter', 'grayscale(0)');
+    //             console.log("send message to clients to create a new asset from url")
+    //             FilesManager.sendMessageToCreateAsset(url);
+    //         })
+    //     }
+
+    //     /// class icon
+    //     el.find('.thumbnail-icon-class').attr('src', UIManager.getThumbnailIconFromClass(classType));
+
+    //     el.attr('data-URL', url);
+    //     el.attr('data-class', classType);
+    //     el.find('.thumbnail-image').attr('src', _icon);
+    //     el.find('p').text(decodeURI(name));
+    //     el.find('.thumbnail-image').click(function () {
+
+    //         if (selectedThumbnailId != id) {
+
+    //             /// disable previous thumbnail
+    //             if (selectedThumbnailId != null) {
+    //                 thumbnails[selectedThumbnailId].find('.thumbnail-image').removeClass('active-user');
+    //                 thumbnails[selectedThumbnailId].find('p').removeClass('active-user-text');
+    //                 thumbnails[selectedThumbnailId].find('.thumbnail-icon-class').removeClass('active-user-icon');
+    //             }
+
+    //             /// enable clicked thumbnail
+    //             thumbnails[id].find('.thumbnail-image').addClass('active-user');
+    //             thumbnails[id].find('p').addClass('active-user-text');
+    //             thumbnails[id].find('.thumbnail-icon-class').addClass('active-user-icon');
+    //             selectedThumbnailId = id;
+    //             onClick();
+    //         }
+
+    //     })
+
+    //     el.appendTo('#bottomBar');
+    //     el.fadeIn();
+    //     thumbnails.push(el);
+
+
+    //     if (callback) callback();
+    // }
+
+
+
+    static toggleThumbnail(id) {
+
+        /// disable previous thumbnail
+        if (selectedThumbnailId) {
+
+            /// get the previuos thumbnail
+            var oldSelectedThumbnail;
+            for (let i = 0; i < thumbnails.length; i++) {
+                const _id = thumbnails[i].data('id');
+                if (_id == selectedThumbnailId) {
+                    oldSelectedThumbnail = thumbnails[i];
+                }
+            }
+            if (oldSelectedThumbnail){
+                console.log("spengo quella prima...")
+                oldSelectedThumbnail.attr('data-selected', 'false');
+                oldSelectedThumbnail.find('.thumbnail-image').removeClass('active-user');
+                oldSelectedThumbnail.find('p').removeClass('active-user-text');
+                oldSelectedThumbnail.find('.thumbnail-icon-class').removeClass('active-user-icon');
+            }
+           
+        }
+
+
+        /// enable clicked thumbnail
+        console.log("provo ad accendere questa!")
+        /// get the selected thumbnail
+        var selectedThumbnail;
+        for (let i = 0; i < thumbnails.length; i++) {
+            const _id = thumbnails[i].data('id');
+            if (_id == id) {
+                selectedThumbnail = thumbnails[i];
+            }
+        }
+        if (selectedThumbnail){
+            console.log("...accendo questa selezionata")
+            selectedThumbnail.attr('data-selected', 'true');
+            selectedThumbnail.find('.thumbnail-image').addClass('active-user');
+            selectedThumbnail.find('p').addClass('active-user-text');
+            selectedThumbnail.find('.thumbnail-icon-class').addClass('active-user-icon');
+        }
+        else{
+            console.log("NESSUNA TROVATA")
+        }
+
+        selectedThumbnailId = id;
+        console.log("settato ID: " + selectedThumbnailId);
+    }
+
+
+
+
     ///
     /// create the thumbnail from loaded asset
     ///
-    static createThumbnailFromAsset(url, classType, name, icon, onClick, callback) {
+    static createThumbnailFromAsset(properties, callback) {
 
-        /// if is not passed the icon url (from a image class)
-        /// get it from the default icons
-        var _icon;
-        if (!icon) {
-            _icon = UIManager.getThumbnailIconFromClass(classType);
-        }
-        else {
-            _icon = icon;
-        }
+        if ((UserManager.userType == "master" && !FilesManager.allAssetRetrieved)
+            || (UserManager.userType == "client" && FilesManager.allAssetRetrieved)) {
 
-        const id = thumbnails.length;
-        const el = $('#bottomBar').children().first().clone();
 
-        /// share button
-        if (UserManager.userType == "client"){
-            el.find('.thumbnail-button-share').css('display', 'none');
-        }
-        else{
-            el.find('.thumbnail-button-share').click(function(){
-                el.find('.thumbnail-icon-share').css('filter', 'grayscale(0)');
-                console.log("send message to clients to create a new asset from url")
-                FilesManager.sendMessageToCreateAsset(url);
-            })
-        }
+            const id = properties.url;
+            const url = properties.url;
+            const classType = properties.classType;
+            const name = properties.name;
+            const poster = properties.poster;
+            const onClick = properties.onClick;
+            
 
-        /// class icon
-        el.find('.thumbnail-icon-class').attr('src', UIManager.getThumbnailIconFromClass(classType));
 
-        el.attr('data-URL', url);
-        el.attr('data-class', classType);
-        el.find('.thumbnail-image').attr('src', _icon);
-        el.find('p').text(decodeURI(name));
-        el.find('.thumbnail-image').click(function () {
-
-            if (selectedThumbnailId != id) {
-
-                if (selectedThumbnailId != null) {
-                    thumbnails[selectedThumbnailId].find('.thumbnail-image').removeClass('active-user');
-                    thumbnails[selectedThumbnailId].find('p').removeClass('active-user-text');
-                    thumbnails[selectedThumbnailId].find('.thumbnail-icon-class').removeClass('active-user-icon');
-                }
-
-                thumbnails[id].find('.thumbnail-image').addClass('active-user');
-                thumbnails[id].find('p').addClass('active-user-text');
-                thumbnails[id].find('.thumbnail-icon-class').addClass('active-user-icon');
-                selectedThumbnailId = id;
-                onClick();
+            /// if is not passed the poster url (from a image class)
+            /// get it from the default icons
+            var _poster;
+            if (!poster) {
+                _poster = UIManager.getThumbnailIconFromClass(classType);
+            }
+            else {
+                _poster = poster;
             }
 
-        })
-
-        el.appendTo('#bottomBar');
-        el.fadeIn();
-        thumbnails.push(el);
 
 
-        if (callback) callback();
+            const el = $('#bottomBar').children().first().clone();
+
+            /// share button
+            if (UserManager.userType == "client") {
+                el.find('.thumbnail-button-share').css('display', 'none');
+            }
+            else {
+                el.find('.thumbnail-button-share').click(function () {
+                    el.find('.thumbnail-icon-share').css('filter', 'grayscale(0)');
+                    console.log("send message to clients to create a new asset from url")
+
+
+                    const newAsset = {
+                        url: properties.url,
+                        selected: properties.selected,
+                    }
+
+
+                    FilesManager.sendMessageToCreateAsset(newAsset); //// QUI DEVE ESSERCI ANCHE SE E' SELEZIONATO!!!
+
+
+
+
+                })
+            }
+
+            /// set
+            el.find('.thumbnail-icon-class').attr('src', UIManager.getThumbnailIconFromClass(classType));
+            el.attr('data-id', id);
+            el.attr('data-URL', url);
+            el.attr('data-class', classType);
+            el.find('.thumbnail-image').attr('src', _poster);
+            el.find('p').text(decodeURI(name));
+
+            
+
+
+            /// click function
+            el.find('.thumbnail-image').click(function () {
+
+                if (selectedThumbnailId != id) {
+
+                    UIManager.toggleThumbnail(id);
+
+                    /// send to clients
+                    jsonObj.action = "ToggleThumbnail";
+                    jsonObj.id = id;
+                    SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+
+                    onClick();
+                }
+
+            })
+
+            el.appendTo('#bottomBar');
+            el.fadeIn();
+            thumbnails.push(el);
+
+            /// we must do this
+            /// so to have the new asset on the client highlighted if it was
+            /// selected on the master....
+            UIManager.toggleThumbnail(selectedThumbnailId);
+
+
+            if (callback) callback();
+
+        }
+
+
+        /// if we don't have to create the thumbnail
+        else {
+            if (callback) callback();
+        }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -247,6 +435,17 @@ export class UIManager {
                 }
             }
         })
-    }
+    };
+
+
+
+    ///
+    /// receive data from socket
+    ///
+    static ReceiveData(obj) {
+        if (obj.action == "ToggleThumbnail") {
+            UIManager.toggleThumbnail(obj.id);
+        }
+    };
 
 }

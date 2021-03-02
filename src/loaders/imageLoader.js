@@ -12,6 +12,7 @@ export class ImageLoader {
 
     static Load(url) {
 
+        console.log("load image...")
         imageContainer.style.display = "inline";
 
         if (viewer) {

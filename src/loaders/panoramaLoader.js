@@ -18,6 +18,9 @@ const panelContainer = $("#panorama-panel");
 export class PanoramaLoader {
 
     static Load(data, usertype) {
+        
+        if (viewer) return;
+
         images = data.root.image;
 
         const firstImage = images[0].url;
@@ -63,6 +66,7 @@ export class PanoramaLoader {
 
         viewer.on('click', (e, data) => {
             console.log(`${data.rightclick ? 'right clicked' : 'clicked'} at longitude: ${data.longitude} latitude: ${data.latitude}`);
+            console.log(data)
         });
 
         viewer.on('position-updated', (e, position) => {
