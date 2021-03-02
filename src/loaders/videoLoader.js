@@ -24,13 +24,34 @@ function createClapprPlayer(url) {
     };
 
 
+    player.listenTo(player, Clappr.Events.PLAYER_READY, () => {
+        // if (UserManager.interactionType == "sender") {
+        //     jsonObj.action = "play";
+        //     SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+        // }
+        /// hide UI for clients
+        if (UserManager.userType == "client") player.core.mediaControl.disable();
+
+        /// register on interactionType changed
+        /// to show-hide the UI
+        UserManager.OnInteractionTypeChanged.push(() => {
+            console.log("change UI")
+            if (UserManager.interactionType == "receiver")
+                player.core.mediaControl.disable();
+
+            if (UserManager.interactionType == "sender")
+                player.core.mediaControl.enable();
+        })
+    });
+
+
     player.listenTo(player, Clappr.Events.PLAYER_PLAY, () => {
         if (UserManager.interactionType == "sender") {
             jsonObj.action = "play";
             SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
         }
-        /// hide UI for clients
-        if (UserManager.userType == "client") player.core.mediaControl.disable();
+        // /// hide UI for clients
+        // if (UserManager.userType == "client") player.core.mediaControl.disable();
     });
 
 

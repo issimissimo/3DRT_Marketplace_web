@@ -9,9 +9,12 @@ const jsonObj = {
 var viewer;
 var markersPlugin;
 var images;
-var panel;
+// var panel;
 const container = document.getElementById('window-main');
 const panelContainer = $("#panorama-panel");
+panelContainer.find('#panorama-panel-button-close').click(function () {
+    PanoramaLoader.HidePanel();
+})
 
 
 
@@ -125,14 +128,15 @@ export class PanoramaLoader {
 
 
     static ShowPanel(text) {
-        panelContainer.show();
+        panelContainer.fadeIn();
 
-        panelContainer.append(text);
+        // panelContainer.append(text);
+        panelContainer.find('p').text(text);
     };
 
 
     static HidePanel() {
-        panelContainer.hide();
+        panelContainer.fadeOut();
 
 
     };
@@ -141,6 +145,7 @@ export class PanoramaLoader {
     static Destroy() {
         if (viewer) {
             viewer.destroy();
+            panelContainer.hide();
             viewer = null;
         }
     };
