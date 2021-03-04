@@ -142,12 +142,15 @@ export class UIManager {
             $('#window-main').css('pointer-events', 'all');
             $('.toggle-interaction').css('filter', 'grayscale(0)');
             $('#bottomBar-cover').fadeOut();
+            $('#window-frame-ative').addClass('active-user');
 
         }
         else if (interactionType == 'receiver') {
             $('#window-main').css('pointer-events', 'none');
             $('.toggle-interaction').css('filter', 'grayscale(100)');
             $('#bottomBar-cover').fadeIn();
+            $('#window-frame-ative').removeClass('active-user');
+
         }
     }
 
