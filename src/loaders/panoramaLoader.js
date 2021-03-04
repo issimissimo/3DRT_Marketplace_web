@@ -6,9 +6,21 @@ const jsonObj = {
     class: "PanoramaLoader",
 }
 
+const rotateButtons = {
+    left: '<img src="img/icon-rotate-left.svg">',
+    right: '<img src="img/icon-rotate-right.svg">',
+    up: '<img src="img/icon-rotate-up.svg">',
+    down: '<img src="img/icon-rotate-down.svg">'
+}
+
+
+
 var viewer;
 var markersPlugin;
 var images;
+
+
+
 // var panel;
 const container = document.getElementById('window-main');
 const panelContainer = $("#panorama-panel");
@@ -18,7 +30,28 @@ panelContainer.find('#panorama-panel-button-close').click(function () {
     /// send message
     jsonObj.action = "closePanel";
     SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
-})
+});
+
+
+
+
+var rotateInterval;
+function rotateWithButton(x, y) {
+    rotateInterval = setInterval(() => {
+
+        var pos = viewer.getPosition();
+        var long = pos.longitude;
+        var lat = pos.latitude;
+        long += x;
+        lat += y;
+        pos.latitude = lat;
+        pos.longitude = long;
+
+        PanoramaLoader.Rotate(pos);
+    }, 20);
+};
+
+
 
 
 
@@ -33,7 +66,32 @@ export class PanoramaLoader {
         const firstImage = images[0].url;
 
         viewer = new PhotoSphereViewer.Viewer({
-            navbar: ['zoom'],
+            navbar: ['zoom',
+                {
+                    id: 'rotate-left',
+                    content: rotateButtons.left,
+                    title: 'Rotate LEFT',
+                    className: 'panorama-button-custom',
+                },
+                {
+                    id: 'rotate-right',
+                    content: rotateButtons.right,
+                    title: 'Rotate RIGHT',
+                    className: 'panorama-button-custom-1',
+                },
+                {
+                    id: 'rotate-up',
+                    content: rotateButtons.up,
+                    title: 'Rotate UP',
+                    className: 'panorama-button-custom-1',
+                },
+                {
+                    id: 'rotate-down',
+                    content: rotateButtons.down,
+                    title: 'Rotate DOWN',
+                    className: 'panorama-button-custom-1',
+                },
+            ],
             container: container,
             panorama: firstImage,
             plugins: [
@@ -89,6 +147,37 @@ export class PanoramaLoader {
                 jsonObj.action = "zoom";
                 jsonObj.level = level;
                 SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+            }
+        });
+
+
+
+        /// listener for MOUSE DOWN
+        /// when we are rotating the image through buttons
+        viewer.navbar.container.addEventListener('mousedown', function (e) {
+            const action = e.target.outerHTML; /// :/....
+
+            switch (action) {
+                case rotateButtons.left:
+                    rotateWithButton(-0.002, 0);
+                    break;
+                case rotateButtons.right:
+                    rotateWithButton(0.002, 0);
+                    break;
+                case rotateButtons.up:
+                    rotateWithButton(0, 0.002);
+                    break;
+                case rotateButtons.down:
+                    rotateWithButton(0, -0.002);
+                    break;
+            }
+        });
+
+        /// listener for MOUSE UP
+        /// when we are rotating the image through buttons
+        viewer.navbar.container.addEventListener('mouseup', function () {
+            if (rotateInterval) {
+                clearInterval(rotateInterval);
             }
         });
 
@@ -234,3 +323,6 @@ export class PanoramaLoader {
         }
     };
 }
+
+
+
