@@ -19,6 +19,8 @@ export class RealtimeLoader {
 
         //     $('#window-realtime').css('z-index', '1');
         // }
+
+        RealtimeLoader.loaded = true;
     };
 
     static Show() {
@@ -33,3 +35,6 @@ export class RealtimeLoader {
         }
     };
 }
+
+
+RealtimeLoader.loaded = false;

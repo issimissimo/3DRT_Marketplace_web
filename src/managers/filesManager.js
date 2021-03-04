@@ -213,7 +213,7 @@ function createNewAsset(_asset, callback) {
 
 
                         /// HERE WE LOAD THE REALTIME ON START !!!!
-                        if (DebugManager.loadRealtime) {
+                        if (DebugManager.loadRealtime && !RealtimeLoader.loaded) {
                             console.log("** Loading Unity App... **")
                             RealtimeLoader.Load(data);
                         }
