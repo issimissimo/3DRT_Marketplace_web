@@ -145,6 +145,26 @@
             }
         }
 
+        /* TOOLBAR */
+        .button-toolbar {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 60px;
+            font-size: 13px;
+            font-weight: 500;
+            box-sizing: border-box;
+            padding: 10px;
+            cursor: pointer;
+            /* margin-right: 15px; */
+        }
+
+        .button-toolbar>img {
+            height: 30px;
+            padding-right: 5px;
+            filter: brightness(0.8);
+        }
+
 
         /* FILTER */
         .button-filter {
@@ -190,7 +210,7 @@
             margin-bottom: 20px;
         }
 
-        .panorama-button-custom{
+        .panorama-button-custom {
             margin-left: auto;
         }
     </style>
@@ -237,7 +257,7 @@
 
 
 
-        <div id="AAAAAA" style="display: flex; flex:1; flex-direction: column; margin-right: 30px;">
+        <div id="leftSide" style="display: flex; flex:1; flex-direction: column; margin-right: 30px;">
 
 
 
@@ -245,16 +265,19 @@
 
 
                 <div id="toolbar"
-                    style="width: 60px; height: 100%; border-right: 1px solid rgb(44, 47, 52); background-color: rgb(26, 29, 33);">
+                    style="width: 120px; height: 100%; border-right: 1px solid rgb(44, 47, 52); background-color: rgb(26, 29, 33);">
 
                     <!-- <img src="img/logo.svg" style="width: 100%;"> -->
 
-                    <input id="toolbar-button-upload" type="image" src="img/icon-upload.svg"
-                        style="width: 100%; filter: brightness(0.7);" />
-                    <input id="toolbar-button-presentation" type="image" src="img/icon-presentation.svg"
-                        style="width: 100%; background-color: rgb(55, 118, 236); filter: brightness(0.9);" />
-                    <input id="toolbar-button-shop" type="image" src="img/icon-shop.svg"
-                        style="width: 100%; filter: brightness(0.7);" />
+                    <div class="button-toolbar" data-window="upload">
+                        <img src="img/icon-upload.svg">Upload
+                    </div>
+                    <div class="button-toolbar button-selected" data-window="show">
+                        <img src="img/icon-presentation.svg">Show
+                    </div>
+                    <div class="button-toolbar" data-window="shop">
+                        <img src="img/icon-shop.svg">Note
+                    </div>
 
                 </div>
 
@@ -294,8 +317,16 @@
                     </div>
 
 
-                    <div id="window-frame-ative" class="absolute" style="z-index: 99; pointer-events: none;"></div>
+                    <div id="window-frame-active" class="absolute" style="z-index: 99; pointer-events: none;"></div>
 
+
+                    <div id="window-shop" class="absolute" style="z-index: 200; display: none;">
+                        <img src="img/shop_fakeImage.jpg" width="100%" height="100%">
+                    </div>
+
+                    <div id="window-upload" class="absolute" style="z-index: 200; display: none;">
+                        <img src="img/shop_fakeImage.jpg" width="100%" height="100%">
+                    </div>
 
                 </div>
 
@@ -303,7 +334,7 @@
             </div>
 
 
-            <!-- qui dobbiamo aggiungere un nuovo div -->
+            
             <div id="bottom-toolbar" style="width: 100%; height: 40px; background-color: rgb(26, 29, 33); display: flex; margin-top: 30px;
             border-bottom: 1px solid rgb(44, 47, 52); position: relative;">
 
@@ -346,38 +377,6 @@
 
 
 
-            <!-- 
-            <div class="filters" style="width: 100%; height: 40px; background-color: rgb(26, 29, 33); display: flex; margin-top: 30px;
-                border-bottom: 1px solid rgb(44, 47, 52);">
-
-                <div class="button-filter button-selected" data-class="all">
-                    <img src="img/icon-all.svg">Show all
-                </div>
-                <div class="button-filter" data-class="image">
-                    <img src="img/icon-image.svg">Images
-                </div>
-                <div class="button-filter" data-class="video">
-                    <img src="img/icon-video.svg">Video
-                </div>
-                <div class="button-filter" data-class="panorama">
-                    <img src="img/icon-panorama.svg">Virtual tour
-                </div>
-                <div class="button-filter" data-class="realtime">
-                    <img src="img/icon-3d.svg">3D Realtime
-                </div>
-                <div class="button-filter" data-class="camera">
-                    <img src="img/icon-camera.svg">IP Cameras
-                </div>
-
-
-
-                <div class="button-filter" style="flex:1; display: flex; justify-content: flex-end;">
-                    <img src="img/icon-control.svg" style="height: 100%;">
-                </div>
-
-
-
-            </div> -->
 
 
 
@@ -390,12 +389,9 @@
             padding-top: 10px; padding-left: 10px; box-sizing: border-box;">
 
 
+
                 <div class="thumbnail" style="display: none; position: relative;">
                     <img class="thumbnail-image" src="" data-type="" data-fileName="" data-url="">
-
-                    <!-- <div class="absolute" style="">
-                        <img src="img/icon-image.svg" width="20px">
-                    </div> -->
 
                     <div
                         style="width: 100%; display: flex; align-items: center; justify-content: space-evenly;  margin-top: 10px;">
@@ -411,14 +407,8 @@
 
                     </div>
 
-                    <!-- <div class="thumbnail-button-share"
-                        style="position: relative; width: 25px; height: 25px; margin-top: 10px;">
-                        <img class="absolute" src="img/circle-darkGrey.svg" style="width: 100%; height: 100%;">
-                        <img class="absolute thumbnail-icon-share" src="img/icon-share.svg"
-                            style="width: 100%; height: 100%; filter: grayscale(100%);">
-                    </div> -->
-
                     <p>name</p>
+
                 </div>
 
 
@@ -437,8 +427,7 @@
 
 
 
-        <div id="rightbar"
-            style="width: 400px; display: flex; flex-direction: column; margin-right: 30px; margin-top: 30px;">
+        <div id="rightbar" style="display: flex; flex-direction: column; margin-right: 30px; margin-top: 30px;">
 
             <div id="window-master-videochat"
                 style="height: 240px; display: flex; justify-content: flex-end; margin-bottom: 20px;">
@@ -447,8 +436,10 @@
                     background-color: rgb(26, 29, 33); display: flex; flex-direction: column; align-items: center;">
 
                     <!-- <img class="toggle-interaction" src="img/icon-control.svg" style="height: 40px; "> -->
-                    <img class="videochat-button-cam" src="img/icon-videoCamera.svg" style="height: 40px; cursor: pointer;">
-                    <img class="videochat-button-mic" src="img/icon-microphone.svg" style="height: 40px; cursor: pointer;">
+                    <img class="videochat-button-cam" src="img/icon-videoCamera.svg"
+                        style="height: 40px; cursor: pointer;">
+                    <img class="videochat-button-mic" src="img/icon-microphone.svg"
+                        style="height: 40px; cursor: pointer;">
 
                 </div>
 
@@ -465,8 +456,10 @@
                     background-color: rgb(26, 29, 33); display: flex; flex-direction: column; align-items: center;">
 
                     <!-- <img class="toggle-interaction" src="img/icon-control.svg" style="height: 40px;"> -->
-                    <img class="videochat-button-cam" src="img/icon-videoCamera.svg" style="height: 40px; cursor: pointer;">
-                    <img class="videochat-button-mic" src="img/icon-microphone.svg" style="height: 40px; cursor: pointer;">
+                    <img class="videochat-button-cam" src="img/icon-videoCamera.svg"
+                        style="height: 40px; cursor: pointer;">
+                    <img class="videochat-button-mic" src="img/icon-microphone.svg"
+                        style="height: 40px; cursor: pointer;">
 
                 </div>
 

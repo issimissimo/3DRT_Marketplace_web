@@ -18,7 +18,8 @@ UIManager.ShowWelcome(() => {
     VideochatManager.init();
 
     ///Load remote files
-    FilesManager.init('https://test.issimissimo.com/folderToLoadFiles/');
+    // FilesManager.init('https://test.issimissimo.com/folderToLoadFiles/');
+    FilesManager.init('https://test.issimissimo.com/folderToLoadFiles_tmp/');
 });
 
 

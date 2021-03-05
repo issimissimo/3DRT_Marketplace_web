@@ -31,30 +31,60 @@ function onFilterButtonClicked(el) {
         el.addClass('button-selected');
         selectedFilterButton = el;
     }
-
-}
-
+};
 
 const filterButtons = $('.filters').children();
-var selectedFilterButton;
+var selectedFilterButton = $(filterButtons[0]);
 
 for (let i = 0; i < filterButtons.length; i++) {
     const el = $(filterButtons[i]);
     el.click(function () {
         onFilterButtonClicked(el);
     })
-}
-
-selectedFilterButton = $(filterButtons[0]);
+};
 
 
 
 
 
 
+/// listener for toolbar buttons
+function onToolbarButtonClicked(el) {
+    if (el != selectedToolbarButton) {
+        selectedToolbarButton.removeClass('button-selected');
+        el.addClass('button-selected');
+        selectedToolbarButton = el;
 
+        switch (el.data('window')) {
+            case "upload":
+                $('#window-shop').hide();
+                $('#window-upload').show();
+                break;
 
+            case "show":
+                $('#window-shop').hide();
+                $('#window-upload').hide();
+                break;
 
+            case "shop":
+                $('#window-upload').hide();
+                $('#window-shop').show();
+                break;
+
+            default:
+                console.error("You should not come here");
+        }
+    }
+};
+
+const toolbarButton = $('.button-toolbar');
+var selectedToolbarButton = $(toolbarButton[1]);
+for (let i = 0; i < toolbarButton.length; i++) {
+    const el = $(toolbarButton[i]);
+    el.click(function () {
+        onToolbarButtonClicked(el);
+    })
+};
 
 
 
@@ -142,14 +172,14 @@ export class UIManager {
             $('#window-main').css('pointer-events', 'all');
             $('.toggle-interaction').css('filter', 'grayscale(0)');
             $('#bottomBar-cover').fadeOut();
-            $('#window-frame-ative').addClass('active-user');
+            $('#window-frame-active').addClass('active-user');
 
         }
         else if (interactionType == 'receiver') {
             $('#window-main').css('pointer-events', 'none');
             $('.toggle-interaction').css('filter', 'grayscale(100)');
             $('#bottomBar-cover').fadeIn();
-            $('#window-frame-ative').removeClass('active-user');
+            $('#window-frame-active').removeClass('active-user');
 
         }
     }
@@ -253,14 +283,14 @@ export class UIManager {
                     oldSelectedThumbnail = thumbnails[i];
                 }
             }
-            if (oldSelectedThumbnail){
+            if (oldSelectedThumbnail) {
                 // console.log("spengo quella prima...")
                 oldSelectedThumbnail.attr('data-selected', 'false');
                 oldSelectedThumbnail.find('.thumbnail-image').removeClass('active-user');
                 oldSelectedThumbnail.find('p').removeClass('active-user-text');
                 oldSelectedThumbnail.find('.thumbnail-icon-class').removeClass('active-user-icon');
             }
-           
+
         }
 
 
@@ -274,7 +304,7 @@ export class UIManager {
                 selectedThumbnail = thumbnails[i];
             }
         }
-        if (selectedThumbnail){
+        if (selectedThumbnail) {
             // console.log("...accendo questa selezionata")
             selectedThumbnail.attr('data-selected', 'true');
             selectedThumbnail.find('.thumbnail-image').addClass('active-user');
@@ -307,7 +337,7 @@ export class UIManager {
             const name = properties.name;
             const poster = properties.poster;
             const onClick = properties.onClick;
-            
+
 
 
             /// if is not passed the poster url (from a image class)
@@ -356,7 +386,7 @@ export class UIManager {
             el.find('.thumbnail-image').attr('src', _poster);
             el.find('p').text(decodeURI(name));
 
-            
+
 
 
             /// click function
