@@ -305,7 +305,7 @@
 
             <!-- qui dobbiamo aggiungere un nuovo div -->
             <div id="bottom-toolbar" style="width: 100%; height: 40px; background-color: rgb(26, 29, 33); display: flex; margin-top: 30px;
-            border-bottom: 1px solid rgb(44, 47, 52);">
+            border-bottom: 1px solid rgb(44, 47, 52); position: relative;">
 
 
                 <div class="filters" style="display: flex;">
@@ -447,8 +447,8 @@
                     background-color: rgb(26, 29, 33); display: flex; flex-direction: column; align-items: center;">
 
                     <!-- <img class="toggle-interaction" src="img/icon-control.svg" style="height: 40px; "> -->
-                    <img src="img/icon-videoCamera.svg" style="height: 40px;">
-                    <img src="img/icon-microphone.svg" style="height: 40px">
+                    <img class="videochat-button-cam" src="img/icon-videoCamera.svg" style="height: 40px; cursor: pointer;">
+                    <img class="videochat-button-mic" src="img/icon-microphone.svg" style="height: 40px; cursor: pointer;">
 
                 </div>
 
@@ -465,8 +465,8 @@
                     background-color: rgb(26, 29, 33); display: flex; flex-direction: column; align-items: center;">
 
                     <!-- <img class="toggle-interaction" src="img/icon-control.svg" style="height: 40px;"> -->
-                    <img src="img/icon-videoCamera.svg" style="height: 40px;">
-                    <img src="img/icon-microphone.svg" style="height: 40px">
+                    <img class="videochat-button-cam" src="img/icon-videoCamera.svg" style="height: 40px; cursor: pointer;">
+                    <img class="videochat-button-mic" src="img/icon-microphone.svg" style="height: 40px; cursor: pointer;">
 
                 </div>
 
@@ -476,7 +476,7 @@
 
 
             <div id="others-videochat-container"
-                style="flex: 1; display: flex; flex-direction: column; align-items: flex-end;">
+                style="flex: 1; display: flex; flex-direction: column; align-items: flex-end; overflow: auto;">
             </div>
 
         </div>

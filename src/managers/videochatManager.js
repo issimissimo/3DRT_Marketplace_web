@@ -15,12 +15,20 @@ var token = "T1==cGFydG5lcl9pZD00NzA5MDI1NCZzaWc9YWI5YzBhNmI0NzZmMWZkNWM3MjQzMjh
 var publisher;
 var subscriber;
 
+var useVideo = true;
+var useAudio = true;
+
+
 // Handling all of our errors here by alerting them
 function handleError(error) {
     if (error) {
         alert(error.message);
     }
 }
+
+
+
+
 
 function initializeSession(user) {
 
@@ -66,7 +74,7 @@ function initializeSession(user) {
 
     publisher.on('videoElementCreated', function (event) {
         document.getElementById(publisherElementId).appendChild(event.element);
-        
+
         /// force the size
         event.element.style.width = "320px";
     });
@@ -111,6 +119,7 @@ function initializeSession(user) {
 
             /// force the size
             event.element.style.width = "320px";
+            event.element.style.paddingTop = "30px";
         });
 
 
@@ -132,22 +141,43 @@ function initializeSession(user) {
 
 
 
+
 export class VideochatManager {
     static init() {
-        if (DebugManager.startVideochat){
+        if (DebugManager.startVideochat) {
             initializeSession(UserManager.userType);
         }
     };
 
-    static toggleVideo() {
+    static toggleVideo(value) {
         if (publisher) {
             publisher.publishVideo(value);
         }
     };
 
-    static toggleAudio() {
+    static toggleAudio(value) {
         if (publisher) {
             publisher.publishAudio(value);
         }
     };
 };
+
+
+
+
+
+
+/// set buttons
+$('.videochat-button-cam').click(function () {
+    useVideo = !useVideo;
+    VideochatManager.toggleVideo(useVideo);
+    const imgSrc = useVideo ? "img/icon-videoCamera.svg" : "img/icon-videoCamera_off.svg";
+    $(this).attr('src', imgSrc);
+
+})
+$('.videochat-button-mic').click(function () {
+    useAudio = !useAudio;
+    VideochatManager.toggleAudio(useAudio);
+    const imgSrc = useAudio ? "img/icon-microphone.svg" : "img/icon-microphone_off.svg";
+    $(this).attr('src', imgSrc);
+})
