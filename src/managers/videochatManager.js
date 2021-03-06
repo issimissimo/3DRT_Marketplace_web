@@ -77,6 +77,7 @@ function initializeSession(user) {
 
         /// force the size
         event.element.style.width = "320px";
+        event.element.style.height = "240px";
     });
 
 
@@ -111,6 +112,8 @@ function initializeSession(user) {
 
         subscriber = session.subscribe(event.stream, {
             insertDefaultUI: false,
+            // resolution: '320x240',
+            // frameRate: 15,
         }, handleError);
 
 
@@ -119,7 +122,7 @@ function initializeSession(user) {
 
             /// force the size
             event.element.style.width = "320px";
-            event.element.style.paddingTop = "30px";
+            event.element.style.height = "240px";
         });
 
 

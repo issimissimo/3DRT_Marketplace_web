@@ -26,9 +26,9 @@ const jsonObj = {
 /// listener for filter buttons
 function onFilterButtonClicked(el) {
     if (el != selectedFilterButton) {
-        selectedFilterButton.removeClass('button-selected');
+        selectedFilterButton.removeClass('button-filter-active');
         UIManager.changeTab(el.data('class'));
-        el.addClass('button-selected');
+        el.addClass('button-filter-active');
         selectedFilterButton = el;
     }
 };
@@ -137,18 +137,17 @@ export class UIManager {
 
         /// Set UI elements for client
         if (UserManager.userType == 'client') {
-            console.log("set UI for client")
 
             $('#toolbar-button-upload').css('display', 'none');
             $('#toolbar-button-shop').css('display', 'none');
-
-            // $('.filters').css('display', 'none');
-            // $('#bottomBar').css('visibility', 'hidden');
-
             $('#master-videochat-toolbar').css('display', 'none');
+
+            $('#no-selection-message').find('p').text('MASTER did not share any content right now');
         }
+
+        /// Set UI elements for master
         else if (UserManager.userType == 'master') {
-            console.log("set UI for master")
+
             $('#window-client-videochat').css('display', 'none');
 
             /// set toggle-interaction
@@ -156,6 +155,8 @@ export class UIManager {
             $('.toggle-interaction').click(function () {
                 UserManager.toggleInteraction();
             })
+
+            $('#no-selection-message').find('p').text('You did not share any content');
         }
 
 

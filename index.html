@@ -5,6 +5,8 @@
     <title>TEST</title>
     <link rel="shortcut icon" href="#" />
 
+    <script src="lib/SVG-class.js"></script>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 
@@ -42,6 +44,12 @@
 
 
     <style>
+        :root {
+            --blue: rgb(55, 118, 236);
+            --lightBlue: rgb(100, 152, 248);
+            --mediumGrey: rgb(150, 151, 155);
+        }
+
         html,
         body {
             width: 100%;
@@ -53,7 +61,7 @@
             overflow: hidden;
 
             /* background-color: rgb(26, 29, 33); */
-            background-color: rgb(23, 26, 29);
+            background-color: rgb(22, 24, 27);
 
             font-family: 'Roboto', sans-serif;
             color: rgb(192, 192, 192);
@@ -146,24 +154,28 @@
         }
 
         /* TOOLBAR */
+
+
+
+
         .button-toolbar {
             display: flex;
             align-items: center;
             width: 100%;
-            height: 60px;
+            height: 40px;
             font-size: 13px;
             font-weight: 500;
             box-sizing: border-box;
             padding: 10px;
             cursor: pointer;
-            /* margin-right: 15px; */
+            margin: 15px 0 15px 0;
         }
 
-        .button-toolbar>img {
+        /* .button-toolbar>img {
             height: 30px;
             padding-right: 5px;
             filter: brightness(0.8);
-        }
+        } */
 
 
         /* FILTER */
@@ -173,22 +185,44 @@
             height: 100%;
             font-size: 13px;
             font-weight: 500;
-            box-sizing: border-box;
-            padding: 10px;
+            /* box-sizing: border-box; */
             cursor: pointer;
-            margin-right: 15px;
+            margin: 0 10px 0 10px;
+            color: var(--mediumGrey);
         }
 
-        .button-filter>img {
-            height: 100%;
-            padding-right: 5px;
+        .button-filter path {
+            fill: var(--mediumGrey);
         }
+
+        .button-filter-active {
+            color: var(--lightBlue) !important;
+        }
+
+        .button-filter-active path {
+            fill: var(--lightBlue) !important;
+        }
+
+        .icon {
+            width: 20px;
+            padding: 5px;
+        }
+
+
+
+
+
+
+
+
+
+
 
         /* END FILTER */
 
 
         .button-selected {
-            background-color: rgb(55, 118, 236);
+            background-color: var(--blue);
         }
 
         .absolute {
@@ -212,6 +246,10 @@
 
         .panorama-button-custom {
             margin-left: auto;
+        }
+
+        #others-videochat-container>div {
+            padding-bottom: 20px;
         }
     </style>
 </head>
@@ -245,7 +283,9 @@
     </div> -->
 
 
-
+    <!-- <div id="message" class="absolute centered" style="background-color: rgba(0, 0, 0, 0.623); z-index: 888;">
+        <p>YOU HAVE CONTROL</p>
+    </div> -->
 
 
 
@@ -270,13 +310,13 @@
                     <!-- <img src="img/logo.svg" style="width: 100%;"> -->
 
                     <div class="button-toolbar" data-window="upload">
-                        <img src="img/icon-upload.svg">Upload
+                        <img class="icon" src="img/icon-upload.svg">Upload
                     </div>
                     <div class="button-toolbar button-selected" data-window="show">
-                        <img src="img/icon-presentation.svg">Show
+                        <img class="icon" src="img/icon-presentation.svg">Show
                     </div>
                     <div class="button-toolbar" data-window="shop">
-                        <img src="img/icon-shop.svg">Note
+                        <img class="icon" src="img/icon-shop.svg">Note
                     </div>
 
                 </div>
@@ -285,9 +325,11 @@
                 <div id="window-main-container" style="position: relative; padding-right: 0; width: 100%;">
 
 
+                    <!-- NO MESSAGE -->
                     <div id="no-selection-message" class="absolute centered"
                         style="font-family: 'Open Sans', sans-serif; z-index: 99;">
-                        <p>Your sharing space is empty</p>
+                        <img src="img/icon-empty.svg" width="80px" style="filter: brightness(0.6);">
+                        <p></p>
                     </div>
 
 
@@ -334,14 +376,15 @@
             </div>
 
 
-            
+            <!-- <div style="position: relative;"> -->
+
             <div id="bottom-toolbar" style="width: 100%; height: 40px; background-color: rgb(26, 29, 33); display: flex; margin-top: 30px;
             border-bottom: 1px solid rgb(44, 47, 52); position: relative;">
 
 
                 <div class="filters" style="display: flex;">
 
-                    <div class="button-filter button-selected" data-class="all">
+                    <!-- <div class="button-filter button-selected" data-class="all">
                         <img src="img/icon-all.svg">Show all
                     </div>
                     <div class="button-filter" data-class="image">
@@ -358,7 +401,39 @@
                     </div>
                     <div class="button-filter" data-class="camera">
                         <img src="img/icon-camera.svg">IP Cameras
+                    </div> -->
+
+
+                    <div class="button-filter button-filter-active" data-class="all">
+                        <div class="icon" data-src="img/icon-all.svg"></div>
+                        <p>All</p>
                     </div>
+
+                    <div class="button-filter" data-class="image">
+                        <div class="icon" data-src="img/icon-image.svg"></div>
+                        <p>Images</p>
+                    </div>
+
+                    <div class="button-filter" data-class="video">
+                        <div class="icon" data-src="img/icon-video.svg"></div>
+                        <p>Video</p>
+                    </div>
+
+                    <div class="button-filter" data-class="panorama">
+                        <div class="icon" data-src="img/icon-panorama.svg"></div>
+                        <p>Virtual tour</p>
+                    </div>
+
+                    <div class="button-filter" data-class="realtime">
+                        <div class="icon" data-src="img/icon-3d.svg"></div>
+                        <p>3D Realtime</p>
+                    </div>
+
+                    <div class="button-filter" data-class="camera">
+                        <div class="icon" data-src="img/icon-camera.svg"></div>
+                        <p>IP Cameras</p>
+                    </div>
+
 
                 </div>
 
@@ -374,19 +449,8 @@
             </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-            <div id="bottomBar" style="position: relative; width: 100%; display: flex; flex-wrap: wrap; background-color: rgb(31, 34, 39); flex: 1; overflow: auto; overflow-x: hidden;
-            padding-top: 10px; padding-left: 10px; box-sizing: border-box;">
+            <div id="bottomBar" style="width: 100%; display: flex; flex-wrap: wrap; background-color: rgb(31, 34, 39); flex: 1; overflow: auto; overflow-x: hidden;
+            padding-top: 10px; padding-left: 10px; box-sizing: border-box; position: relative;">
 
 
 
@@ -412,10 +476,12 @@
                 </div>
 
 
-
                 <div id="bottomBar-cover" class="absolute"
                     style="background-color: rgb(31, 34, 39); opacity: 0.6; z-index: 99;">
                 </div>
+
+
+
 
             </div>
 
@@ -423,19 +489,26 @@
 
 
 
+
+            <!-- </div> -->
+
+
+
         </div>
 
 
 
-        <div id="rightbar" style="display: flex; flex-direction: column; margin-right: 30px; margin-top: 30px;">
+        <div id="rightbar" style="display: flex; flex-direction: column; margin-right: 30px; margin-top: 10px;">
 
-            <div id="window-master-videochat"
+
+
+            <!-- MASTER -->
+            <!-- <div id="window-master-videochat"
                 style="height: 240px; display: flex; justify-content: flex-end; margin-bottom: 20px;">
 
                 <div id="master-videochat-toolbar" style="width: 40px; height: 100%; border-right: 1px solid rgb(44, 47, 52);
                     background-color: rgb(26, 29, 33); display: flex; flex-direction: column; align-items: center;">
 
-                    <!-- <img class="toggle-interaction" src="img/icon-control.svg" style="height: 40px; "> -->
                     <img class="videochat-button-cam" src="img/icon-videoCamera.svg"
                         style="height: 40px; cursor: pointer;">
                     <img class="videochat-button-mic" src="img/icon-microphone.svg"
@@ -445,17 +518,46 @@
 
                 <div id="video-master" style="box-sizing: border-box; width: 320px; background-color: rgb(31, 34, 39);">
                 </div>
+            </div> -->
+
+            <div id="window-master-videochat">
+
+                <p>MASTER</p>
+                <div style="display: flex; justify-content: center; height: 30px; background-color: blue; width: 100%;">
+
+                </div>
+
+                <div style="height: 240px; display: flex; justify-content: flex-end; margin-bottom: 20px;">
+
+                    <div id="master-videochat-toolbar"
+                        style="width: 40px; height: 100%; border-right: 1px solid rgb(44, 47, 52);
+                        background-color: rgb(26, 29, 33); display: flex; flex-direction: column; align-items: center;">
+
+                        <img class="videochat-button-cam" src="img/icon-videoCamera.svg"
+                            style="height: 40px; cursor: pointer;">
+                        <img class="videochat-button-mic" src="img/icon-microphone.svg"
+                            style="height: 40px; cursor: pointer;">
+
+                    </div>
+
+                    <div id="video-master"
+                        style="box-sizing: border-box; width: 320px; background-color: rgb(31, 34, 39);">
+                    </div>
+                </div>
+
             </div>
 
 
 
+
+
+            <!-- YOU NO MASTER -->
             <div id="window-client-videochat"
                 style="height: 240px; display: flex; justify-content: flex-end; margin-bottom: 20px">
 
                 <div id="client-videochat-toolbar" style="width: 40px; height: 100%; border-right: 1px solid rgb(44, 47, 52);
                     background-color: rgb(26, 29, 33); display: flex; flex-direction: column; align-items: center;">
 
-                    <!-- <img class="toggle-interaction" src="img/icon-control.svg" style="height: 40px;"> -->
                     <img class="videochat-button-cam" src="img/icon-videoCamera.svg"
                         style="height: 40px; cursor: pointer;">
                     <img class="videochat-button-mic" src="img/icon-microphone.svg"
@@ -468,6 +570,9 @@
             </div>
 
 
+
+
+            <!-- OTHERS -->
             <div id="others-videochat-container"
                 style="flex: 1; display: flex; flex-direction: column; align-items: flex-end; overflow: auto;">
             </div>
