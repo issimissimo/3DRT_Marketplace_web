@@ -88,6 +88,46 @@ for (let i = 0; i < toolbarButton.length; i++) {
 
 
 
+///
+/// the message on interaction type changed
+///
+var messageTimeout;
+/// preload
+var icon1 = new Image();
+icon1.src = "img/icon-interaction.svg";
+var icon2 = new Image();
+icon2.src = "img/icon-interaction_none.svg";
+
+function showMessage(interactionType) {
+
+    var text;
+    var color;
+    var icon;
+
+    if (interactionType == 'sender') {
+        text = "You can interact"
+        color = getComputedStyle(document.documentElement).getPropertyValue('--blue');
+        icon = "img/icon-interaction.svg";
+    }
+    else if (interactionType == 'receiver') {
+        text = "You can't interact"
+        color = getComputedStyle(document.documentElement).getPropertyValue('--orange');
+        icon = "img/icon-interaction_none.svg";
+    }
+
+    if (messageTimeout) clearTimeout(messageTimeout);
+    const msg = $('#message');
+    msg.find('span').text(text);
+    msg.css('background-color', color);
+    msg.find('img').attr('src', icon);
+    msg.fadeIn();
+    messageTimeout = setTimeout(function () {
+        msg.fadeOut();
+        messageTimeout = null;
+    }, 3000)
+};
+
+
 
 
 export class UIManager {
@@ -169,6 +209,7 @@ export class UIManager {
     /// called when the interaction type change
     ///
     static OnInteractionType(interactionType) {
+
         if (interactionType == 'sender') {
             $('#window-main').css('pointer-events', 'all');
             $('.toggle-interaction').css('filter', 'grayscale(0)');
@@ -183,6 +224,9 @@ export class UIManager {
             $('#window-frame-active').removeClass('active-user');
 
         }
+
+        /// show the interaction message
+        showMessage(interactionType);
     }
 
 
