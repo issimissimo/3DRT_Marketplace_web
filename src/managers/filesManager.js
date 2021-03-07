@@ -397,6 +397,10 @@ export class FilesManager {
                                 createNewAsset(jsonObj.asset, null);
                                 break;
 
+                            // case "RemoveAsset":
+                            //     UIManager.removeAsset(jsonObj.id);
+                            //     break;
+
                             case "LoadImage":
                                 LoadImage(jsonObj.url);
                                 break;
@@ -460,6 +464,8 @@ export class FilesManager {
         return _allAssetRetrieved;
     }
 
+
+
     /// send a message to the clients
     /// to create a new asset in their working space
     /// from the provided url
@@ -467,6 +473,18 @@ export class FilesManager {
         if (UserManager.interactionType == "sender") {
             jsonObj.action = "CreateAsset";
             jsonObj.asset = _asset;
+            SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+        }
+    }
+
+
+    /// send a message to the clients
+    /// to remove an asset from their working space
+    /// from the provided url
+    static sendMessageToRemoveAsset(id) {
+        if (UserManager.interactionType == "sender") {
+            jsonObj.action = "RemoveAsset";
+            jsonObj.id = id;
             SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
         }
     }

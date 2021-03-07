@@ -37,7 +37,7 @@
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="css/scrollbar.css" />
 
@@ -47,8 +47,15 @@
         :root {
             --blue: rgb(55, 118, 236);
             --lightBlue: rgb(100, 152, 248);
+            --lightGray: rgb(175, 176, 179);
             --mediumGrey: rgb(150, 151, 155);
+            --darkGrey: rgb(83, 84, 87);
             --orange: rgb(204, 96, 8);
+            --magenta: rgb(187, 50, 169);
+            --background: rgb(20, 22, 25);
+            --label: rgb(26, 29, 33);
+            --content: rgb(31, 34, 39);
+            --border: rgb(44, 47, 52);
         }
 
         html,
@@ -60,13 +67,9 @@
             /* remove scrollbar for Microsoft Edge */
             -ms-overflow-style: none;
             overflow: hidden;
-
-            /* background-color: rgb(26, 29, 33); */
-            background-color: rgb(22, 24, 27);
-
+            background-color: var(--background);
             font-family: 'Roboto', sans-serif;
             color: rgb(192, 192, 192);
-
         }
 
         #window-clients-videochat div {
@@ -94,20 +97,17 @@
         }
 
         .thumbnail p {
-            /* max-width: 120px; */
             text-align: center;
             font-weight: 300;
-            /* color: darkgrey; */
         }
 
 
-        /* iframe {
-            border-radius: 8px;
-        } */
+       
 
         .active-user {
             box-sizing: border-box;
-            border: 2px solid rgb(55, 118, 236);
+            border: 2px solid;
+            border-color: var(--blue);
         }
 
         .active-user-text {
@@ -119,8 +119,9 @@
         }
 
         #preloader {
-            font-size: 30px;
+            font-size: 40px;
             font-family: 'Open Sans', sans-serif;
+            font-weight: 700;
         }
 
         #preloader button {
@@ -154,22 +155,51 @@
             }
         }
 
-        /* TOOLBAR */
 
 
 
-
-        .button-toolbar {
+        .label {
             display: flex;
             align-items: center;
-            width: 100%;
             height: 40px;
             font-size: 13px;
             font-weight: 500;
             box-sizing: border-box;
             padding: 10px;
+        }
+        .label-clicked{
+            color: var(--blue) !important;
+        }
+        .label-clicked path{
+            fill: var(--blue) !important;
+        }
+
+
+
+
+        .left {
+            justify-content: flex-start;
+        }
+
+        .right {
+            justify-content: flex-end;
+        }
+
+
+
+
+        /* TOOLBAR */
+
+        #toolbar>div {
+            margin: 20px 0 20px 0;
+        }
+
+
+
+
+        .interactable {
             cursor: pointer;
-            margin: 15px 0 15px 0;
+            /* margin: 20px 0 20px 0; */
         }
 
         /* .button-toolbar>img {
@@ -180,33 +210,36 @@
 
 
         /* FILTER */
-        .button-filter {
+        /* .button-filter {
             display: flex;
             align-items: center;
             height: 100%;
             font-size: 13px;
             font-weight: 500;
-            /* box-sizing: border-box; */
             cursor: pointer;
-            margin: 0 10px 0 10px;
+            margin: 0 15px 0 15px;
             color: var(--mediumGrey);
-        }
+        } */
 
-        .button-filter path {
+        /* .button-filter path {
             fill: var(--mediumGrey);
-        }
+        } */
 
-        .button-filter-active {
+        /* .button-filter-active {
             color: var(--blue) !important;
         }
 
         .button-filter-active path {
             fill: var(--blue) !important;
-        }
+        } */
 
         .icon {
             width: 20px;
-            padding: 5px;
+            padding: 0 7px 0 7px;
+        }
+
+        .icon path {
+            fill: var(--lightGray);
         }
 
 
@@ -223,7 +256,12 @@
 
 
         .button-selected {
-            background-color: var(--blue);
+            background-color: var(--background) !important;
+            color: var(--blue) !important;
+        }
+
+        .button-selected path {
+            fill: var(--blue) !important;
         }
 
         .absolute {
@@ -268,9 +306,18 @@
             font-family: 'Open Sans', sans-serif;
             box-sizing: border-box;
         }
+
         #message>img {
             width: 25px;
             padding-right: 10px;
+        }
+
+        #no-selection-message {
+            color: var(--darkGrey);
+        }
+
+        #no-selection-message path {
+            fill: var(--darkGrey);
         }
     </style>
 </head>
@@ -326,19 +373,30 @@
 
 
                 <div id="toolbar"
-                    style="width: 120px; height: 100%; border-right: 1px solid rgb(44, 47, 52); background-color: rgb(26, 29, 33);">
+                    style="box-sizing: border-box; width: 120px; height: 100%; border-right: 1px solid rgb(44, 47, 52); border-bottom: 1px solid rgb(19, 20, 22); background-color: rgb(26, 29, 33);">
 
                     <!-- <img src="img/logo.svg" style="width: 100%;"> -->
 
-                    <div class="button-toolbar" data-window="upload">
-                        <img class="icon" src="img/icon-upload.svg">Upload
+                    <div class="label interactable" data-window="upload">
+                        <div class="icon" data-src="img/icon-upload.svg"></div>
+                        <span>Upload</span>
                     </div>
-                    <div class="button-toolbar button-selected" data-window="show">
-                        <img class="icon" src="img/icon-presentation.svg">Show
+                    <div class="label interactable" data-window="shop">
+                        <div class="icon" data-src="img/icon-shop.svg"></div>
+                        <span>Shop</span>
                     </div>
-                    <div class="button-toolbar" data-window="shop">
-                        <img class="icon" src="img/icon-shop.svg">Note
+                    <div class="label interactable button-selected" data-window="show">
+                        <div class="icon" data-src="img/icon-presentation.svg"></div>
+                        <span>Show</span>
                     </div>
+
+
+                    <div class="label interactable" data-window="" style="position: relative;">
+                        <div class="icon" data-src="img/icon-interaction.svg"></div>
+                        <span>Send</span>
+                        <div class="absolute" style="border-right: 4px solid rgb(55, 118, 236);"></div>
+                    </div>
+
 
                 </div>
 
@@ -349,9 +407,12 @@
                     <!-- NO MESSAGE -->
                     <div id="no-selection-message" class="absolute centered"
                         style="font-family: 'Open Sans', sans-serif; z-index: 99;">
-                        <img src="img/icon-empty.svg" width="80px" style="filter: brightness(0.6);">
+                        <div data-src="img/icon-empty.svg" style="width: 80px;"></div>
                         <p></p>
                     </div>
+
+
+
 
 
                     <div id="window-main" style="position: relative;">
@@ -408,60 +469,46 @@
 
             <!-- <div style="position: relative;"> -->
 
-            <div id="bottom-toolbar" style="width: 100%; height: 40px; background-color: rgb(26, 29, 33); display: flex; margin-top: 30px;
+            <div id="bottom-toolbar" style="width: 100%; height: 40px; background-color: rgb(26, 29, 33); display: flex; padding-top: 30px;
             border-bottom: 1px solid rgb(44, 47, 52); position: relative;">
 
 
                 <div class="filters" style="display: flex;">
 
-                    <!-- <div class="button-filter button-selected" data-class="all">
-                        <img src="img/icon-all.svg">Show all
-                    </div>
-                    <div class="button-filter" data-class="image">
-                        <img src="img/icon-image.svg">Images
-                    </div>
-                    <div class="button-filter" data-class="video">
-                        <img src="img/icon-video.svg">Video
-                    </div>
-                    <div class="button-filter" data-class="panorama">
-                        <img src="img/icon-panorama.svg">Virtual tour
-                    </div>
-                    <div class="button-filter" data-class="realtime">
-                        <img src="img/icon-3d.svg">3D Realtime
-                    </div>
-                    <div class="button-filter" data-class="camera">
-                        <img src="img/icon-camera.svg">IP Cameras
+
+                    <!-- <div class="button-filter button-filter-active" data-class="all">
+                        <div class="icon" data-src="img/icon-all.svg"></div>
+                        <p>All</p>
                     </div> -->
 
-
-                    <div class="button-filter button-filter-active" data-class="all">
+                    <div class="label interactable label-clicked" data-class="all">
                         <div class="icon" data-src="img/icon-all.svg"></div>
                         <p>All</p>
                     </div>
 
-                    <div class="button-filter" data-class="image">
+                    <div class="label interactable" data-class="image">
                         <div class="icon" data-src="img/icon-image.svg"></div>
-                        <p>Images</p>
+                        <p>Image</p>
                     </div>
 
-                    <div class="button-filter" data-class="video">
+                    <div class="label interactable" data-class="video">
                         <div class="icon" data-src="img/icon-video.svg"></div>
                         <p>Video</p>
                     </div>
 
-                    <div class="button-filter" data-class="panorama">
+                    <div class="label interactable" data-class="panorama">
                         <div class="icon" data-src="img/icon-panorama.svg"></div>
-                        <p>Virtual tour</p>
+                        <p>Virtual Tour</p>
                     </div>
 
-                    <div class="button-filter" data-class="realtime">
+                    <div class="label interactable" data-class="realtime">
                         <div class="icon" data-src="img/icon-3d.svg"></div>
-                        <p>3D Realtime</p>
+                        <p>3D Real Time</p>
                     </div>
 
-                    <div class="button-filter" data-class="camera">
+                    <div class="label interactable" data-class="camera">
                         <div class="icon" data-src="img/icon-camera.svg"></div>
-                        <p>IP Cameras</p>
+                        <p>IP Camera</p>
                     </div>
 
 
@@ -528,7 +575,7 @@
 
 
 
-        <div id="rightbar" style="display: flex; flex-direction: column; margin-right: 30px; margin-top: 10px;">
+        <div id="rightbar" style="display: flex; flex-direction: column; margin: 10px 10px 0 0;">
 
 
 
@@ -550,12 +597,15 @@
                 </div>
             </div> -->
 
-            <div id="window-master-videochat">
+            <div id="window-master-videochat" style="background-color: yellowgreen;">
 
-                <p>MASTER</p>
-                <div style="display: flex; justify-content: center; height: 30px; background-color: blue; width: 100%;">
 
+                <div class="label right">
+                    <div class="icon" data-src="img/icon-user.svg"></div>
+                    <span>Master</span>
                 </div>
+
+
 
                 <div style="height: 240px; display: flex; justify-content: flex-end; margin-bottom: 20px;">
 
@@ -578,7 +628,10 @@
             </div>
 
 
-
+            <div class="label right">
+                <div class="icon" data-src="img/icon-users.svg"></div>
+                <span>Clients</span>
+            </div>
 
 
             <!-- YOU NO MASTER -->

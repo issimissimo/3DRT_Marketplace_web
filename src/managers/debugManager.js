@@ -1,6 +1,6 @@
 export class DebugManager {
 }
 
-DebugManager.startVideochat = true;
-DebugManager.loadRealtime = true;
-DebugManager.showWelcome = true;
+DebugManager.startVideochat = false;
+DebugManager.loadRealtime = false;
+DebugManager.showWelcome = false;

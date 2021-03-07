@@ -26,9 +26,9 @@ const jsonObj = {
 /// listener for filter buttons
 function onFilterButtonClicked(el) {
     if (el != selectedFilterButton) {
-        selectedFilterButton.removeClass('button-filter-active');
+        selectedFilterButton.removeClass('label-clicked');
         UIManager.changeTab(el.data('class'));
-        el.addClass('button-filter-active');
+        el.addClass('label-clicked');
         selectedFilterButton = el;
     }
 };
@@ -77,8 +77,8 @@ function onToolbarButtonClicked(el) {
     }
 };
 
-const toolbarButton = $('.button-toolbar');
-var selectedToolbarButton = $(toolbarButton[1]);
+const toolbarButton = $('#toolbar').children();
+var selectedToolbarButton = $(toolbarButton[2]);
 for (let i = 0; i < toolbarButton.length; i++) {
     const el = $(toolbarButton[i]);
     el.click(function () {
@@ -105,12 +105,12 @@ function showMessage(interactionType) {
     var icon;
 
     if (interactionType == 'sender') {
-        text = "You can interact"
+        text = "You have permission to interact";
         color = getComputedStyle(document.documentElement).getPropertyValue('--blue');
         icon = "img/icon-interaction.svg";
     }
     else if (interactionType == 'receiver') {
-        text = "You can't interact"
+        text = "You don't have permission to interact";
         color = getComputedStyle(document.documentElement).getPropertyValue('--orange');
         icon = "img/icon-interaction_none.svg";
     }
@@ -124,7 +124,7 @@ function showMessage(interactionType) {
     messageTimeout = setTimeout(function () {
         msg.fadeOut();
         messageTimeout = null;
-    }, 3000)
+    }, 5000)
 };
 
 
@@ -182,7 +182,7 @@ export class UIManager {
             $('#toolbar-button-shop').css('display', 'none');
             $('#master-videochat-toolbar').css('display', 'none');
 
-            $('#no-selection-message').find('p').text('MASTER did not share any content right now');
+            $('#no-selection-message').find('p').text('No content shared yet');
         }
 
         /// Set UI elements for master
@@ -196,7 +196,7 @@ export class UIManager {
                 UserManager.toggleInteraction();
             })
 
-            $('#no-selection-message').find('p').text('You did not share any content');
+            $('#no-selection-message').find('p').text('You are not sharing any content');
         }
 
 
@@ -395,9 +395,8 @@ export class UIManager {
                 _poster = poster;
             }
 
-
-
             const el = $('#bottomBar').children().first().clone();
+
 
             /// share button
             if (UserManager.userType == "client") {
@@ -405,21 +404,35 @@ export class UIManager {
             }
             else {
                 el.find('.thumbnail-button-share').click(function () {
-                    el.find('.thumbnail-icon-share').css('filter', 'grayscale(0)');
-                    console.log("send message to clients to create a new asset from url")
+
+                    /// Add new asset to the clients
+                    if (el.data('shared') == "false") {
+
+                        console.log("ATTIVO")
+                        el.data('shared', 'true');
+
+                        el.find('.thumbnail-icon-share').css('filter', 'grayscale(0)');
+                        console.log("send message to clients to create a new asset from url")
 
 
-                    const newAsset = {
-                        url: properties.url,
-                        selected: properties.selected,
+                        /// send message to clients
+                        const newAsset = { url: properties.url }
+                        FilesManager.sendMessageToCreateAsset(newAsset);
                     }
 
+                    /// Remove previously created asset from the clients
+                    else if (el.data('shared') == "true") {
 
-                    FilesManager.sendMessageToCreateAsset(newAsset); //// QUI DEVE ESSERCI ANCHE SE E' SELEZIONATO!!!
+                        console.log("SPENGO")
+                        el.data('shared', 'false');
+                        el.find('.thumbnail-icon-share').css('filter', 'grayscale(1)');
 
-
-
-
+                        /// send message to clients
+                        // FilesManager.sendMessageToRemoveAsset(id);
+                        jsonObj.action = "RemoveThumbnail";
+                        jsonObj.id = id;
+                        SocketManager.FMEmitStringToOthers(JSON.stringify(jsonObj));
+                    }
                 })
             }
 
@@ -428,6 +441,7 @@ export class UIManager {
             el.attr('data-id', id);
             el.attr('data-URL', url);
             el.attr('data-class', classType);
+            el.data('shared', 'false');
             el.find('.thumbnail-image').attr('src', _poster);
             el.find('p').text(decodeURI(name));
 
@@ -470,7 +484,26 @@ export class UIManager {
         else {
             if (callback) callback();
         }
-    }
+    };
+
+
+
+
+    ///
+    /// remove asset
+    ///
+    static removeAsset(id) {
+
+        thumbnails.forEach((el) => {
+            if (el.data('id') == id) {
+                const index = thumbnails.indexOf(el);
+                /// remove from array
+                thumbnails.splice(index, 1);
+                /// remove from DOM
+                el.remove();
+            }
+        });
+    };
 
 
 
@@ -524,6 +557,15 @@ export class UIManager {
         if (obj.action == "ToggleThumbnail") {
             UIManager.toggleThumbnail(obj.id);
         }
+        if (obj.action == "RemoveThumbnail") {
+            UIManager.removeAsset(obj.id);
+        }
     };
+
+
+
+
+
+
 
 }
