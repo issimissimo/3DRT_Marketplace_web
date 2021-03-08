@@ -435,6 +435,7 @@ export class FilesManager {
 
 
                     case "PanoramaLoader":
+                        console.log("...PanoramaLoader...")
                         PanoramaLoader.ReceiveData(jsonObj);
                         break;
 

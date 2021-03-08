@@ -38,7 +38,7 @@ panelContainer.find('#panorama-panel-button-close').click(function () {
 var rotateInterval;
 function rotateWithButton(x, y) {
     rotateInterval = setInterval(() => {
-
+        console.log(">>>rotate interval")
         var pos = viewer.getPosition();
         var long = pos.longitude;
         var lat = pos.latitude;
@@ -155,6 +155,7 @@ export class PanoramaLoader {
         /// listener for MOUSE DOWN
         /// when we are rotating the image through buttons
         viewer.navbar.container.addEventListener('mousedown', function (e) {
+            console.log("MOUSE DOWN")
             const action = e.target.outerHTML; /// :/....
 
             switch (action) {
@@ -176,6 +177,7 @@ export class PanoramaLoader {
         /// listener for MOUSE UP
         /// when we are rotating the image through buttons
         viewer.navbar.container.addEventListener('mouseup', function () {
+            console.log("MOUSE UP")
             if (rotateInterval) {
                 clearInterval(rotateInterval);
             }
