@@ -50,39 +50,47 @@ for (let i = 0; i < filterButtons.length; i++) {
 
 /// listener for toolbar buttons
 function onToolbarButtonClicked(el) {
-    if (el != selectedToolbarButton) {
-        selectedToolbarButton.removeClass('button-selected');
-        el.addClass('button-selected');
-        selectedToolbarButton = el;
+    // if (el != selectedToolbarButton) {
+    // selectedToolbarButton.removeClass('button-selected');
+    // el.addClass('button-selected');
+    selectedToolbarButton.removeClass('label-clicked');
+    // selectedToolbarButton.removeClass('label-clicked-bacground');
+    el.addClass('label-clicked');
+    // el.addClass('label-clicked-bacground');
 
-        switch (el.data('window')) {
-            case "upload":
-                $('#window-shop').hide();
-                $('#window-upload').show();
-                break;
+    selectedToolbarButton = el;
 
-            case "show":
-                $('#window-shop').hide();
-                $('#window-upload').hide();
-                break;
+    switch (el.data('window')) {
+        case "upload":
+            $('#window-shop').hide();
+            $('#window-upload').show();
+            break;
 
-            case "shop":
-                $('#window-upload').hide();
-                $('#window-shop').show();
-                break;
+        case "show":
+            $('#window-shop').hide();
+            $('#window-upload').hide();
+            break;
 
-            default:
-                console.error("You should not come here");
-        }
+        case "shop":
+            $('#window-upload').hide();
+            $('#window-shop').show();
+            break;
+
+        default:
+            console.error("You should not come here");
     }
+    // }
 };
 
-const toolbarButton = $('#toolbar').children();
+const toolbarButton = $('#toolbar').children().not('#toggle-interaction');
 var selectedToolbarButton = $(toolbarButton[2]);
+onToolbarButtonClicked(selectedToolbarButton);
+
 for (let i = 0; i < toolbarButton.length; i++) {
     const el = $(toolbarButton[i]);
     el.click(function () {
-        onToolbarButtonClicked(el);
+        if (el != selectedToolbarButton)
+            onToolbarButtonClicked(el);
     })
 };
 
@@ -178,8 +186,10 @@ export class UIManager {
         /// Set UI elements for client
         if (UserManager.userType == 'client') {
 
+            $('#toolbar').css('pointer-events', 'none');
             $('#toolbar-button-upload').css('display', 'none');
             $('#toolbar-button-shop').css('display', 'none');
+            $('#toolbar-button-show').css('display', 'none');
             $('#master-videochat-toolbar').css('display', 'none');
 
             $('#no-selection-message').find('p').text('No content shared yet');
@@ -191,8 +201,9 @@ export class UIManager {
             $('#window-client-videochat').css('display', 'none');
 
             /// set toggle-interaction
-            $('.toggle-interaction').css('cursor', 'pointer');
-            $('.toggle-interaction').click(function () {
+            // $('.toggle-interaction').css('cursor', 'pointer');
+            $('#toggle-interaction').click(function () {
+                console.log("toggle interaction!")
                 UserManager.toggleInteraction();
             })
 
@@ -212,17 +223,30 @@ export class UIManager {
 
         if (interactionType == 'sender') {
             $('#window-main').css('pointer-events', 'all');
-            $('.toggle-interaction').css('filter', 'grayscale(0)');
             $('#bottomBar-cover').fadeOut();
             $('#window-frame-active').addClass('active-user');
 
+            $('#toggle-interaction').addClass('label-clicked');
+            $('#toggle-interaction').find('span').text('Active');
+            $('#toggle-interaction').find('.absolute').show();
+            
+
+
+            // $('.toggle-interaction').css('filter', 'grayscale(0)');
+
+           
         }
         else if (interactionType == 'receiver') {
             $('#window-main').css('pointer-events', 'none');
-            $('.toggle-interaction').css('filter', 'grayscale(100)');
             $('#bottomBar-cover').fadeIn();
             $('#window-frame-active').removeClass('active-user');
 
+            $('#toggle-interaction').removeClass('label-clicked');
+            $('#toggle-interaction').find('span').text('Off');
+            $('#toggle-interaction').find('.absolute').hide();
+            // $('.toggle-interaction').css('filter', 'grayscale(100)');
+
+            
         }
 
         /// show the interaction message
